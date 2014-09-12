@@ -1,2 +1,4 @@
 *.pyc
 dora/settings.py
+.project
+*.pydevproject
