@@ -1,6 +1,7 @@
 import sys, urllib2, json
-#from dora.dora.models import Patient, Disease
-
+from dora.dora.models import Patient, Disease
+from dora.dora.mds_adapter_models import *
+from datetime import datetime
 
 def get_diagnosis_and_gps_lists(list):
 	
@@ -17,9 +18,25 @@ def get_diagnosis_and_gps_lists(list):
 	return diagnosis_list, gps_list
 
 
-def populate_database(subjects, diseases):
-	pass
-
+def populate_database(diagnosis_list, gps_list):
+	
+	synchonisation_date = LastSynchronised.objects.all()[0]
+	for diagnosis in diagnosis_list:
+		encounter = diagnosis.encounter
+		modified = datetime.strptime(encounter.modified, '%Y-%m-%sT%H:%M:%S')
+		
+		if modified > synchronisation_date:
+			
+			patient = PatientLookupTable.objects.get(uuid=subject.uuid)
+			
+			#check if patient exists, if not create it
+			if not patient:
+				patient = Patient.objects.create(given_name=subject.given_name,
+											family_name=subject.family_name,
+											dob=subject.dob,
+											gender=subject.gender)
+				PatientLookupTable.objects.create(uuid=subject.uuid, patient=patient)
+			
 
 def main(argv):
 
