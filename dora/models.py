@@ -6,7 +6,7 @@ class Disease(models.Model):
 	name = models.CharField(max_length=128)
 	""" THe name of the disease """
 	
-	patients = models.ManyToManyField(Patient, through='Encounter')
+	patients = models.ManyToManyField('Patient', through='Encounter')
 	""" Patients diagnosed with this disease """
 
 	class Meta:
@@ -18,15 +18,20 @@ class Disease(models.Model):
 class Encounter(models.Model):
 	""" A completed procedure, where data has been collected """
 	
-	patient = models.ForeignKey(Patient)
+	patient = models.ForeignKey('Patient')
 	
-	disease = models.ForeignKey(Disease)
+	disease = models.ForeignKey('Disease')
 	
-	created = models.DateTimeField
+	created = models.DateTimeField()
 	
-	modified = models.DateTimeField
+	modified = models.DateTimeField()
 	
-
+	lon = models.FloatField(null=True)
+	
+	lat = models.FloatField(null=True)
+	
+	objects = models.GeoManager()
+	
 class Patient(models.Model):
 	""" A medical patient """
 	
@@ -38,15 +43,7 @@ class Patient(models.Model):
 	
 	gender = models.CharField(choices=(("M","M"),("F","F")), max_length=2)
 	
-	created = models.DateTimeField()
-	
-	modified = models.DateTimeField()
-	
 	#image = models.ImageField(blank=True)
-	
-	latitude = models.FloatField()
-	
-	longitude = models.FloatField()
 
 	def __unicode__(self):
 		return self.given_name

@@ -1,17 +1,17 @@
 from django.contrib.gis.db import models
-from datetime import date
+from datetime import datetime
 
 class LastSynchronised(models.Model):
 
-    last_synchronised = models.DateTimeField(default=date.min)
+    last_synchronised = models.DateTimeField(default=datetime.min)
     
-    def __unicode__():
-        return last_synchronised
+    def __unicode__(self):
+        return self.last_synchronised.isoformat(' ')
     
 class PatientLookupTable(models.Model):
     uuid = models.CharField(max_length=128, primary_key=True)
     subject = models.ForeignKey('Patient')
-    
-class DiseaseLookupTable(models.Model):
+
+class EncounterLookupTable(models.Model):
     uuid = models.CharField(max_length=128, primary_key=True)
-    disease = models.ForeignKey('Disease')
+    encounter = models.ForeignKey('Encounter')
