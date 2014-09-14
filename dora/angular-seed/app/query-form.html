@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" ng-app="doraControllers">
+<head>
+  <meta charset="utf-8">
+  <title>Dora</title>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="js/controllers.js"></script>
+</head>
+<body >
+
+  <div ng-controller="QueryFormController">
+    
+    <input ng-model="queryString" type="text" placeholder="Enter disesase or medical condition here" />
+    {{queryString}}
+
+
+    <ul>
+      <li ng-repeat="filter in queryFilters">
+        <p>{{filter.type}}</p>
+        <p>{{filter.value}}</p>
+      </li>
+    </ul>
+    
+    <div ng-show="filterFormVisibility">
+      <select ng-model="filterFormType">
+        <option value="age">Age</option>
+        <option value="gender">Gender</option>
+        <option value="treatment">Treatment</option>
+      </select>
+
+      <div ng-show="filterFormType == 'age'">
+        <input ng-model="filterFormValue" type="number"/>
+      </div>
+      <div ng-show="filterFormType == 'gender'">
+        <input ng-model="filterFormValue" type="radio" name="gender" value="male"/>Male
+        <input ng-model="filterFormValue" type="radio" name="gender" value="female"/>Female
+      </div>
+      <div ng-show="filterFormType == 'treatment'">
+        <input ng-model="filterFormValue" type="text"/>
+      </div>
+
+      <button ng-click="addFilter()">Done</button>
+
+    </div>
+
+    <button ng-click="filterFormVisibility = true">Add Filter</button>
+    <button ng-click="submitQuery()">Submit</button>
+
+  </div>
+  
+
+</body>
+</html>
