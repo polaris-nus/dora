@@ -1,7 +1,7 @@
 var doraControllers = angular.module('doraControllers', []);
 
-doraControllers.controller('QueryFormController', ['$scope',
-	function($scope) {
+doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ',
+	function($scope, QRSHistoryServ) {
 
 		$scope.queryString = '';
 		$scope.queryFilters = [];
@@ -23,35 +23,26 @@ doraControllers.controller('QueryFormController', ['$scope',
 
 		$scope.submitQuery = function(){
 			//GET request here!
+			var query = {};
+			query.string = $scope.queryString;
+			query.filters = $scope.queryFilters;
+
+			QRSHistoryServ.addQRS(query);
+
 			$scope.queryString = '';
 			$scope.queryFilters = [];
 		};
 	}]);
 
-doraControllers.controller('QueryResultController', ['$scope',
-	function($scope) {
-		$scope.QRSHistory = [
-		{
-			abbreviation: 'TB'
-		},
-		{
-			abbreviation: 'EB'
-		},
-		{
-			abbreviation: 'MA'
-		},
-		{
-			abbreviation: 'SA'
-		},
-		{
-			abbreviation: 'BF'
-		}
-		];
+doraControllers.controller('QueryResultController', ['$scope', 'QRSHistoryServ',
+	function($scope, QRSHistoryServ) {
+		$scope.QRSHistory = QRSHistoryServ.getQRSHistory();
+	
 		// can init/set to null?
-		$scope.displayedQRS = 0;
+		$scope.displayedQRS = {};
 
 		$scope.setDisplayedQRS = function(index) {
-			$scope.displayedQRS = index;
+			$scope.displayedQRS = $scope.QRSHistory[index];
 		};
 
 	}]);
