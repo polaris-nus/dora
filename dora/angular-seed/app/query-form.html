@@ -2,70 +2,108 @@
 <html lang="en" ng-app="doraApp">
 <head>
   <meta charset="utf-8">
-  <title>Dora</title>
+  <title>Dora - Iteration 1</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" rel="text/css" href="css/stylesheet.css">
 
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/jquery/jquery.js"></script>
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/services.js"></script>
 </head>
+
 <body >
+  <div class="mapHolder">
+    <div class="container">
+      <br/>
 
-  <div ng-controller="QueryFormController">
-    
-    <input ng-model="queryString" type="text" placeholder="Enter disesase or medical condition here" />
-    {{queryString}}
+      <div ng-controller="QueryFormController">
+        <div class="row" style ="background-color: green;"> 
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="input-group">
+                <input ng-model="queryString" type="Search" placeholder="Enter medical condition here" class="form-control" />
+                <div class="input-group-btn">
+                  <button class="btn btn-info" ng-click="submitQuery()">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
 
 
-    <ul>
-      <li ng-repeat="filter in queryFilters">
-        <p>{{filter.type}}</p>
-        <p>{{filter.value}}</p>
-      </li>
-    </ul>
-    
-    <div ng-show="filterFormVisibility">
-      <select ng-model="filterFormType">
-        <option value="age">Age</option>
-        <option value="gender">Gender</option>
-        <option value="treatment">Treatment</option>
-      </select>
+            <!-- <input ng-model="queryString" type="text" placeholder="Enter disesase or medical condition here" /> -->
+            <!-- {{queryString}} -->
+            <button type="button" class="btn btn-info col-xs-1" ng-click="filterFormVisibility = true">Add Filter</button>
+             <!-- <button type="button" class="btn btn-info" ng-click="submitQuery()">Submit</button>  -->
+           
 
-      <div ng-show="filterFormType == 'age'">
-        <input ng-model="filterFormValue" type="number"/>
+            <div>
+              <div class="filter">
+                <!-- {{filter.type}} -->
+                <button ng-repeat="filter in queryFilters" class="filter btn btn-default"> {{filter.value}} </button>
+              </div>
+
+
+              <div class="filter" ng-show="filterFormVisibility" >
+                <select class="filter form-control" ng-model="filterFormType" style="width:100px;">
+                  <option value="age">Age</option>
+                  <option value="gender">Gender</option>
+                  <option value="treatment">Treatment</option>
+                </select>
+              
+                <div class="filter" ng-show="filterFormType == 'age'">
+                  <input ng-model="filterFormValue" type="number"/>
+                </div>
+
+                <div class="filter" ng-show="filterFormType == 'gender'">
+                  <input ng-model="filterFormValue" type="radio" name="gender" value="male"/>Male
+                  <input ng-model="filterFormValue" type="radio" name="gender" value="female"/>Female
+                </div>
+
+                <div class="filter" ng-show="filterFormType == 'treatment'">
+                  <input ng-model="filterFormValue" type="text"/>
+                </div>
+                <button type="button" class="btn btn-info" ng-click="addFilter()">Done</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <br/>
+         <div ng-controller="QueryResultController">
+          <div ng-repeat="qrs in QRSHistory">
+            <button type="button" class="btn btn-warning btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
+            {{qrs.string}}
+          </div>
+          <div>
+            {{displayedQRS | json}}
+          </div>
+        </div>
       </div>
-      <div ng-show="filterFormType == 'gender'">
-        <input ng-model="filterFormValue" type="radio" name="gender" value="male"/>Male
-        <input ng-model="filterFormValue" type="radio" name="gender" value="female"/>Female
-      </div>
-      <div ng-show="filterFormType == 'treatment'">
-        <input ng-model="filterFormValue" type="text"/>
-      </div>
 
-      <button ng-click="addFilter()">Done</button>
 
+      <br/>
+      <div class="row">
+        <div class="col-xs-3">      
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Query Result Set</h3>
+            </div>
+            <div class="panel-body" style="height:400px;">
+              Charts here
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <button ng-click="filterFormVisibility = true">Add Filter</button>
-    <button ng-click="submitQuery()">Submit</button>
-
   </div>
+  <!-- Latest compiled and minified JavaScript -->
 
-  <div ng-controller="QueryResultController">
 
-    <ul>
-      <li ng-repeat="qrs in QRSHistory">
-        <button ng-click="setDisplayedQRS($index)">[{{$index}}] {{qrs.string}}</button>
-      </li>
-    </ul>
-
-    <div>
-      {{displayedQRS | json}}
-    </div>
-
-  </div>
   
 
 </body>
