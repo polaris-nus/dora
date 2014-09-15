@@ -1,0 +1,17 @@
+{
+  "pk": $observation_number,
+  "model": "core.observation",
+  "fields": {
+    "node": "$observation_node",
+    "value_text": "$observation_value",
+    "concept": "$observation_concept",
+    "uuid": "$observation_uuid",
+    "_complex_size": 0,
+    "created": "$created_date",
+    "modified": "$created_date",
+    "voided": false,
+    "_complex_progress": 0,
+    "value_complex": "",
+    "encounter": "$encounter_uuid"
+  }
+}

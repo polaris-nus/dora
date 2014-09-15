@@ -2,3 +2,5 @@
 .project
 *.pydevproject
 dora/settings.py
+initial_data.json
+*.json
