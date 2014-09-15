@@ -1,10 +1,11 @@
 from django.contrib.gis.db import models
+from datetime import datetime
 
 class Disease(models.Model):
 	""" A disease """
 	
 	name = models.CharField(max_length=128)
-	""" THe name of the disease """
+	""" The name of the disease """
 	
 	patients = models.ManyToManyField('Patient', through='Encounter')
 	""" Patients diagnosed with this disease """
@@ -47,3 +48,24 @@ class Patient(models.Model):
 
 	def __unicode__(self):
 		return self.given_name
+	
+class LastSynchronised(models.Model):
+
+    last_synchronised = models.DateTimeField()
+    
+    def __unicode__(self):
+        return self.last_synchronised.isoformat(' ')
+    
+class PatientLookupTable(models.Model):
+	
+    uuid = models.CharField(max_length=128, primary_key=True)
+    
+    patient = models.ForeignKey('Patient')
+
+class EncounterLookupTable(models.Model):
+	
+    uuid = models.CharField(max_length=128, primary_key=True)
+    
+    encounter = models.ForeignKey('Encounter')
+    
+    
