@@ -1,0 +1,16 @@
+{
+    "disease": "{{ disease_name }}",
+    "patient": {
+        "family_name": "{{ patient_family_name }}",
+        "given_name": "{{ patient_given_name }}",
+        "dob": "{{ patient_dob }}",
+        "gender": "{{ patient_gender }}"
+    },
+    "created_date": "{{ created_date }}",
+    "modified_date": "{{ modified_date }}",
+    "location": {
+        "lon": "{{ longitude }}"
+        "lat": "{{ latitude }}"
+        "alt": "{{ altitude }}"
+    }
+}
