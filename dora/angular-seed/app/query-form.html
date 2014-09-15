@@ -38,8 +38,8 @@
             <!-- <input ng-model="queryString" type="text" placeholder="Enter disesase or medical condition here" /> -->
             <!-- {{queryString}} -->
             <button type="button" class="btn btn-info col-xs-1" ng-click="filterFormVisibility = true">Add Filter</button>
-             <!-- <button type="button" class="btn btn-info" ng-click="submitQuery()">Submit</button>  -->
-           
+            <!-- <button type="button" class="btn btn-info" ng-click="submitQuery()">Submit</button>  -->
+
 
             <div>
               <div class="filter">
@@ -54,7 +54,7 @@
                   <option value="gender">Gender</option>
                   <option value="treatment">Treatment</option>
                 </select>
-              
+
                 <div class="filter" ng-show="filterFormType == 'age'">
                   <input ng-model="filterFormValue" type="number"/>
                 </div>
@@ -74,37 +74,29 @@
         </div>
         
         <br/>
-         <div ng-controller="QueryResultController">
-          <div ng-repeat="qrs in QRSHistory">
-            <button type="button" class="btn btn-warning btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
-            {{qrs.string}}
-          </div>
-          <div>
-            {{displayedQRS | json}}
-          </div>
-        </div>
-      </div>
-
-
-      <br/>
-      <div class="row">
-        <div class="col-xs-3">      
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Query Result Set</h3>
+        <div ng-controller="QueryResultController">
+          <div class="col-xs-1">
+            <div ng-repeat="qrs in QRSHistory">
+              <button type="button" class="btn btn-warning btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
+            <!--   {{qrs.string}} -->
             </div>
-            <div class="panel-body" style="height:400px;">
-              Charts here
+          </div> 
+
+          <div class="col-xs-3">      
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">query result set {{$index}}</h3>
+              </div>
+              <div class="panel-body" style="height:400px;">
+                Charts here {{displayedQRS | json}}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Latest compiled and minified JavaScript -->
 
-
-  
-
+<!-- Latest compiled and minified JavaScript -->
 </body>
 </html>
