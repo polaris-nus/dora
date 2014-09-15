@@ -5,6 +5,7 @@ doraControllers.controller('QueryFormController', ['$scope',
 
 		$scope.queryString = '';
 		$scope.queryFilters = [];
+		
 		$scope.filterFormVisibility = false;
 		$scope.filterFormType = '';
 		$scope.filterFormValue = '';
@@ -27,3 +28,30 @@ doraControllers.controller('QueryFormController', ['$scope',
 		};
 	}]);
 
+doraControllers.controller('QueryResultController', ['$scope',
+	function($scope) {
+		$scope.QRSHistory = [
+		{
+			abbreviation: 'TB'
+		},
+		{
+			abbreviation: 'EB'
+		},
+		{
+			abbreviation: 'MA'
+		},
+		{
+			abbreviation: 'SA'
+		},
+		{
+			abbreviation: 'BF'
+		}
+		];
+		// can init/set to null?
+		$scope.displayedQRS = 0;
+
+		$scope.setDisplayedQRS = function(index) {
+			$scope.displayedQRS = index;
+		};
+
+	}]);

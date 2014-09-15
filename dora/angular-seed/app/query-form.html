@@ -50,6 +50,20 @@
     <button ng-click="submitQuery()">Submit</button>
 
   </div>
+
+  <div ng-controller="QueryResultController">
+
+    <ul>
+      <li ng-repeat="qrs in QRSHistory">
+        <button ng-click="setDisplayedQRS($index)">[{{$index}}] {{qrs.abbreviation}}</button>
+      </li>
+    </ul>
+
+    <div>
+      {{displayedQRS}}
+    </div>
+
+  </div>
   
 
 </body>

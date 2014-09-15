@@ -1,3 +1,4 @@
 var doraApp = angular.module('doraApp', [
-	'doraControllers'
+	'doraControllers',
+	
 	]);
