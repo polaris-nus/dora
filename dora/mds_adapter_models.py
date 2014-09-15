@@ -10,7 +10,7 @@ class LastSynchronised(models.Model):
     
 class PatientLookupTable(models.Model):
     uuid = models.CharField(max_length=128, primary_key=True)
-    subject = models.ForeignKey('Patient')
+    patient = models.ForeignKey('Patient')
 
 class EncounterLookupTable(models.Model):
     uuid = models.CharField(max_length=128, primary_key=True)
