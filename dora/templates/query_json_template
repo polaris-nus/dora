@@ -9,8 +9,8 @@
     "created_date": "{{ created_date }}",
     "modified_date": "{{ modified_date }}",
     "location": {
-        "lon": "{{ longitude }}"
-        "lat": "{{ latitude }}"
+        "lon": "{{ longitude }}",
+        "lat": "{{ latitude }}",
         "alt": "{{ altitude }}"
     }
 }
