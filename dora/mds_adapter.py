@@ -1,9 +1,9 @@
-import sys, urllib2, json
-from dora.dora.models import Patient, Disease, Encounter
-from dora.dora.mds_adapter_models import *
+import sys, urllib2, json, re
+from dora.models import *
 from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
-MDS_DATETIME_FORMAT = '%Y-%m-%sT%H:%M:%S'
+MDS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
 def get_diagnosis_and_gps_lists(list):
 	
@@ -22,55 +22,60 @@ def get_diagnosis_and_gps_lists(list):
 
 def populate_database(diagnosis_list, gps_list):
 	
-	synchonisation_date = LastSynchronised.objects.all()[0]
+	synchronisation_date_record = LastSynchronised.objects.all()[0]
+	synchronisation_date = synchronisation_date_record.last_synchronised
 	for diagnosis in diagnosis_list:
-		encounter = diagnosis.encounter
-		modified = datetime.strptime(encounter.modified, MDS_DATETIME_FORMAT)
+		encounter = diagnosis['encounter']
+		subject = encounter['subject']
+		modified = datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT)
 		
 		if modified > synchronisation_date:
 			
-			patient_record = PatientLookupTable.objects.get(uuid=encounter.subject.uuid)
-			
-			#check if patient exists, if not create it
-			if not patient_record:
-				patient = Patient.objects.create(given_name=subject.given_name,
-											family_name=subject.family_name,
-											dob=subject.dob,
-											gender=subject.gender)
-				PatientLookupTable.objects.create(uuid=subject.uuid, patient=patient)
-			else:
-				patient = patient_record.patient
+			try:
+				patient = Patient.objects.get(uuid=subject['uuid'])
 				
-			disease = Disease.objects.get(name=diagnosis.value_text)
+			except ObjectDoesNotExist:
+				patient = Patient.objects.create(uuid=subject['uuid'],
+												given_name=subject['given_name'],
+												family_name=subject['family_name'],
+												dob=subject['dob'],
+												gender=subject['gender'])
+				
+			try:
+				disease = Disease.objects.get(name=diagnosis['value_text'])
 			
-			#check if disease exists, if not create it
-			if not disease:
-				disease = Disease.objects.create(name=diagnosis.value_text)
+			except ObjectDoesNotExist:
+				disease = Disease.objects.create(name=diagnosis['value_text'])
 			
-			dora_encounter = Encounter.objects.get(uuid=encounter.uuid)
-			
-			#check to see whether encounter exists, if it does, delete it
-			if dora_encounter:
+			try:
+				dora_encounter = Encounter.objects.get(uuid=encounter['uuid'])
 				dora_encounter.delete()
+			#check to see whether encounter exists, if it does, delete it
+			except ObjectDoesNotExist:
+				pass
 			
-			dora_encounter = Encounter.objects.create(patient=patient,
-												disease=disease,
-												created=datetime.strptime(encounter.created, MDS_DATETIME_FORMAT),
-												modified=datetime.strptime(encounter.modified, MDS_DATETIME_FORMAT))
+			dora_encounter = Encounter.objects.create(uuid=encounter['uuid'],
+													patient=patient,
+													disease=disease,
+													created=datetime.strptime(encounter['created'], MDS_DATETIME_FORMAT),
+													modified=datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT))
 			
 	#only update lon and lat of encounters that already exist
 	for gps in gps_list:
-		encounter = gps.encounter
-		modified = datetime.strptime(encounter.modified, MDS_DATETIME_FORMAT)
+		encounter = gps['encounter']
+		modified = datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT)
 		
 		if modified > synchronisation_date:
 			
-			dora_encounter = Encounter.objects.get(uuid=encounter.uuid)
-			
-			if dora_encounter:
-				gps_tuple = tuple(float(v) for v in re.findall('[-+]?[0-9]*\.?[0-9]+', gps.value_text))
+			try:
+				dora_encounter = Encounter.objects.get(uuid=encounter['uuid'])
+				gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
 				dora_encounter.lon, dora_encounter.lat = gps_tuple[0], gps_tuple[1]
 			
+			except ObjectDoesNotExist:
+				pass
+			
+	synchronisation_date_record.last_synchronised = datetime.now()
 
 def main(argv):
 
