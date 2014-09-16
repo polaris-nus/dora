@@ -1,6 +1,6 @@
 import sys, urllib2, json, re
 from dora.models import *
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.core.exceptions import ObjectDoesNotExist
 
 MDS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
@@ -22,8 +22,8 @@ def get_diagnosis_and_gps_lists(list):
 
 def populate_database(diagnosis_list, gps_list):
 	
-	synchronisation_date_record = LastSynchronised.objects.all()[0]
-	synchronisation_date = synchronisation_date_record.last_synchronised
+	synchronised_date_record = get_last_synchronised_date_record()
+	synchronised_date = synchronised_date_record.last_synchronised
 	for diagnosis in diagnosis_list:
 		encounter = diagnosis['encounter']
 		subject = encounter['subject']
@@ -75,7 +75,26 @@ def populate_database(diagnosis_list, gps_list):
 			except ObjectDoesNotExist:
 				pass
 			
-	synchronisation_date_record.last_synchronised = datetime.now()
+	synchronised_date_record.last_synchronised = datetime.now()
+	
+def get_last_synchronised_date_record():
+	last_synchronised_manager = LastSynchonised.objects
+	
+	if last_synchronised_manager.all().count() != 1:	
+		for record in last_synchronised_manager.all():
+			record.delete()
+		
+		now = datetime.now()
+		five_hundred_years = timedelta(days=500*365)
+		five_hundred_years_ago = now - five_hundred_years
+		
+		date = last_synchronised_manager.create(last_synchronised=five_hundred_years_ago)
+		
+	else:
+		date = last_synchronised_manager.all()[0]
+	
+	return date
+		
 
 def main(argv):
 
