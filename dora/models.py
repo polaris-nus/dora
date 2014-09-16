@@ -1,5 +1,4 @@
 from django.contrib.gis.db import models
-from datetime import datetime
 
 class Disease(models.Model):
 	""" A disease """
@@ -19,6 +18,9 @@ class Disease(models.Model):
 class Encounter(models.Model):
 	""" A completed procedure, where data has been collected """
 	
+	uuid = models.CharField(max_length=128, primary_key=True)
+	"""Universally unique identifier"""
+	
 	patient = models.ForeignKey('Patient')
 	
 	disease = models.ForeignKey('Disease')
@@ -35,6 +37,9 @@ class Encounter(models.Model):
 	
 class Patient(models.Model):
 	""" A medical patient """
+	
+	uuid = models.CharField(max_length=128, primary_key=True)
+	"""Universally unique identifier"""
 	
 	given_name = models.CharField(max_length=128)
 	
@@ -55,17 +60,4 @@ class LastSynchronised(models.Model):
     
     def __unicode__(self):
         return self.last_synchronised.isoformat(' ')
-    
-class PatientLookupTable(models.Model):
-	
-    uuid = models.CharField(max_length=128, primary_key=True)
-    
-    patient = models.ForeignKey('Patient')
-
-class EncounterLookupTable(models.Model):
-	
-    uuid = models.CharField(max_length=128, primary_key=True)
-    
-    encounter = models.ForeignKey('Encounter')
-    
     
