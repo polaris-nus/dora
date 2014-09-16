@@ -71,6 +71,7 @@ def populate_database(diagnosis_list, gps_list):
 				dora_encounter = Encounter.objects.get(uuid=encounter['uuid'])
 				gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
 				dora_encounter.lon, dora_encounter.lat = gps_tuple[0], gps_tuple[1]
+				dora_encounter.save()
 			
 			except ObjectDoesNotExist:
 				pass
