@@ -29,7 +29,7 @@ def populate_database(diagnosis_list, gps_list):
 		subject = encounter['subject']
 		modified = datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT)
 		
-		if modified > synchronisation_date:
+		if modified > synchronised_date:
 			
 			try:
 				patient = Patient.objects.get(uuid=subject['uuid'])
@@ -65,7 +65,7 @@ def populate_database(diagnosis_list, gps_list):
 		encounter = gps['encounter']
 		modified = datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT)
 		
-		if modified > synchronisation_date:
+		if modified > synchronised_date:
 			
 			try:
 				dora_encounter = Encounter.objects.get(uuid=encounter['uuid'])
@@ -78,7 +78,7 @@ def populate_database(diagnosis_list, gps_list):
 	synchronised_date_record.last_synchronised = datetime.now()
 	
 def get_last_synchronised_date_record():
-	last_synchronised_manager = LastSynchonised.objects
+	last_synchronised_manager = LastSynchronised.objects
 	
 	if last_synchronised_manager.all().count() != 1:	
 		for record in last_synchronised_manager.all():
