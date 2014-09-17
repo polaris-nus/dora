@@ -2,6 +2,7 @@ import sys, urllib2, json, re
 from dora.models import *
 from datetime import datetime, timedelta
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 
 MDS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
@@ -19,7 +20,7 @@ def get_diagnosis_and_gps_lists(list):
 
 	return diagnosis_list, gps_list
 
-
+@transaction.atomic
 def populate_database(diagnosis_list, gps_list):
 	
 	synchronised_date_record = get_last_synchronised_date_record()
