@@ -3,6 +3,7 @@ from dora.models import *
 from datetime import datetime, timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from django.contrib.gis.geos import Point
 
 MDS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
@@ -61,18 +62,24 @@ def populate_database(diagnosis_list, gps_list):
 													created=datetime.strptime(encounter['created'], MDS_DATETIME_FORMAT),
 													modified=datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT))
 			
-	#only update lon and lat of encounters that already exist
+	#update gps coordinates of the patient, if the patient exists
 	for gps in gps_list:
 		encounter = gps['encounter']
+		subject = encounter['subject']
 		modified = datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT)
+		created = datetime.strptime(encounter['created'], MDS_DATETIME_FORMAT)
 		
 		if modified > synchronised_date:
 			
 			try:
-				dora_encounter = Encounter.objects.get(uuid=encounter['uuid'])
-				gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
-				dora_encounter.lon, dora_encounter.lat = gps_tuple[0], gps_tuple[1]
-				dora_encounter.save()
+				dora_patient = Patient.objects.get(uuid=subject['uuid'])
+				date_last_updated_gps = dora_patient.date_last_updated_gps
+				
+				if not date_last_updated_gps or date_last_updated_gps < created:
+					dora_patient.date_last_updated_gps = created
+					gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
+					dora_patient.coordinates = Point(gps_tuple[0], gps_tuple[1])
+					dora_patient.save()
 			
 			except ObjectDoesNotExist:
 				pass
@@ -117,6 +124,10 @@ def main(argv):
 		#end of debugging/checking block
 
 		populate_database(diagnosis_list,gps_list)
+		
+	else:
+		print "Error code: &d" % response.getcode()
+		
 	return 0
 
 if __name__ == "__main__":
