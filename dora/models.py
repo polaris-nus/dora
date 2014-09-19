@@ -29,10 +29,6 @@ class Encounter(models.Model):
 	
 	modified = models.DateTimeField()
 	
-	lon = models.FloatField(null=True)
-	
-	lat = models.FloatField(null=True)
-	
 	objects = models.GeoManager()
 	
 class Patient(models.Model):
@@ -48,6 +44,10 @@ class Patient(models.Model):
 	dob = models.DateTimeField()
 	
 	gender = models.CharField(choices=(("M","M"),("F","F")), max_length=2)
+	
+	coordinates = models.PointField(null=True)
+	
+	date_last_updated_gps = models.DateTimeField(null=True)
 	
 	#image = models.ImageField(blank=True)
 
