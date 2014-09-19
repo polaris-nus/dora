@@ -2,7 +2,7 @@ from dora.logic import *
 from django.shortcuts import render
 
 def index(request):	
-    return render(request, 'mappage.html', {})
+    return render(request, 'lala.html', {})
 
 
 def query(request):

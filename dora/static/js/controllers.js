@@ -30,7 +30,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 			query.filters = $scope.queryFilters;
 
 			var domain = 'http://127.0.0.1';
-			var port = ':'+'8080/';
+			var port = ':'+'8000/';
 			var path = 'query/?disease=EBOLA&gender=M';
 
 
