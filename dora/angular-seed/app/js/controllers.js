@@ -1,7 +1,7 @@
 var doraControllers = angular.module('doraControllers', []);
 
-doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ',
-	function($scope, QRSHistoryServ) {
+doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '$http',
+	function($scope, QRSHistoryServ, $http) {
 
 		$scope.queryString = '';
 		$scope.queryFilters = [];
@@ -9,6 +9,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ',
 		$scope.filterFormVisibility = false;
 		$scope.filterFormType = '';
 		$scope.filterFormValue = '';
+
+		$scope.response = 'testing data';
 
 		$scope.addFilter = function(){
 			var filter = {};
@@ -26,6 +28,15 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ',
 			var query = {};
 			query.string = $scope.queryString;
 			query.filters = $scope.queryFilters;
+
+			var domain = 'http://127.0.0.1';
+			var port = ':'+'8080/';
+			var path = 'query/?disease=EBOLA&gender=M';
+
+
+			$http.get(domain + port + path).success(function(data) {
+				$scope.response = data;
+			})
 
 			QRSHistoryServ.addQRS(query);
 

@@ -8,13 +8,46 @@ class ViewsTestCase(TestCase):
 
 	#test the query method in views
 	def test_query(self):
-		query_result = query("test")
-		self.assertEqual(query_result,"query_result_set")
+		#query_result = query("test")
+		#self.assertEqual(query_result,"query_result_set")
+		pass
 		
 class MdsAdapterTestCase(TestCase):
 	def setup(self):
-		pass
-	
+		#Create a fake json list to pass in
+		with open ("mds_adapter_test_case_data.txt", "r") as myfile:
+			json_list = myfile.read().replace('\n', '')
+
+		#generate hardcoded answer
+		answer_diagnosis = []
+		answer_diagnosis.append({})
+		answer_diagnosis[0]['concept']['name'] = 'DIAGNOSIS'
+		answer_diagnosis[0]['encounter']['subject']['given_name'] = 'first'
+		answer_diagnosis.append({})
+		answer_diagnosis[1]['concept']['name'] = 'DIAGNOSIS'
+		answer_diagnosis[1]['encounter']['subject']['given_name'] = 'second'
+		answer_diagnosis.append({})
+		answer_diagnosis[2]['concept']['name'] = 'DIAGNOSIS'
+		answer_diagnosis[2]['encounter']['subject']['given_name'] = 'third'
+
+		answer_location_gps = []
+		answer_location_gps.append({})
+		answer_location_gps[0]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[0]['encounter']['subject']['given_name'] = 'first'
+		answer_location_gps.append({})
+		answer_location_gps[1]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[1]['encounter']['subject']['given_name'] = 'second'
+		answer_location_gps.append({})
+		answer_location_gps[2]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[2]['encounter']['subject']['given_name'] = 'third'
+
+		#pass into get_diagnosis_and_gps_list
+		response_diagnosis_list,response_gps_list = mds_adapter.get_diagnosis_and_gps_list(json_list)
+
+		#check whether same
+		self.assertTrue(response_diagnosis_list == answer_diagnosis)
+		self.assertTrue(response_gps_list == answer_location_gps)
+
 	def test_get_last_synchronised_date_record(self):
 		"""Ensure that there is one or no entries in the LastSynchronised model"""
 		prev_number_entries = LastSynchronised.objects.all().count()

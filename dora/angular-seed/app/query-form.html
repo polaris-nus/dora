@@ -6,26 +6,28 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
   <link rel="stylesheet" rel="text/css" href="css/stylesheet.css">
-
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script> 
+  
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/services.js"></script>
 
   <!-- TEMPORARY DEPENDENCIES -->
+  <link rel='stylesheet' href='http://ol3js.org/en/master/css/ol.css'>
   <script src='http://ol3js.org/en/master/build/ol.js'></script>
 </head>
 
 <body>
-  <div id="map">
-      <div class="mapHolder">
+  <div id="map"></div>
+  <div class="controls-container">
     <div class="container">
       <br/>
 
       <div>
         <div class="row" ng-controller="QueryFormController"> 
+          <div>{{response}}</div>
           <div class="row">
             <div class="col-xs-4">
               <div class="input-group">
@@ -93,8 +95,6 @@
         </div>
       </div>
     </div>
-  </div>
-
   </div>
 
 <!-- Latest compiled and minified JavaScript -->
