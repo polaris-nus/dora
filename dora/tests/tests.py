@@ -1,4 +1,4 @@
-import urllib2
+import urllib2, json
 from django.test import TestCase
 from dora.models import *
 import dora.mds_adapter as mds_adapter
@@ -18,28 +18,46 @@ class MdsAdapterTestCase(TestCase):
 		#generate hardcoded answer
 		answer_diagnosis = []
 		answer_diagnosis.append({})
+		answer_diagnosis[0]['concept'] = {}
 		answer_diagnosis[0]['concept']['name'] = 'DIAGNOSIS'
+		answer_diagnosis[0]['encounter'] = {}
+		answer_diagnosis[0]['encounter']['subject'] = {}
 		answer_diagnosis[0]['encounter']['subject']['given_name'] = 'first'
 		answer_diagnosis.append({})
+		answer_diagnosis[1]['concept'] = {}
 		answer_diagnosis[1]['concept']['name'] = 'DIAGNOSIS'
+		answer_diagnosis[1]['encounter'] = {}
+		answer_diagnosis[1]['encounter']['subject'] = {}
 		answer_diagnosis[1]['encounter']['subject']['given_name'] = 'second'
 		answer_diagnosis.append({})
+		answer_diagnosis[2]['concept'] = {}
 		answer_diagnosis[2]['concept']['name'] = 'DIAGNOSIS'
+		answer_diagnosis[2]['encounter'] = {}
+		answer_diagnosis[2]['encounter']['subject'] = {}
 		answer_diagnosis[2]['encounter']['subject']['given_name'] = 'third'
 
 		answer_location_gps = []
 		answer_location_gps.append({})
+		answer_location_gps[0]['concept'] = {}
 		answer_location_gps[0]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[0]['encounter'] = {}
+		answer_location_gps[0]['encounter']['subject'] = {}
 		answer_location_gps[0]['encounter']['subject']['given_name'] = 'first'
 		answer_location_gps.append({})
+		answer_location_gps[1]['concept'] = {}
 		answer_location_gps[1]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[1]['encounter'] = {}
+		answer_location_gps[1]['encounter']['subject'] = {}
 		answer_location_gps[1]['encounter']['subject']['given_name'] = 'second'
 		answer_location_gps.append({})
+		answer_location_gps[2]['concept'] = {}
 		answer_location_gps[2]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[2]['encounter'] = {}
+		answer_location_gps[2]['encounter']['subject'] = {}
 		answer_location_gps[2]['encounter']['subject']['given_name'] = 'third'
 
-		#pass into get_diagnosis_and_gps_list
-		response_diagnosis_list,response_gps_list = mds_adapter.get_diagnosis_and_gps_list(json_list)
+		#pass into get_diagnosis_and_gps_lists
+		response_diagnosis_list,response_gps_list = mds_adapter.get_diagnosis_and_gps_lists(json_list)
 
 		#check whether same
 		self.assertTrue(response_diagnosis_list == answer_diagnosis)
