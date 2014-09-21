@@ -1,4 +1,4 @@
-from dora.logic import *
+from dora.utils import *
 from django.shortcuts import render
 
 def index(request):	
