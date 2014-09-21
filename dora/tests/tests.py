@@ -1,17 +1,10 @@
+import urllib2
 from django.test import TestCase
-from dora.views import query
 from dora.models import *
 import dora.mds_adapter as mds_adapter
 from datetime import *
 
-class ViewsTestCase(TestCase):
 
-	#test the query method in views
-	def test_query(self):
-		#query_result = query("test")
-		#self.assertEqual(query_result,"query_result_set")
-		pass
-		
 class MdsAdapterTestCase(TestCase):
 	def setup(self):
 		#Create a fake json list to pass in
