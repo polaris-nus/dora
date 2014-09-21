@@ -4,6 +4,7 @@ from dora.models import *
 from django.template import Context, loader
 
 #Returns the query result set from a given request
+#Pre: must have disease request
 def get_query_result_set(request):
 	disease_name = request.GET.get('disease')
 	if (not disease_name):
