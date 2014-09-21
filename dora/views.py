@@ -2,7 +2,7 @@ from dora.utils import *
 from django.shortcuts import render
 
 def index(request):	
-    return render(request, 'lala.html', {})
+    return render(request, 'main.html', {})
 
 
 def query(request):
