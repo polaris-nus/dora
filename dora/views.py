@@ -11,7 +11,7 @@ def query(request):
 
 	#Create a list of json objects
 	json_obj_list = []
-	if (query_result_set)
+	if (query_result_set):
 		json_obj_list = create_json_obj_list(query_result_set)
 
 	#transform json objects into one json array of objects
