@@ -79,6 +79,6 @@
 	                "given_name": "fourth"
 	            }
 	        }
-	    },
+	    }
 	]
 }

@@ -39,19 +39,19 @@ class MdsAdapterTestCase(TestCase):
 		answer_location_gps = []
 		answer_location_gps.append({})
 		answer_location_gps[0]['concept'] = {}
-		answer_location_gps[0]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[0]['concept']['name'] = 'LOCATION GPS'
 		answer_location_gps[0]['encounter'] = {}
 		answer_location_gps[0]['encounter']['subject'] = {}
 		answer_location_gps[0]['encounter']['subject']['given_name'] = 'first'
 		answer_location_gps.append({})
 		answer_location_gps[1]['concept'] = {}
-		answer_location_gps[1]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[1]['concept']['name'] = 'LOCATION GPS'
 		answer_location_gps[1]['encounter'] = {}
 		answer_location_gps[1]['encounter']['subject'] = {}
 		answer_location_gps[1]['encounter']['subject']['given_name'] = 'second'
 		answer_location_gps.append({})
 		answer_location_gps[2]['concept'] = {}
-		answer_location_gps[2]['concept']['name'] = 'DIAGNOSIS'
+		answer_location_gps[2]['concept']['name'] = 'LOCATION GPS'
 		answer_location_gps[2]['encounter'] = {}
 		answer_location_gps[2]['encounter']['subject'] = {}
 		answer_location_gps[2]['encounter']['subject']['given_name'] = 'third'
