@@ -29,16 +29,16 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 			query.string = $scope.queryString;
 			query.filters = $scope.queryFilters;
 
-			var domain = 'http://127.0.0.1';
-			var port = ':'+'8000/';
-			var path = 'query/?disease=EBOLA&gender=M';
+			// var domain = 'http://127.0.0.1';
+			// var port = ':'+'8000/';
+			// var path = 'query/?disease=EBOLA&gender=M';
 
-
-			$http.get(domain + port + path).success(function(data) {
-				$scope.response = data;
-			})
+			// $http.get(domain + port + path).success(function(data) {
+			// 	$scope.response = data;
+			// })
 
 			QRSHistoryServ.addQRS(query);
+			generatePoints();
 
 			$scope.queryString = '';
 			$scope.queryFilters = [];
