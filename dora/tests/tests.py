@@ -6,9 +6,13 @@ from datetime import *
 
 
 class MdsAdapterTestCase(TestCase):
-	def setup(self):
+	def setUp(self):
+		#set last synchronised date to 1st January 2000
+		LastSynchronised.objects.create(last_synchronised=datetime(2000,1,1,0,0,0,0))
+	
+	def test_get_diagnosis_and_gps_lists(self):
 		#Create a fake json list to pass in
-		with open ("mds_adapter_test_case_data.txt", "r") as myfile:
+		with open (r"dora\tests\helpers\mds_adapter_test_case_data.txt", "r") as myfile:
 			json_list = myfile.read().replace('\n', '')
 
 		#generate hardcoded answer
@@ -42,21 +46,29 @@ class MdsAdapterTestCase(TestCase):
 		self.assertTrue(response_gps_list == answer_location_gps)
 
 	def test_get_last_synchronised_date_record(self):
-		"""Ensure that there is one or no entries in the LastSynchronised model"""
-		prev_number_entries = LastSynchronised.objects.all().count()
-		self.assertTrue(prev_number_entries == 0 or prev_number_entries == 1)
+		#ensure entry created on setup is correct
+		self.assertTrue(LastSynchronised.objects.all()[0].last_synchronised == datetime(2000,1,1,0,0,0,0))
 		
+		#delete entry created on setup
+		LastSynchronised.objects.all()[0].delete()
+		
+		#ensure that an entry is created on calling get_last_synchronised_date_record()
 		last_synchronised_date = mds_adapter.get_last_synchronised_date_record()
-		new_number_entries = LastSynchronised.objects.all().count()
-		self.assertTrue(new_number_entries == 1)
-			
-		if prev_number_entries == 0:
-			#ensure that last synchronised date is set to earlier than 100 years ago
-			one_hundred_years = timedelta(days=100*365)
-			now = datetime.now()
-			self.assertTrue(now - last_synchronised_date.last_synchronised > one_hundred_years)
-			
+		number_entries = LastSynchronised.objects.all().count()
+		self.assertTrue(number_entries == 1)
 		
+		#ensure that last synchronised date is set to earlier than 100 years ago
+		one_hundred_years = timedelta(days=100*365)
+		now = datetime.now()
+		self.assertTrue(now - last_synchronised_date.last_synchronised > one_hundred_years)
+		
+		#ensure that the date returned is the same as before when an entry already exists
+		last_synchronised_date.last_synchronised = datetime(1999,3,18,0,0,0,0)
+		last_synchronised_date.save()
+		
+		last_synchronised = mds_adapter.get_last_synchronised_date_record()
+		self.assertTrue(last_synchronised.last_synchronised == datetime(1999,3,18,0,0,0,0))
+
 	def test_populate_database(self):
 		pass
 	
