@@ -5,19 +5,19 @@
   <title>Dora - Iteration 1</title>
   <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel='stylesheet' href='/static/ol3/ol.css'>
+
   <link rel="stylesheet" rel="text/css" href="/static/css/stylesheet.css">
   
   <script src="/static/angular/angular.js"></script>
   <script src="/static/jquery/dist/jquery.js"></script>
   <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src='/static/ol3/ol.js'></script>
   
   <script src="/static/js/app.js"></script>
   <script src="/static/js/controllers.js"></script>
   <script src="/static/js/services.js"></script>
 
-  <!-- TEMPORARY DEPENDENCIES -->
-  <link rel='stylesheet' href='http://ol3js.org/en/master/css/ol.css'>
-  <script src='http://ol3js.org/en/master/build/ol.js'></script>
 </head>
 {% verbatim %}
 <body>
@@ -97,8 +97,9 @@
       </div>
     </div>
   </div>
+  
 {% endverbatim %}
-<!-- Latest compiled and minified JavaScript -->
+  <!-- scripts loaded after html-->
   <script src="/static/js/map.js"></script>
 </body>
 
