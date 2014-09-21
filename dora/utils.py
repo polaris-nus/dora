@@ -7,6 +7,9 @@ from django.template import Context, loader
 #Returns the query result set from a given request
 def get_query_result_set(request):
 	disease_name = request.GET.get('disease')
+	if (not disease_name):
+		return None
+		
 	patient_gender_filter = request.GET.get('gender')
 	location_filter = request.GET.get('location')
 	age_range_filter = request.GET.get('age_range')
