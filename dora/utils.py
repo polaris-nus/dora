@@ -45,8 +45,8 @@ def create_json_obj_list(query_result_set):
 			"patient_gender":query_result.patient.gender, 
 			"created_date":query_result.created, 
 			"modified_date":query_result.modified, 
-			"longitude":query_result.patient.coordinates.x, 
-			"latitude":query_result.patient.coordinates.y, 
+			"longitude":query_result.lon, 
+			"latitude":query_result.lat, 
 			"altitude":"alt!"
 		}))
 		json_obj_list.append(json_obj)
