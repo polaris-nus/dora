@@ -1,5 +1,4 @@
 import json
-from django.http import HttpResponse
 from django.shortcuts import render
 from dora.models import *
 from django.template import Context, loader
@@ -34,22 +33,23 @@ def get_query_result_set(request):
 #Creates a list of json objects from the given query_result_set
 def create_json_obj_list(query_result_set):
 	json_obj_list = []
-	for query_result in query_result_set:
-		json_template = loader.get_template('query_json_template')
-		json_obj = json_template.render(Context({
-			"disease_name":query_result.disease.name, 
-			"patient_uuid":query_result.patient.uuid, 
-			"patient_family_name":query_result.patient.family_name, 
-			"patient_given_name":query_result.patient.given_name, 
-			"patient_dob":query_result.patient.dob,
-			"patient_gender":query_result.patient.gender, 
-			"created_date":query_result.created, 
-			"modified_date":query_result.modified, 
-			"longitude":query_result.patient.coordinates.x, 
-			"latitude":query_result.patient.coordinates.y, 
-			"altitude":"alt!"
-		}))
-		json_obj_list.append(json_obj)
+	if (query_result_set):
+		for query_result in query_result_set:
+			json_template = loader.get_template('query_json_template')
+			json_obj = json_template.render(Context({
+				"disease_name":query_result.disease.name, 
+				"patient_uuid":query_result.patient.uuid, 
+				"patient_family_name":query_result.patient.family_name, 
+				"patient_given_name":query_result.patient.given_name, 
+				"patient_dob":query_result.patient.dob,
+				"patient_gender":query_result.patient.gender, 
+				"created_date":query_result.created, 
+				"modified_date":query_result.modified, 
+				"longitude":query_result.patient.coordinates.x, 
+				"latitude":query_result.patient.coordinates.y, 
+				"altitude":"alt!"
+			}))
+			json_obj_list.append(json_obj)
 	return json_obj_list;
 
 
@@ -64,4 +64,4 @@ def generate_json_obj_to_return(json_obj_list):
 
 	json_complete += "\n]"
 
-	return HttpResponse(json_complete, content_type="application/json")
+	return json_complete
