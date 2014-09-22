@@ -45,7 +45,7 @@ class Patient(models.Model):
 	
 	gender = models.CharField(choices=(("M","M"),("F","F")), max_length=2)
 	
-	coordinates = models.PointField(null=True)
+	coordinates = models.PointField(null=True, srid=4326)
 	
 	date_last_updated_gps = models.DateTimeField(null=True)
 	
