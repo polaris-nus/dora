@@ -9,26 +9,30 @@ var map = new ol.Map({
   view: new ol.View({
     projection: 'EPSG:900913',
     center:[0,0],
-    zoom:2
+    zoom:5
   })
 });
 
-function generatePoints(){
-  var count = 10;
-  var features = new Array(count);
-  var e = 4500000;
-  for (var i = 0; i < count; ++i) {
-    var coordinates = [2 * e * Math.random() - e, 2 * e * Math.random() - e];
-    features[i] = new ol.Feature(new ol.geom.Point(coordinates));
+function generatePoints(coordinates){
+  var wktParser = new ol.format.WKT();
+
+  var features = [];
+  for (index in coordinates){
+    var feature = wktParser.readFeature(coordinates[index], {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:900913'});
+    console.log(feature.getGeometry().getType());
+    console.log(feature.getGeometry().getExtent());
+    console.log(feature.getGeometry().getFirstCoordinate());
+    console.log(feature.getGeometry().getLastCoordinate());
+    features.push(feature);
   }
 
-  var source = new ol.source.Vector({
+  var featureSource = new ol.source.Vector({
     features: features
   });
 
   var clusterSource = new ol.source.Cluster({
-    distance: 40,
-    source: source
+    distance: 50,
+    source: featureSource
   });
 
   var styleCache = {};

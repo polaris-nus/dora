@@ -10,8 +10,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 		$scope.filterFormType = '';
 		$scope.filterFormValue = '';
 
-		$scope.response = 'testing data';
-
 		$scope.addFilter = function(){
 			var filter = {};
 			filter.type = $scope.filterFormType;
@@ -24,12 +22,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 		};
 
 		$scope.submitQuery = function(){
-			//GET request here!
 			var query = {};
 			query.string = $scope.queryString;
 			query.filters = $scope.queryFilters;
 
-			// Simple check before pulling data from backend
+			// Basic check before pulling data from backend
 			if (query.string && query.string != '') {
 				var domain = 'http://127.0.0.1';
 				var port = ':'+'8000/';
@@ -45,14 +42,18 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 
 				$http.get(domain + port + path).success(function(data) {
 					$scope.response = data;
+
+					var coordinates = [];
+					for(index in $scope.response) {
+						var encounter = $scope.response[index];
+						coordinates.push(encounter.location.coords);
+					}
+					console.log(coordinates);
+					generatePoints(coordinates);
 				})
 
 				QRSHistoryServ.addQRS(query);
-				generatePoints();
-
 			}
-
-			
 
 			$scope.queryString = '';
 			$scope.queryFilters = [];
