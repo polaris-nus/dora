@@ -1,4 +1,4 @@
-import json
+import json, operator
 from django.shortcuts import render
 from dora.models import *
 from django.template import Context, loader
@@ -29,7 +29,7 @@ def get_query_result_set(request):
 			pass
 
 	#Make the query
-	return Encounter.objects.filter(**filter_args)
+	return sorted(Encounter.objects.filter(**filter_args).order_by('patient__uuid'))
 
 #Creates a list of json objects from the given query_result_set
 def create_json_obj_list(query_result_set):
