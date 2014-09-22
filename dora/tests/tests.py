@@ -3,7 +3,7 @@ from django.test import TestCase
 from dora.models import *
 import dora.mds_adapter as mds_adapter
 from datetime import *
-
+from django.contrib.gis.geos import Point
 
 class MdsAdapterTestCase(TestCase):
 	def setUp(self):
@@ -88,5 +88,82 @@ class MdsAdapterTestCase(TestCase):
 		self.assertTrue(last_synchronised.last_synchronised == datetime(1999,3,18,0,0,0,0))
 
 	def test_populate_database(self):
-		pass
+		
+		#test 1: ensure that the encounter modified before the last synchronised date not show up
+		
+		with open(r'dora\tests\helpers\mds_populate_database_test_case_gps_list1.txt', 'r') as gps_json_list_file:
+			gps_list = json.loads(gps_json_list_file.read())
+			
+		with open(r'dora\tests\helpers\mds_populate_database_test_case_diagnosis_list1.txt', 'r') as diagnosis_json_list_file:
+			diagnosis_list = json.loads(diagnosis_json_list_file.read())
 	
+		mds_adapter.populate_database(diagnosis_list, gps_list)
+		
+		
+		#esure patient is correct
+		self.assertTrue(Patient.objects.all().count() == 1)
+		patient = Patient.objects.all()[0]
+		self.assertTrue(patient.family_name == 'test1' and
+					patient.given_name == 'test1' and
+					patient.uuid == 'subject1' and
+					patient.dob == datetime(year=1986,month=1,day=13,hour=7,minute=13,second=38,microsecond=841000) and
+					patient.gender == 'F')
+		
+		#ensure disease is correct
+		self.assertTrue(Disease.objects.all().count() == 1)
+		disease = Disease.objects.all()[0]
+		self.assertTrue(disease.name == 'HIV')
+		
+		#ensure encounter is correct
+		self.assertTrue(Encounter.objects.all().count() == 1)
+		encounter = Encounter.objects.all()[0]
+		self.assertTrue(encounter.uuid == 'encounter2' and
+					encounter.created == datetime(2008,8,16,2,38,38,854000) and
+					encounter.modified == datetime(2008,8,16,2,38,38,854000) and
+					encounter.patient == patient and
+					encounter.disease == disease)
+		
+		#test 2: ensure that the gps coordinates of a patient is updated from the latest encounter, and previous data is correct
+		with open(r'dora\tests\helpers\mds_populate_database_test_case_gps_list2.txt', 'r') as gps_json_list_file:
+			gps_list = json.loads(gps_json_list_file.read())
+			
+		with open(r'dora\tests\helpers\mds_populate_database_test_case_diagnosis_list2.txt', 'r') as diagnosis_json_list_file:
+			diagnosis_list = json.loads(diagnosis_json_list_file.read())
+	
+		mds_adapter.populate_database(diagnosis_list, gps_list)
+		
+		self.assertTrue(Patient.objects.all().count() == 2)
+		patient = Patient.objects.all()[0]
+		self.assertTrue(patient.family_name == 'test1' and
+					patient.given_name == 'test1' and
+					patient.uuid == 'subject1' and
+					patient.dob == datetime(year=1986,month=1,day=13,hour=7,minute=13,second=38,microsecond=841000) and
+					patient.gender == 'F')
+		
+		
+		self.assertTrue(Disease.objects.all().count() == 4)
+		disease = Disease.objects.get(name='HIV')
+		self.assertTrue(disease.name == 'HIV')
+		
+		self.assertTrue(Encounter.objects.all().count() == 4)
+		encounter = Encounter.objects.all()[0]
+		self.assertTrue(encounter.uuid == 'encounter2' and
+					encounter.created == datetime(2008,8,16,2,38,38,854000) and
+					encounter.modified == datetime(2008,8,16,2,38,38,854000) and
+					encounter.patient == patient and
+					encounter.disease == Disease.objects.get(name__iexact='hiv'))
+		
+		patient2 = Patient.objects.all()[1]
+		self.assertTrue(patient2.family_name == 'test2' and
+					patient2.given_name == 'test2' and
+					patient2.uuid == 'subject2' and
+					patient2.dob == datetime(1991,1,13,7,13,38,841000) and
+					patient2.gender == 'M')
+		
+		diseases = Disease.objects.all()
+		self.assertTrue(diseases[0].name == 'ATHLETES FOOT')
+		self.assertTrue(diseases[1].name == 'HIV')
+		self.assertTrue(diseases[2].name == 'MAD-COW DISEASE')
+		self.assertTrue(diseases[3].name == 'SALMONELLA')
+		
+		self.assertTrue(patient2.coordinates == Point(3,3))
