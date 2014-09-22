@@ -29,7 +29,7 @@ def get_query_result_set(request):
 			pass
 
 	#Make the query
-	return sorted(Encounter.objects.filter(**filter_args).order_by('patient__uuid'))
+	return Encounter.objects.filter(**filter_args).order_by('patient__uuid')
 
 #Creates a list of json objects from the given query_result_set
 def create_json_obj_list(query_result_set):
