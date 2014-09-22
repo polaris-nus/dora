@@ -24,8 +24,16 @@ def get_diagnosis_and_gps_lists(list):
 @transaction.atomic
 def populate_database(diagnosis_list, gps_list):
 	
+	
 	synchronised_date_record = get_last_synchronised_date_record()
 	synchronised_date = synchronised_date_record.last_synchronised
+			
+	populate_database_from_diagnosis_list(diagnosis_list, synchronised_date)
+	populate_database_from_gps_list(gps_list, synchronised_date)
+			
+	synchronised_date_record.last_synchronised = datetime.now()
+	
+def populate_database_from_diagnosis_list(diagnosis_list, synchronised_date):
 	for diagnosis in diagnosis_list:
 		encounter = diagnosis['encounter']
 		subject = encounter['subject']
@@ -62,6 +70,7 @@ def populate_database(diagnosis_list, gps_list):
 													created=datetime.strptime(encounter['created'], MDS_DATETIME_FORMAT),
 													modified=datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT))
 			
+def populate_database_from_gps_list(gps_list, synchronised_date):
 	for gps in gps_list:
 		encounter = gps['encounter']
 		subject = encounter['subject']
@@ -88,11 +97,7 @@ def populate_database(diagnosis_list, gps_list):
 				gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
 				dora_patient.coordinates = Point(gps_tuple[0], gps_tuple[1])
 				dora_patient.save()
-			
 
-			
-	synchronised_date_record.last_synchronised = datetime.now()
-	
 def get_last_synchronised_date_record():
 	last_synchronised_manager = LastSynchronised.objects
 	
