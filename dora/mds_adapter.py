@@ -62,7 +62,6 @@ def populate_database(diagnosis_list, gps_list):
 													created=datetime.strptime(encounter['created'], MDS_DATETIME_FORMAT),
 													modified=datetime.strptime(encounter['modified'], MDS_DATETIME_FORMAT))
 			
-	#update gps coordinates of the patient, if the patient exists
 	for gps in gps_list:
 		encounter = gps['encounter']
 		subject = encounter['subject']
@@ -73,16 +72,24 @@ def populate_database(diagnosis_list, gps_list):
 			
 			try:
 				dora_patient = Patient.objects.get(uuid=subject['uuid'])
-				date_last_updated_gps = dora_patient.date_last_updated_gps
+
 				
-				if not date_last_updated_gps or date_last_updated_gps < created:
-					dora_patient.date_last_updated_gps = created
-					gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
-					dora_patient.coordinates = Point(gps_tuple[0], gps_tuple[1])
-					dora_patient.save()
-			
 			except ObjectDoesNotExist:
-				pass
+				dora_patient = Patient.objects.create(uuid=subject['uuid'],
+												given_name=subject['given_name'],
+												family_name=subject['family_name'],
+												dob=subject['dob'],
+												gender=subject['gender'])
+				
+			date_last_updated_gps = dora_patient.date_last_updated_gps
+				
+			if not date_last_updated_gps or date_last_updated_gps < created:
+				dora_patient.date_last_updated_gps = created
+				gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', gps['value_text']))
+				dora_patient.coordinates = Point(gps_tuple[0], gps_tuple[1])
+				dora_patient.save()
+			
+
 			
 	synchronised_date_record.last_synchronised = datetime.now()
 	
