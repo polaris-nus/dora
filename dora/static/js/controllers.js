@@ -29,16 +29,30 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 			query.string = $scope.queryString;
 			query.filters = $scope.queryFilters;
 
-			// var domain = 'http://127.0.0.1';
-			// var port = ':'+'8000/';
-			// var path = 'query/?disease=EBOLA&gender=M';
+			// Simple check before pulling data from backend
+			if (query.string && query.string != '') {
+				var domain = 'http://127.0.0.1';
+				var port = ':'+'8000/';
+				var path = 'query/?disease='+ query.string ;
 
-			// $http.get(domain + port + path).success(function(data) {
-			// 	$scope.response = data;
-			// })
+				for (index in query.filters) {
+					var filter = query.filters[index];
+					// Can only query gender for now, in future just append filter.type to path.
+					if(filter.type == 'gender') {
+						path += '&gender=' + filter.value;
+					}
+				}
 
-			QRSHistoryServ.addQRS(query);
-			generatePoints();
+				$http.get(domain + port + path).success(function(data) {
+					$scope.response = data;
+				})
+
+				QRSHistoryServ.addQRS(query);
+				generatePoints();
+
+			}
+
+			
 
 			$scope.queryString = '';
 			$scope.queryFilters = [];

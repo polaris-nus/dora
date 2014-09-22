@@ -14,7 +14,7 @@ var map = new ol.Map({
 });
 
 function generatePoints(){
-  var count = 1000;
+  var count = 10;
   var features = new Array(count);
   var e = 4500000;
   for (var i = 0; i < count; ++i) {
@@ -62,6 +62,5 @@ function generatePoints(){
   });
 
   map.addLayer(clusters);
-  console.log("WOOHOO");
 }
 
