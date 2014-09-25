@@ -7,8 +7,11 @@ def index(request):
 
 
 def query(request):
+	#Parse the request
+	filter_args = parse_request(request)
+
 	#Make the query
-	query_result_set = get_query_result_set(request)
+	query_result_set = get_query_result_set(filter_args)
 
 	#Create a list of json objects
 	json_obj_list = create_json_obj_list(query_result_set)

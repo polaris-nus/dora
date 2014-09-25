@@ -5,7 +5,7 @@ from django.template import Context, loader
 
 #Returns the query result set from a given request
 #Pre: must have disease request
-def get_query_result_set(request):
+def parse_request(request):
 	disease_name = request.GET.get('disease')
 	if (not disease_name):
 		return None
@@ -29,39 +29,64 @@ def get_query_result_set(request):
 			pass
 
 	#Make the query
+	return filter_args
+
+def get_query_result_set(filter_args):
 	return Encounter.objects.filter(**filter_args).order_by('patient__uuid')
 
 #Creates a list of json objects from the given query_result_set
 def create_json_obj_list(query_result_set):
 	json_obj_list = []
+	json_obj_list.append([])
+	json_obj_list.append([])
 	if (query_result_set):
+		json_template = loader.get_template('query_json_template')
 		for query_result in query_result_set:
-			json_template = loader.get_template('query_json_template')
-			json_obj = json_template.render(Context({
-				"disease_name":query_result.disease.name, 
-				"patient_uuid":query_result.patient.uuid, 
-				"patient_family_name":query_result.patient.family_name, 
-				"patient_given_name":query_result.patient.given_name, 
-				"patient_dob":query_result.patient.dob,
-				"patient_gender":query_result.patient.gender, 
-				"created_date":query_result.created, 
-				"modified_date":query_result.modified, 
-				"coordinates":query_result.patient.coordinates.wkt,
-				"altitude":"alt!"
-			}))
-			json_obj_list.append(json_obj)
+			context_args = {}
+			context_args['disease_name'] = query_result.disease.name
+			context_args['patient_uuid'] = query_result.patient.uuid
+			context_args['patient_family_name'] = query_result.patient.family_name
+			context_args['patient_given_name'] = query_result.patient.given_name
+			context_args['patient_dob'] = query_result.patient.dob
+			context_args['patient_gender'] = query_result.patient.gender
+			context_args['created_date'] = query_result.created
+			context_args['modified_date'] = query_result.modified
+			context_args['coordinates'] = "None"
+			context_args['altitude'] = "alt!"
+
+			if (not query_result.patient.coordinates):
+				context_args['coordinates'] = query_result.patient.coordinates.wkt
+				json_obj = json_template.render(Context(context_args))
+				json_obj_list[0].append(json_obj)
+			else:
+				json_obj = json_template.render(Context(context_args))
+				json_obj_list[1].append(json_obj)
+
 	return json_obj_list;
 
 
 #Creates a json array of objects from a given list of json objects
 def generate_json_obj_to_return(json_obj_list):
 	json_complete = "[\n"
+	
 	for i in range(0, len(json_obj_list)-1):
-		json_complete += (json_obj_list[i] + ",\n")
+		json_complete += (generate_json_from_list(json_obj_list[i]) + ",\n")
 
 	if (len(json_obj_list) > 0):
-		json_complete += json_obj_list[len(json_obj_list)-1]
+		json_complete += generate_json_from_list(json_obj_list[len(json_obj_list)-1])
 
 	json_complete += "\n]"
 
 	return json_complete
+
+def generate_json_from_list(json_obj_list):
+	json_array = "[\n"
+	for i in range(0, len(json_obj_list)-1):
+		json_array += (json_obj_list[i] + ",\n")
+
+	if (len(json_obj_list) > 0):
+		json_array += json_obj_list[len(json_obj_list)-1]
+
+	json_array += "\n]"
+
+	return json_array
