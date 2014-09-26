@@ -1,6 +1,8 @@
 import json, operator
 from django.shortcuts import render
 from dora.models import *
+from django.db.models import Q
+from datetime import *
 from django.template import Context, loader
 
 #Returns the query result set from a given request
@@ -15,27 +17,29 @@ def parse_request(request):
 	age_range_filter = request.GET.get('age_range')
 
 	#Construct filter arguments
-	filter_args = {}
-	filter_args['disease__name__iexact'] = disease_name
+	q_object = Q(disease__name__iexact=disease_name)
 
 	if (patient_gender_filter):
-		filter_args['patient__gender'] = patient_gender_filter
+		q_object &= Q(patient__gender=patient_gender_filter)
 		
-	if (location):
-		filter_args['coordinates__within'] = location
+	if (location_filter):
+		q_object &= Q(coordinates__within=location_filter)
 
 	if (age_range_filter):
-		age_range_filter_list = age_range_filter.split(',');
+		q_object_age_range = Q()
+		now = datetime.now()
+		age_range_filter_list = age_range_filter.split(',')
 		for age_range in age_range_filter_list:
-			#do some age_range logic here.
-			#How to union the two "sets" or just add on stuff
-			pass
+			age_range_list = age_range.split('-')
+			age_start = int(age_range_list[0])
+			age_end = int(age_range_list[1]) + 1
+			q_object_age_range |= (Q(patient__dob__lte=datetime(year=now.year-age_start, month=now.month, day=now.day)) & Q(patient__dob__gte=datetime(year=now.year-age_end, month=now.month, day=now.day)))
+		q_object &= q_object_age_range
 
-	#Make the query
-	return filter_args
+	return q_object
 
-def get_query_result_set(filter_args):
-	return Encounter.objects.filter(**filter_args).order_by('patient__uuid')
+def get_query_result_set(query):
+	return Encounter.objects.filter(query).order_by('patient__uuid')
 
 #Creates a list of json objects from the given query_result_set
 def create_json_obj_list(query_result_set):
