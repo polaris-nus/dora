@@ -43,7 +43,7 @@ def create_json_obj_list(query_result_set):
 	json_obj_list.append([])
 	json_obj_list.append([])
 	if (query_result_set):
-		json_template = loader.get_template('query_json_template')
+		json_template = loader.get_template('json_obj_template')
 		for query_result in query_result_set:
 			context_args = {}
 			context_args['disease_name'] = query_result.disease.name
@@ -57,7 +57,7 @@ def create_json_obj_list(query_result_set):
 			context_args['coordinates'] = "None"
 			context_args['altitude'] = "alt!"
 
-			if (not query_result.patient.coordinates):
+			if (query_result.patient.coordinates):
 				context_args['coordinates'] = query_result.patient.coordinates.wkt
 				json_obj = json_template.render(Context(context_args))
 				json_obj_list[0].append(json_obj)
@@ -68,17 +68,18 @@ def create_json_obj_list(query_result_set):
 	return json_obj_list;
 
 
-#Creates a json array of objects from a given list of json objects
+#Creates a json array of objects from a given list of json objects. Pre cond: = 2
 def generate_json_obj_to_return(json_obj_list):
-	json_complete = "[\n"
-	
-	for i in range(0, len(json_obj_list)-1):
-		json_complete += (generate_json_from_list(json_obj_list[i]) + ",\n")
+	json_complete = "{\n"
 
-	if (len(json_obj_list) > 0):
-		json_complete += generate_json_from_list(json_obj_list[len(json_obj_list)-1])
+	if (len(json_obj_list) == 2) :
+		json_complete += '"assigned" : ' + (generate_json_from_list(json_obj_list[0]) + ",\n")
 
-	json_complete += "\n]"
+		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + ",\n")
+
+		json_complete += '"centroid" : ' + '"CENTROID!"' + "\n"
+
+	json_complete += "\n}"
 
 	return json_complete
 
