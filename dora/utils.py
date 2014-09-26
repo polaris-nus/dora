@@ -20,6 +20,9 @@ def parse_request(request):
 
 	if (patient_gender_filter):
 		filter_args['patient__gender'] = patient_gender_filter
+		
+	if (location):
+		filter_args['coordinates__within'] = location
 
 	if (age_range_filter):
 		age_range_filter_list = age_range_filter.split(',');
