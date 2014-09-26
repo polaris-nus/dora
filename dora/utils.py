@@ -79,9 +79,7 @@ def generate_json_obj_to_return(json_obj_list):
 	if (len(json_obj_list) == 2) :
 		json_complete += '"assigned" : ' + (generate_json_from_list(json_obj_list[0]) + ",\n")
 
-		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + ",\n")
-
-		json_complete += '"centroid" : ' + '"CENTROID!"' + "\n"
+		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + "\n")
 
 	json_complete += "\n}"
 
