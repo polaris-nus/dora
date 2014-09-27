@@ -12,13 +12,14 @@ def parse_request(request):
 	query_form = QueryForm(request.GET)
 	
 	if query_form.is_valid():
-		cleaned_data = query_form.cleaned_data
-		disease_name = cleaned_data.disease
+		cleaned_data = dict(query_form.cleaned_data)
+		print cleaned_data
+		disease_name = cleaned_data['disease']
 		if (not disease_name):
 			return None
-		patient_gender_filter = cleaned_data.gender
-		location_filter = cleaned_data.location
-		age_range_filter = cleaned_data.age_range
+		patient_gender_filter = cleaned_data['gender']
+		location_filter = cleaned_data['location']
+		age_range_filter = cleaned_data['age_range']
 	
 		#Construct filter arguments
 		q_object = Q(disease__name__iexact=disease_name)
