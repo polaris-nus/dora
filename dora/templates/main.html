@@ -5,24 +5,30 @@
   <title>Dora - Iteration 1</title>
   <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
-  <link rel="stylesheet" rel="text/css" href="/static/css/stylesheet.css">
+  <link rel="stylesheet" type="text/css" href="/static/ol2/style.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
   
   <script src="/static/angular/angular.js"></script>
   <script src="/static/jquery/jquery.js"></script>
   <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+  <script src='/static/ol2/ol.js'></script>
   
   <script src="/static/js/app.js"></script>
   <script src="/static/js/controllers.js"></script>
   <script src="/static/js/services.js"></script>
-
-  <script src='/static/ol2/ol.js'></script>
+  
   <script src="/static/js/map_ol2.js"></script>
 
 </head>
 {% verbatim %}
 <body onload="init();">
 
-  <div id="map"></div>
+  <div id="map">
+    <div id="customZoom">
+        <a href="#customZoomIn" id="customZoomIn">+</a>
+        <a href="#customZoomOut" id="customZoomOut">-</a>
+    </div>
+  </div>
   
   <div class="controls-container">
     <div class="container">

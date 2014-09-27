@@ -44,8 +44,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 					$scope.response = data;
 
 					var coordinates = [];
-					for(index in $scope.response) {
-						var encounter = $scope.response[index];
+					for(index in $scope.response.assigned) {
+						var encounter = $scope.response.assigned[index];
 						coordinates.push(encounter.location.coords);
 					}
 					console.log(coordinates);
