@@ -39,6 +39,8 @@ def parse_request(request):
 	return q_object
 
 def get_query_result_set(query):
+	if (query == None):
+		return None	
 	return Encounter.objects.filter(query).order_by('patient__uuid')
 
 #Creates a list of json objects from the given query_result_set
@@ -81,7 +83,7 @@ def generate_json_obj_to_return(json_obj_list):
 
 		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + "\n")
 
-	json_complete += "\n}"
+	json_complete += "}"
 
 	return json_complete
 

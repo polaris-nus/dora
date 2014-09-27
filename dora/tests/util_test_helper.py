@@ -11,55 +11,53 @@ def setup_database():
 	disease2 = Disease.objects.create(name='EBOLA')
 	disease = disease1
 	patients = []
-	for i in range(0,6):
+	for i in range(0,20):
 		if (i%2 == 1):
 			gender = 'F'
 		else:
 			gender = 'M'
+		seed = datetime(year=2014,month=1,day=1)
 		temp_patient = Patient.objects.create(
 			uuid=str(i), 
 			given_name=('abnn'+str(i)), 
 			family_name=str(i), 
-			dob=(date(2010, 10, 10) - timedelta(days=(i*365*5))), 
+			dob=datetime(year=(seed.year-(i*3)), month=seed.month, day=seed.day), 
 			gender=gender,
-			coordinates=Point(-180+((i+1)/6*360),-90+((i+1)/6*180))
+			coordinates=Point((-180+((i+1)/20.0*360)),(-90+((i+1)/20.0*180)))
 		)
 		patients.append(temp_patient)
-	for i in range(0,6):
-		if (i > 2):
+	for i in range(0,20):
+		if (i >= 10):
 			disease = disease2
 		Encounter.objects.create(
 			uuid=str(i), 
 			patient=patients[i],
 			disease=disease,
-			created=date(2010, 10, 10),
-			modified=date(2010, 10, 10)
+			created=datetime(2010, 10, 10),
+			modified=datetime(2010, 10, 10)
 		)
 
 def setup_get_QRS_results():
 	results = []
 	results.append([])
 	results.append([])
-	results[0].append({
-		"disease_name":'TUBERCOLOSIS', 
-		"patient_uuid":'0',
-	})
-	results[0].append({
-		"disease_name":'TUBERCOLOSIS', 
-		"patient_uuid":'1',
-	})
-	results[0].append({
-		"disease_name":'TUBERCOLOSIS', 
-		"patient_uuid":'2',
-	})
-	results[1].append({
-		"disease_name":'TUBERCOLOSIS', 
-		"patient_uuid":'0',
-	})
-	results[1].append({
-		"disease_name":'TUBERCOLOSIS', 
-		"patient_uuid":'2',
-	})
+	results.append([])
+	for i in range(0,10):
+		results[0].append({
+			"disease_name":'TUBERCOLOSIS', 
+			"patient_uuid":str(i),
+		})
+		if (i%2 == 0):
+			results[1].append({
+				"disease_name":'TUBERCOLOSIS', 
+				"patient_uuid":str(i),
+			})
+			if (i<=10/3 or (i>=50/3 and i <=60/3)):
+				results[2].append({
+					"disease_name":'TUBERCOLOSIS', 
+					"patient_uuid":str(i),
+				})
+
 	return results
 
 def check_assertions(self, query_result_set, results, check_num):
@@ -71,32 +69,30 @@ def check_assertions(self, query_result_set, results, check_num):
 
 
 def setup_create_json_obj_list_results():
-	results = []
-	json_template = loader.get_template('query_json_template')
-	results.append(json_template.render(Context({
+	results = [[],[]]
+	json_template = loader.get_template('json_obj_template')
+	results[0].append(json_template.render(Context({
 		"disease_name":'TUBERCOLOSIS', 
 		"patient_uuid":'0', 
 		"patient_family_name":'0', 
 		"patient_given_name":'abnn0', 
-		"patient_dob":'Oct. 10, 2010, midnight',
+		"patient_dob":'Jan. 1, 2014, midnight',
 		"patient_gender":'M', 
 		"created_date":'Oct. 10, 2010, midnight', 
 		"modified_date":'Oct. 10, 2010, midnight', 
-		"longitude":str(-180.0+(1/6*360.0)), 
-		"latitude":str(-90.0+(1/6*180.0)), 
+		"coordinates":'POINT (-162.0000000000000000 -81.0000000000000000)',
 		"altitude":"alt!"
 	})))
-	results.append(json_template.render(Context({
+	results[0].append(json_template.render(Context({
 		"disease_name":'TUBERCOLOSIS', 
 		"patient_uuid":'2', 
 		"patient_family_name":'2', 
 		"patient_given_name":'abnn2', 
-		"patient_dob":'Oct. 12, 2000, midnight',
+		"patient_dob":'Jan. 1, 2008, midnight',
 		"patient_gender":'M', 
 		"created_date":'Oct. 10, 2010, midnight', 
 		"modified_date":'Oct. 10, 2010, midnight', 
-		"longitude":str(-180.0+(3/6*360.0)), 
-		"latitude":str(-90.0+(3/6*180.0)), 
+		"coordinates":'POINT (-126.0000000000000000 -63.0000000000000000)',
 		"altitude":"alt!"
 	})))
 	return results
