@@ -28,17 +28,16 @@ class UtilsTestCase(TestCase):
 		check_assertions(self, query_result_set, results, 1)
 
 		#assert with disease,gender,age_range
-		request = self.factory.get('/query/', {'disease': 'tubercolosis', 'gender':'M', 'age_range':'0-10,50-60'})
+		request = self.factory.get('/query/', {'disease': 'tubercolosis', 'gender':'M', 'age_range':'0-5,15-20'})
 		query = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query)
 		check_assertions(self, query_result_set, results, 2)
 
-		#SHAO NING CAN YOU HELP WITH THE LOCATION ONE?
 		#assert with disease,gender,location,age_range
-		#request = self.factory.get('/query/', {'disease': 'tubercolosis', 'gender':'M', 'location':'SOME LOCATION', 'age_range':'0-10,50-60'})
-		#query = utils.parse_request(request)
-		#query_result_set = utils.get_query_result_set(query)
-		#check_assertions(self, query_result_set, results, 1)
+		request = self.factory.get('/query/', {'disease': 'tubercolosis', 'gender':'M', 'location':'POLYGON ((-200 -100, -200 -75, -150 -75, -150 -100, -200 -100))', 'age_range':'0-10,50-60'})
+		query = utils.parse_request(request)
+		query_result_set = utils.get_query_result_set(query)
+		check_assertions(self, query_result_set, results, 3)
 
 		#assert with nothing (edge case)
 		request = self.factory.get('/query/')

@@ -42,6 +42,7 @@ def setup_get_QRS_results():
 	results.append([])
 	results.append([])
 	results.append([])
+	results.append([])
 	for i in range(0,10):
 		results[0].append({
 			"disease_name":'TUBERCOLOSIS', 
@@ -52,20 +53,32 @@ def setup_get_QRS_results():
 				"disease_name":'TUBERCOLOSIS', 
 				"patient_uuid":str(i),
 			})
-			if (i<=10/3 or (i>=50/3 and i <=60/3)):
+			if (i<=5/3 or (i>15/3 and i <=20/3)):
 				results[2].append({
 					"disease_name":'TUBERCOLOSIS', 
 					"patient_uuid":str(i),
 				})
+				if (i==0):
+					results[3].append({
+						"disease_name":'TUBERCOLOSIS', 
+						"patient_uuid":str(i),
+					})
+
 
 	return results
 
 def check_assertions(self, query_result_set, results, check_num):
-	index = 0
+	query_result_list = []
 	for query_result in query_result_set:
-		self.assertEqual(query_result.disease.name, results[check_num][index]['disease_name'])
-		self.assertEqual(query_result.patient.uuid, results[check_num][index]['patient_uuid'])
-		index += 1
+		query_result_list.append({
+			"disease_name":query_result.disease.name,
+			"patient_uuid":query_result.patient.uuid,
+		})
+
+	self.assertEqual(len(query_result_list), len(results[check_num]))
+	for i in range(0,len(results[check_num])):
+		self.assertEqual(query_result_list[i]['disease_name'], results[check_num][i]['disease_name'])
+		self.assertEqual(query_result_list[i]['patient_uuid'], results[check_num][i]['patient_uuid'])
 
 
 def setup_create_json_obj_list_results():
