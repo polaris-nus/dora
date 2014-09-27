@@ -24,16 +24,17 @@ function init(){
     ]
 	});
 
-	var center = [180,0];
-	var zoom = 3;
+
+	var center = [0,0];
+	var zoom = 1;
 	map.setCenter(center, zoom);
 	console.log(map.getCenter());
 	console.log(map.getMinZoom());
 
-// map.addControl(new OpenLayers.Control.LayerSwitcher());
 }
 
 var clusterStrategy = new OpenLayers.Strategy.Cluster();
+
 var stylemap = new OpenLayers.StyleMap({
 	default: new OpenLayers.Style({
 		pointRadius: 10,
@@ -72,11 +73,11 @@ function generatePoints(coordinates) {
     features.push(vectorFeature);
   }
 
+  var vectorLayer = new OpenLayers.Layer.Vector('Vectorlayer',{
+		styleMap: stylemap,
+		strategies: [clusterStrategy]
+  });
 
-  var vectorLayer = new OpenLayers.Layer.Vector(
-  	'Vectorlayer',
-  	{styleMap: stylemap, strategies: [clusterStrategy]}
-  );
-  vectorLayer.addFeatures(features);
   map.addLayer(vectorLayer);
+  vectorLayer.addFeatures(features);
 }
