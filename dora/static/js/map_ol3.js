@@ -1,15 +1,19 @@
 var raster = new ol.layer.Tile({
+  // extent: [-20037508, -20037508, 20037508, 20037508],
   source: new ol.source.OSM()
 });
+
+console.log(raster.getExtent());
 
 var map = new ol.Map({
   layers: [raster],
   target:'map',
-  renderer:'canvas',
+  render: 'canvas',
   view: new ol.View({
     projection: 'EPSG:900913',
     center:[0,0],
-    zoom:5
+    zoom:2,
+    minZoom: 2
   })
 });
 
@@ -18,11 +22,11 @@ function generatePoints(coordinates){
 
   var features = [];
   for (index in coordinates){
-    var feature = wktParser.readFeature(coordinates[index], {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:900913'});
-    console.log(feature.getGeometry().getType());
-    console.log(feature.getGeometry().getExtent());
+    var feature = wktParser.readFeature(coordinates[index], {
+      dataProjection: 'EPSG:4326', // from WSG84
+      featureProjection: 'EPSG:900913' // to Spherical Mercator Projection
+    });
     console.log(feature.getGeometry().getFirstCoordinate());
-    console.log(feature.getGeometry().getLastCoordinate());
     features.push(feature);
   }
 
@@ -68,3 +72,6 @@ function generatePoints(coordinates){
   map.addLayer(clusters);
 }
 
+function init() {
+  
+}
