@@ -36,6 +36,8 @@ def parse_request(request):
 			age_range_filter_list = age_range_filter.split(',')
 			for age_range in age_range_filter_list:
 				age_range_list = age_range.split('-')
+				if (len(age_range_list) != 2 or (not age_range_list[0].isdigit()) or (not age_range_list[1].isdigit())):
+					return None
 				age_start = int(age_range_list[0])
 				age_end = int(age_range_list[1]) + 1
 				q_object_age_range |= (Q(patient__dob__lte=datetime(year=now.year-age_start, month=now.month, day=now.day)) & Q(patient__dob__gte=datetime(year=now.year-age_end, month=now.month, day=now.day)))
