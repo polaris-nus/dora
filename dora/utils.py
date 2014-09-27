@@ -1,8 +1,8 @@
 import json, operator
 from django.shortcuts import render
 from dora.models import *
-from dora.forms import QueryForm
 from django.db.models import Q
+from dora.forms import QueryForm
 from datetime import *
 from django.template import Context, loader
 
@@ -13,28 +13,9 @@ def parse_request(request):
 	
 	if query_form.is_valid():
 		cleaned_data = query_form.cleaned_data
-		
-<<<<<<< HEAD
-	if (location_filter):
-		q_object &= Q(patient__coordinates__within=location_filter)
-
-	if (age_range_filter):
-		q_object_age_range = Q()
-		now = datetime.now()
-		age_range_filter_list = age_range_filter.split(',')
-		for age_range in age_range_filter_list:
-			age_range_list = age_range.split('-')
-			age_start = int(age_range_list[0])
-			age_end = int(age_range_list[1]) + 1
-			q_object_age_range |= (Q(patient__dob__lte=datetime(year=now.year-age_start, month=now.month, day=now.day)) & Q(patient__dob__gte=datetime(year=now.year-age_end, month=now.month, day=now.day)))
-		q_object &= q_object_age_range
-
-	return q_object
-=======
 		disease_name = cleaned_data.disease
 		if (not disease_name):
 			return None
-			
 		patient_gender_filter = cleaned_data.gender
 		location_filter = cleaned_data.location
 		age_range_filter = cleaned_data.age_range
@@ -46,7 +27,7 @@ def parse_request(request):
 			q_object &= Q(patient__gender=patient_gender_filter)
 			
 		if (location_filter):
-			q_object &= Q(coordinates__within=location_filter)
+			q_object &= Q(patient__coordinates__within=location_filter)
 	
 		if (age_range_filter):
 			q_object_age_range = Q()
@@ -63,7 +44,6 @@ def parse_request(request):
 	
 	else:
 		return None
->>>>>>> origin/approval
 
 def get_query_result_set(query):
 	if (query == None):
