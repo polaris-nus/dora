@@ -15,7 +15,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '**/*.js'
+      'angular/angular.js',
+      'ol2/ol.js',
+      'jquery/jquery.js',
+      'js/*.js',
+      'test/unit/*.js'
     ],
 
 
@@ -25,7 +29,6 @@ module.exports = function(config) {
 
     plugins : [
       'karma-chrome-launcher',
-      'karma-firefox-launcher',
       'karma-jasmine'
     ],
 
