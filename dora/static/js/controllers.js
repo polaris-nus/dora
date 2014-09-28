@@ -41,15 +41,15 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 				}
 
 				$http.get(domain + port + path).success(function(data) {
-					$scope.response = data;
+					$scope.encounters = data;
 
 					var coordinates = [];
-					for(index in $scope.response.assigned) {
-						var encounter = $scope.response.assigned[index];
+					for(index in $scope.encounters.assigned) {
+						var encounter = $scope.encounters.assigned[index];
 						coordinates.push(encounter.location.coords);
 					}
-					console.log(coordinates);
-					generatePoints(coordinates);
+					// commented out to pass unit testing! MUST FIND BETTER WAY TO INJECT DEPENDENCY. Try services?
+					// generatePoints(coordinates); 
 				})
 
 				QRSHistoryServ.addQRS(query);

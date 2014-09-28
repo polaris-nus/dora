@@ -11,10 +11,5 @@ doraServices.service('QRSHistoryServ', [
 				return QRSHistory;
 			}
 		};
-	}]);
-
-doraServices.service('QRSGenerateServ', [
-	function(){
-		
-
-	}]);
+	}
+]);
