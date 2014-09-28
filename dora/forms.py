@@ -6,7 +6,7 @@ class QueryForm(forms.Form):
     gender = forms.CharField(required=False, max_length=2,
             validators=[RegexValidator(regex=r"^[MFmf]$")])
     age_range = forms.CharField(required=False, max_length=128, 
-            validators=[RegexValidator(regex=r"^\s*([0-9]+\s*-\s*[0-9]+)(\s*,\s*[0-9]+\s*-\s*[0-9]+)*$")])
+            validators=[RegexValidator(regex=r"^\s*[0-9]+\s*-\s*[0-9]+\s*(,\s*[0-9]+\s*-\s*[0-9]+\s*)*$")])
     location = forms.GeometryField(required=False, srid=4326)
     
     def clean_age_range(self):
