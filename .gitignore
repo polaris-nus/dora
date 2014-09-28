@@ -3,5 +3,5 @@
 *.pydevproject
 dora/settings.py
 initial_data.json
-*.json
 dora/settings - Copy.py
+node_modules/
