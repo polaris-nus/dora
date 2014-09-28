@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 class QueryForm(forms.Form):
     disease = forms.CharField(max_length=128)
     gender = forms.CharField(required=False, max_length=2,
-                             widget=forms.Select(choices=(("M","M"),("F","F"))))
+            validators=[RegexValidator(regex=r"^[MFmf]$")])
     age_range = forms.CharField(required=False, max_length=128, 
             validators=[RegexValidator(regex=r"^\s*([0-9]+\s*-\s*[0-9]+)(\s*,\s*[0-9]+\s*-\s*[0-9]+)*$")])
     location = forms.GeometryField(required=False, srid=4326)
@@ -14,3 +14,9 @@ class QueryForm(forms.Form):
         age_range = age_range.replace(" ","")
         
         return age_range
+    
+    def clean_gender(self):
+        gender = self.cleaned_data['gender']
+        gender = gender.upper()
+        
+        return gender
