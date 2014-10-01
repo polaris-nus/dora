@@ -1,0 +1,167 @@
+{
+"assigned" : [
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "obed",
+        "uuid": "2c5787df-c09f-4d08-a1a6-ce7ec07abc33",
+        "given_name": "wheaton",
+        "dob": "July 3, 1989, 10:47 a.m.",
+        "gender": "F"
+    },
+    "created_date": "Nov. 25, 2011, 1:28 p.m.",
+    "modified_date": "Nov. 25, 2011, 1:28 p.m.",
+    "location": {
+        "coords": "POINT (131.9055123729999934 -87.8140864197000042)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "mack",
+        "uuid": "40649660-08ab-4db5-929d-3bf4bed4ac40",
+        "given_name": "laroche",
+        "dob": "Oct. 21, 2004, 4:28 a.m.",
+        "gender": "M"
+    },
+    "created_date": "Nov. 4, 2009, 1:11 a.m.",
+    "modified_date": "Nov. 4, 2009, 1:11 a.m.",
+    "location": {
+        "coords": "POINT (59.4009829323000034 0.6154749438860000)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "milne",
+        "uuid": "44f32804-20e1-4013-a5eb-e9d9600920ce",
+        "given_name": "cron",
+        "dob": "Dec. 30, 1949, 10:49 a.m.",
+        "gender": "M"
+    },
+    "created_date": "July 9, 2014, 8:15 p.m.",
+    "modified_date": "July 9, 2014, 8:15 p.m.",
+    "location": {
+        "coords": "POINT (111.3054086369999993 78.0347755436999932)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "lamboth",
+        "uuid": "ab2d187a-49e2-4b50-8a42-9bc91f3bf015",
+        "given_name": "axtel",
+        "dob": "Feb. 25, 1977, 3:32 p.m.",
+        "gender": "F"
+    },
+    "created_date": "July 1, 2012, 4:20 a.m.",
+    "modified_date": "July 1, 2012, 4:20 a.m.",
+    "location": {
+        "coords": "POINT (-47.8093131867000025 -40.8778081426999975)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "lamboth",
+        "uuid": "c53e6e22-5dfb-4932-b1b8-27ee261cbf4f",
+        "given_name": "ramsay",
+        "dob": "April 29, 1960, 4:23 p.m.",
+        "gender": "M"
+    },
+    "created_date": "June 2, 2010, 2:29 p.m.",
+    "modified_date": "June 2, 2010, 2:29 p.m.",
+    "location": {
+        "coords": "POINT (-32.2053649413999992 -35.0141242149000007)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "willan",
+        "uuid": "cba9dc2b-cafd-4411-bddb-c142c8c7a4f7",
+        "given_name": "bates",
+        "dob": "Jan. 13, 1986, 7:13 a.m.",
+        "gender": "F"
+    },
+    "created_date": "Aug. 16, 2014, 2:38 a.m.",
+    "modified_date": "Aug. 16, 2014, 2:38 a.m.",
+    "location": {
+        "coords": "POINT (-134.4851058959999932 83.6301373057000035)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "harkness",
+        "uuid": "cda66e0e-eda5-4bd5-b35b-b66fb38ef960",
+        "given_name": "dove",
+        "dob": "Dec. 19, 1982, 6:12 p.m.",
+        "gender": "F"
+    },
+    "created_date": "July 20, 2011, 3:05 p.m.",
+    "modified_date": "July 20, 2011, 3:05 p.m.",
+    "location": {
+        "coords": "POINT (-75.4075043197999975 -89.0190155835999946)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "petersen",
+        "uuid": "d1424cb5-100a-4ba3-8a50-bd9a23d53f94",
+        "given_name": "shaw",
+        "dob": "Nov. 22, 1963, 6:07 p.m.",
+        "gender": "M"
+    },
+    "created_date": "Feb. 2, 2010, 11:45 p.m.",
+    "modified_date": "Feb. 2, 2010, 11:45 p.m.",
+    "location": {
+        "coords": "POINT (-87.1134192674000047 -4.0753749522299998)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "angelico",
+        "uuid": "e2ae6187-e95b-406f-995d-42d2260604ce",
+        "given_name": "pascale",
+        "dob": "June 24, 1946, 12:11 p.m.",
+        "gender": "F"
+    },
+    "created_date": "Oct. 22, 2009, 5:04 p.m.",
+    "modified_date": "Oct. 22, 2009, 5:04 p.m.",
+    "location": {
+        "coords": "POINT (158.4795246920000125 74.5477679921000060)",
+        "alt": "alt!"
+    }
+},
+{
+    "disease": "HIV",
+    "patient": {
+        "family_name": "garret",
+        "uuid": "f2854f3a-bd3e-4923-b07c-2b47fbdf6a42",
+        "given_name": "harry",
+        "dob": "April 15, 1940, 10:55 a.m.",
+        "gender": "F"
+    },
+    "created_date": "Nov. 13, 2012, 12:15 p.m.",
+    "modified_date": "Nov. 13, 2012, 12:15 p.m.",
+    "location": {
+        "coords": "POINT (40.3393490166000035 -41.1745275103999973)",
+        "alt": "alt!"
+    }
+}
+],
+"unassigned" : [
+
+]
+}

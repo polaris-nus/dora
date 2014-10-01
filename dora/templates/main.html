@@ -23,88 +23,85 @@
 {% verbatim %}
 <body onload="init()">
 
-  <div id="map">
-    <div id="customZoom">
+  <!-- <div class="controls-container"> -->
+  <div class="container">
+
+    <div id="map">
+      <div id="customZoom">
         <a href="#customZoomIn" id="customZoomIn">+</a>
         <a href="#customZoomOut" id="customZoomOut">-</a>
+      </div>
     </div>
-  </div>
-  
-  <div class="controls-container">
-    <div class="container">
-      <br/>
-
-      <div class="row" ng-controller="QueryFormController"> 
-        <div class="row">
-          <div class="col-xs-4">
-            <div class="input-group">
-              <input ng-model="queryString" type="Search" placeholder="Enter medical condition here" class="form-control" />
-              <div class="input-group-btn">
-                <button class="btn btn-info" ng-click="submitQuery()">
-                  <span class="glyphicon glyphicon-search"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-info col-xs-1" ng-click="filterFormVisibility = true">+ Filter</button>
-
-          <div>
-            <div class="filter">
-              <button ng-repeat="filter in queryFilters" class="filter btn btn-default"> {{filter.value}} </button>
-            </div>
 
 
-            <div class="filter" ng-show="filterFormVisibility" >
-              <select class="filter form-control" ng-model="filterFormType" style="width:100px;">
-                <option value="age">Age</option>
-                <option value="gender">Gender</option>
-                <option value="treatment">Treatment</option>
-              </select>
-
-              <div class="filter" ng-show="filterFormType == 'age'">
-                <input ng-model="filterFormValue" type="number"/>
-              </div>
-
-              <div class="filter" ng-show="filterFormType == 'gender'">
-                <input ng-model="filterFormValue" type="radio" name="gender" value="M"/>Male
-                <input ng-model="filterFormValue" type="radio" name="gender" value="F"/>Female
-              </div>
-
-              <div class="filter" ng-show="filterFormType == 'treatment'">
-                <input ng-model="filterFormValue" type="text"/>
-              </div>
-              <button type="button" class="btn btn-info" ng-click="addFilter()">Done</button>
+    <div class="row" ng-controller="QueryFormController"> 
+        <div class="col-xs-4 above">
+          <div class="input-group">
+            <input ng-model="queryString" type="Search" placeholder="Enter medical condition here" class="form-control" />
+            <div class="input-group-btn">
+              <button class="btn btn-info" ng-click="submitQuery()">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      
-      <br/>
-      <div ng-controller="QueryResultController">
-        <div class="col-xs-1">
-          <div ng-repeat="qrs in QRSHistory">
-            <button type="button" class="btn btn-warning btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
-            {{qrs.string}}
-          </div>
-        </div> 
 
-        <div class="col-xs-3">      
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{displayedQRS.string}}</h3>
+        <button type="button" class="btn btn-info col-xs-1 above" ng-click="filterFormVisibility = true">+ Filter</button>
+
+        <div>
+          <div class="filter">
+            <button ng-repeat="filter in queryFilters" class="filter btn btn-default"> {{filter.value}} </button>
+          </div>
+
+
+          <div class="filter" ng-show="filterFormVisibility" >
+            <select class="filter form-control" ng-model="filterFormType" style="width:100px;">
+              <option value="age">Age</option>
+              <option value="gender">Gender</option>
+              <option value="treatment">Treatment</option>
+            </select>
+
+            <div class="filter" ng-show="filterFormType == 'age'">
+              <input ng-model="filterFormValue" type="number"/>
             </div>
-            <div class="panel-body" style="height:400px;">
-              {{displayedQRS | json}}
+
+            <div class="filter" ng-show="filterFormType == 'gender'">
+              <input ng-model="filterFormValue" type="radio" name="gender" value="M"/>Male
+              <input ng-model="filterFormValue" type="radio" name="gender" value="F"/>Female
             </div>
+
+            <div class="filter" ng-show="filterFormType == 'treatment'">
+              <input ng-model="filterFormValue" type="text"/>
+            </div>
+            <button type="button" class="btn btn-info" ng-click="addFilter()">Done</button>
+          </div>
+        </div>
+    </div>
+
+    <div ng-controller="QueryResultController">
+      <div class="col-xs-1 above">
+        <div ng-repeat="qrs in QRSHistory">
+          <button type="button" class="btn btn-warning btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
+          {{qrs.string}}
+        </div>
+      </div> 
+
+      <div class="col-xs-3 above">      
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">{{displayedQRS.string}}</h3>
+          </div>
+          <div class="panel-body" style="height:400px;">
+            {{displayedQRS | json}}
           </div>
         </div>
       </div>
+      <!-- </div> -->
 
     </div>
   </div>
 
-{% endverbatim %}
+  {% endverbatim %}
   <!-- scripts loaded after html-->
 
 </body>

@@ -1,9 +1,21 @@
-.controls-container{
-/*  position:absolute;
+/*.controls-container{
+  position:absolute;
   top:0;
   left:0;
-  z-index: 99999999;*/
+  z-index: 99999999;
 }
+*/
+
+body { overflow: hidden; }
+
+#map { position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; }
+/*#map .ol-zoom { font-size: 1.2em; margin-left: 300px;}*/
+
+#map { z-index: 35; }
+
+.above { z-index: 45; }
+
+.row { position: relative; margin-top: 20px; }
 
 .filter {
   display: inline;
@@ -41,7 +53,7 @@ html, body{
     z-index: 1001;
     position: relative;
     top: 10px;
-    left: 10px;
+    left: 1100px;
 }
 #customZoom a {
     text-decoration: none;

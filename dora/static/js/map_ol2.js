@@ -4,6 +4,19 @@ OpenLayers.ImgPath = '/static/ol2/img/';
 var map;
 
 function init(){
+  // map = new ol.Map({
+  //   target: "map",
+  //   layers: [
+  //   new ol.layer.Tile({
+  //     source: new ol.source.OSM()
+  //   })
+  //   ],
+  //   view: new ol.View({
+  //     center: [0, 0],
+  //     zoom: 2
+  //   })
+  // });
+
 	map = new OpenLayers.Map({
     div: "map",
     controls: [
@@ -24,9 +37,8 @@ function init(){
     ]
 	});
 
-
 	var center = [0,0];
-	var zoom = 1;
+	var zoom = 3;
 	map.setCenter(center, zoom);
 	console.log(map.getCenter());
 	console.log(map.getMinZoom());
