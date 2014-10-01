@@ -9,13 +9,15 @@
   <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
   
   <script src="/static/angular/angular.js"></script>
-  <script src="/static/jquery/jquery.js"></script>
+  <!--<script src="/static/jquery/jquery.js"></script>-->
+  <script src="http://code.jquery.com/jquery.min.js"></script>
   <script src="/static/bootstrap/js/bootstrap.min.js"></script>
   <script src='/static/ol2/ol.js'></script>
   
   <script src="/static/js/app.js"></script>
   <script src="/static/js/controllers.js"></script>
   <script src="/static/js/services.js"></script>
+   <script src="/static/js/qrspanel.js"></script>
 
   <script src="/static/js/map_ol2.js"></script>
 
@@ -53,7 +55,6 @@
             <button ng-repeat="filter in queryFilters" class="filter btn btn-default"> {{filter.value}} </button>
           </div>
 
-
           <div class="filter" ng-show="filterFormVisibility" >
             <select class="filter form-control" ng-model="filterFormType" style="width:100px;">
               <option value="age">Age</option>
@@ -78,25 +79,31 @@
         </div>
     </div>
 
-    <div ng-controller="QueryResultController">
+
+
+    <div class="row" ng-controller="QueryResultController">
       <div class="col-xs-1 above">
         <div ng-repeat="qrs in QRSHistory">
-          <button type="button" class="btn btn-warning btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
-          {{qrs.string}}
+          <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
         </div>
       </div> 
 
       <div class="col-xs-3 above">      
-        <div class="panel panel-default">
+          <div class="panel panel-success">
           <div class="panel-heading">
-            <h3 class="panel-title">{{displayedQRS.string}}</h3>
+            <h3 class="panel-title" id="qrs-panel-title">{{displayedQRS.string}}</h3>
           </div>
-          <div class="panel-body" style="height:400px;">
+          <div class="panel-body" id="qrs-panel-body" style="height:400px;">
+            {{qrs.string}}
             {{displayedQRS | json}}
+            <button type="button" class="btn btn-success" id="togglePL">patient list</button>
+            <div id="pl"></div>
           </div>
         </div>
       </div>
       <!-- </div> -->
+
+
 
     </div>
   </div>
