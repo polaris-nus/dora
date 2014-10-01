@@ -9,17 +9,17 @@
   <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
   
   <script src="/static/angular/angular.js"></script>
-  <!--<script src="/static/jquery/jquery.js"></script>-->
+  <script src="/static/jquery/jquery.js"></script>
   <script src="http://code.jquery.com/jquery.min.js"></script>
-  <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+  <!--<script src="/static/bootstrap/js/bootstrap.min.js"></script>-->
   <script src='/static/ol2/ol.js'></script>
-  
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
   <script src="/static/js/app.js"></script>
   <script src="/static/js/controllers.js"></script>
   <script src="/static/js/services.js"></script>
-   <script src="/static/js/qrspanel.js"></script>
-
   <script src="/static/js/map_ol2.js"></script>
+  <script src="/static/js/qrspanel.js"></script>
 
 </head>
 {% verbatim %}
@@ -79,8 +79,6 @@
         </div>
     </div>
 
-
-
     <div class="row" ng-controller="QueryResultController">
       <div class="col-xs-1 above">
         <div ng-repeat="qrs in QRSHistory">
@@ -88,23 +86,26 @@
         </div>
       </div> 
 
+
       <div class="col-xs-3 above">      
-          <div class="panel panel-success">
+        <div class="panel panel-success">
           <div class="panel-heading">
-            <h3 class="panel-title" id="qrs-panel-title">{{displayedQRS.string}}</h3>
+            <h3 class="panel-title" id="qrs-panel-title">Query Result Set</h3>
           </div>
-          <div class="panel-body" id="qrs-panel-body" style="height:400px;">
-            {{qrs.string}}
-            {{displayedQRS | json}}
+          <div class="panel-body" id="qrs-panel-body">  
+            <div id="pie-chart"></div>
+            <div id="line-chart"></div>
+
             <button type="button" class="btn btn-success" id="togglePL">patient list</button>
             <div id="pl"></div>
+            {{displayedQRS.string}}
+            {{qrs.string}}
+            {{displayedQRS | json}}
           </div>
         </div>
       </div>
+
       <!-- </div> -->
-
-
-
     </div>
   </div>
 
