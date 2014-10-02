@@ -13,13 +13,13 @@ body { overflow: hidden; }
 
 #map { z-index: 35; }
 
-.above { z-index: 45; }
+.above { z-index: 45; position: relative;}
 
 .row { position: relative; margin-top: 20px; }
 
 .filter {
   display: inline;
-  margin-left: 10px;
+  //margin-left: 10px;
 }
 
 .btn-circle {

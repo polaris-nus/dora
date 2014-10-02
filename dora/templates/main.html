@@ -39,7 +39,7 @@
     <div class="row" ng-controller="QueryFormController"> 
         <div class="col-xs-4 above">
           <div class="input-group">
-            <input ng-model="queryString" type="Search" placeholder="Enter medical condition here" class="form-control" />
+            <input ng-model="queryString" type="search" placeholder="Enter medical condition here" class="form-control" />
             <div class="input-group-btn">
               <button class="btn btn-info" ng-click="submitQuery()">
                 <span class="glyphicon glyphicon-search"></span>
@@ -48,36 +48,36 @@
           </div>
         </div>
 
-        <button type="button" class="btn btn-info col-xs-1 above" ng-click="filterFormVisibility = true">+ Filter</button>
 
-        <div>
-          <div class="filter">
-            <button ng-repeat="filter in queryFilters" class="filter btn btn-default"> {{filter.value}} </button>
-          </div>
+		<div class="filter above">
+			<button ng-repeat="filter in queryFilters"
+				class="filter btn btn-default">{{filter.value}}</button>
+		</div>
+	
+		<div class="filter above" ng-show="filterFormVisibility">
+			<select class="filter form-control" ng-model="filterFormType"
+				style="width: 100px;">
+				<option value="age">Age</option>
+				<option value="gender">Gender</option>
+			</select>
+	
+			<div class="filter" ng-show="filterFormType == 'age'">
+				<input ng-model="filterFormValue" type="number" />
+			</div>
+	
+			<div class="filter" ng-show="filterFormType == 'gender'">
+				<input ng-model="filterFormValue" type="radio" name="gender"
+					value="M" />Male <input ng-model="filterFormValue" type="radio"
+					name="gender" value="F" />Female
+			</div>
+			<button type="button" class="btn btn-info" ng-click="addFilter()">Done</button>
+		</div>
+	
+	
+		<button type="button" class="btn btn-info above"
+			ng-click="filterFormVisibility = true">+ Filter</button>
 
-          <div class="filter" ng-show="filterFormVisibility" >
-            <select class="filter form-control" ng-model="filterFormType" style="width:100px;">
-              <option value="age">Age</option>
-              <option value="gender">Gender</option>
-              <option value="treatment">Treatment</option>
-            </select>
-
-            <div class="filter" ng-show="filterFormType == 'age'">
-              <input ng-model="filterFormValue" type="number"/>
-            </div>
-
-            <div class="filter" ng-show="filterFormType == 'gender'">
-              <input ng-model="filterFormValue" type="radio" name="gender" value="M"/>Male
-              <input ng-model="filterFormValue" type="radio" name="gender" value="F"/>Female
-            </div>
-
-            <div class="filter" ng-show="filterFormType == 'treatment'">
-              <input ng-model="filterFormValue" type="text"/>
-            </div>
-            <button type="button" class="btn btn-info" ng-click="addFilter()">Done</button>
-          </div>
-        </div>
-    </div>
+	</div>
 
     <div class="row" ng-controller="QueryResultController">
       <div class="col-xs-1 above">
