@@ -28,18 +28,6 @@ describe('Dora controllers', function() {
     	expect(scope.filterFormValue).toBe('');
     });
 
-
-    it('should create "encounters" model with 3 encounters fetched from XHR', function() {
-    	expect(scope.encounters).toBeUndefined();
-
-    	scope.queryString = 'hiv';
-    	scope.submitQuery();
-    	$httpBackend.flush();
-
-    	expect(scope.encounters).toEqual(
-    		{json: 'expected data here'});
-    });
-
 	});
 
 	describe('QueryResultController', function() {
