@@ -10,7 +10,6 @@
   
   <script src="/static/angular/angular.js"></script>
   <script src="/static/jquery/jquery.js"></script>
-  <script src="http://code.jquery.com/jquery.min.js"></script>
   <!--<script src="/static/bootstrap/js/bootstrap.min.js"></script>-->
   <script src='/static/ol2/ol.js'></script>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -18,12 +17,11 @@
   <script src="/static/js/app.js"></script>
   <script src="/static/js/controllers.js"></script>
   <script src="/static/js/services.js"></script>
-  <script src="/static/js/map_ol2.js"></script>
   <script src="/static/js/qrspanel.js"></script>
 
 </head>
 {% verbatim %}
-<body onload="init()">
+<body>
 
   <!-- <div class="controls-container"> -->
   <div class="container">
@@ -34,7 +32,6 @@
         <a href="#customZoomOut" id="customZoomOut">-</a>
       </div>
     </div>
-
 
     <div class="row" ng-controller="QueryFormController"> 
         <div class="col-xs-4 above">

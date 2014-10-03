@@ -1,7 +1,7 @@
 var doraControllers = angular.module('doraControllers', []);
 
-doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '$http',
-	function($scope, QRSHistoryServ, $http) {
+doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '$http', 'MapServ',
+	function($scope, QRSHistoryServ, $http, MapServ){
 
 		$scope.queryString = '';
 		$scope.queryFilters = [];
@@ -50,17 +50,18 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 					}
 					QRSHistoryServ.addQRS($scope.encounters);
 					// commented out to pass unit testing! MUST FIND BETTER WAY TO INJECT DEPENDENCY. Try services?
-					// generatePoints(coordinates); 
+					MapServ.generatePoints(coordinates); 
 				})
 			}
 
 			$scope.queryString = '';
 			$scope.queryFilters = [];
 		};
-	}]);
+	}
+]);
 
 doraControllers.controller('QueryResultController', ['$scope', 'QRSHistoryServ',
-	function($scope, QRSHistoryServ) {
+	function($scope, QRSHistoryServ){
 		$scope.QRSHistory = QRSHistoryServ.getQRSHistory();
 		$scope.selectedQRSList = [];
 		$scope.selectionFlag = false;
@@ -106,4 +107,5 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSHistoryServ',
 			$scope.selectionFunction = '';
 		};
 
-	}]);
+	}
+]);
