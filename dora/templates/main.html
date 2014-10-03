@@ -48,7 +48,6 @@
           </div>
         </div>
 
-
 		<div class="filter above">
 			<button ng-repeat="filter in queryFilters"
 				class="filter btn btn-default">{{filter.value}}</button>
@@ -80,11 +79,17 @@
 	</div>
 
     <div class="row" ng-controller="QueryResultController">
+
+      <div class="above">
+        <button type="button" class="btn btn-success" ng-click="selectionFunction = 'union'; selectionFlag = true;">UNION!</button>
+        <button type="button" class="btn btn-success" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">INTERSECT!</button>
+        <button type="button" class="btn btn-info" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
+      </div>
       <div class="col-xs-1 above">
         <div ng-repeat="qrs in QRSHistory">
-          <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index)">{{$index}}</button>
+          <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index);selectQRS($index);">{{$index}}</button>
         </div>
-      </div> 
+      </div>
 
 
       <div class="col-xs-3 above">      

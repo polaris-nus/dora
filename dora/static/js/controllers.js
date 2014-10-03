@@ -48,11 +48,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 						var encounter = $scope.encounters.assigned[index];
 						coordinates.push(encounter.location.coords);
 					}
+					QRSHistoryServ.addQRS($scope.encounters);
 					// commented out to pass unit testing! MUST FIND BETTER WAY TO INJECT DEPENDENCY. Try services?
 					// generatePoints(coordinates); 
 				})
-
-				QRSHistoryServ.addQRS(query);
 			}
 
 			$scope.queryString = '';
@@ -63,12 +62,48 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 doraControllers.controller('QueryResultController', ['$scope', 'QRSHistoryServ',
 	function($scope, QRSHistoryServ) {
 		$scope.QRSHistory = QRSHistoryServ.getQRSHistory();
-	
+		$scope.selectedQRSList = [];
+		$scope.selectionFlag = false;
+		$scope.selectionFunction = '';
+
 		// can init/set to null?
 		$scope.displayedQRS = {};
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
+		};
+
+		$scope.selectQRS = function(QRS){
+			var indexOfQRS = $scope.selectedQRSList.indexOf(QRS);
+			if ($scope.selectionFlag && indexOfQRS === -1) {
+				$scope.selectedQRSList.push(QRS);
+			} else {
+				$scope.selectedQRSList.splice(indexOfQRS, 1);
+			}
+
+			console.log(QRS);
+			console.log($scope.selectedQRSList);
+		};
+
+		$scope.unionIntersectQRS = {
+			union: function(){
+				var newQRS = QRSHistoryServ.unionQRSHistory($scope.selectedQRSList);
+				console.log("BEIOWN");
+			},
+			intersect: function(){
+				var newQRS = QRSHistoryServ.intersectQRSHistory($scope.selectedQRSList);
+				console.log("BEIOWN ALSO");
+			}
+		};
+
+		$scope.executeUnionIntersection = function(){
+			console.log($scope.selectionFunction);
+			$scope.unionIntersectQRS[$scope.selectionFunction]();
+
+			//reset
+			$scope.selectedQRSList = [];
+			$scope.selectionFlag = false;
+			$scope.selectionFunction = '';
 		};
 
 	}]);
