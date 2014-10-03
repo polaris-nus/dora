@@ -1,14 +1,22 @@
 var doraServices = angular.module('doraServices', []);
 
-doraServices.service('QRSHistoryServ', [
+doraServices.service('QRSServ', [
 	function(){
 		var QRSHistory = [];
 		return {
-			addQRS: function(QRS){
+			addToQRSHistory: function(QRS){
 				QRSHistory.push(QRS);
 			},
 			getQRSHistory: function(){
 				return QRSHistory;
+			},
+			getQRSCoordinates: function(QRS){
+				var coordinates = [];
+				for(index in QRS.assigned) {
+					var encounter = QRS.assigned[index];
+					coordinates.push(encounter.location.coords);
+				}
+				return coordinates;
 			},
 			unionQRSHistory: function(unionList){
 				//Initialize data structures

@@ -1,7 +1,7 @@
 var doraControllers = angular.module('doraControllers', []);
 
-doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '$http', 'MapServ',
-	function($scope, QRSHistoryServ, $http, MapServ){
+doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
+	function($scope, QRSServ, $http, MapServ){
 
 		$scope.queryString = '';
 		$scope.queryFilters = [];
@@ -41,16 +41,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 				}
 
 				$http.get(domain + port + path).success(function(data) {
-					$scope.encounters = data;
-
-					var coordinates = [];
-					for(index in $scope.encounters.assigned) {
-						var encounter = $scope.encounters.assigned[index];
-						coordinates.push(encounter.location.coords);
-					}
-					QRSHistoryServ.addQRS($scope.encounters);
-					// commented out to pass unit testing! MUST FIND BETTER WAY TO INJECT DEPENDENCY. Try services?
-					MapServ.generatePoints(coordinates); 
+					QRSServ.addToQRSHistory(data);
+					MapServ.generatePoints(QRSServ.getQRSCoordinates(data)); 
 				})
 			}
 
@@ -60,9 +52,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSHistoryServ', '
 	}
 ]);
 
-doraControllers.controller('QueryResultController', ['$scope', 'QRSHistoryServ',
-	function($scope, QRSHistoryServ){
-		$scope.QRSHistory = QRSHistoryServ.getQRSHistory();
+doraControllers.controller('QueryResultController', ['$scope', 'QRSServ',
+	function($scope, QRSServ){
+		$scope.QRSHistory = QRSServ.getQRSHistory();
 		$scope.selectedQRSList = [];
 		$scope.selectionFlag = false;
 		$scope.selectionFunction = '';
@@ -88,11 +80,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSHistoryServ',
 
 		$scope.unionIntersectQRS = {
 			union: function(){
-				var newQRS = QRSHistoryServ.unionQRSHistory($scope.selectedQRSList);
+				var newQRS = QRSServ.unionQRSHistory($scope.selectedQRSList);
 				console.log("BEIOWN");
 			},
 			intersect: function(){
-				var newQRS = QRSHistoryServ.intersectQRSHistory($scope.selectedQRSList);
+				var newQRS = QRSServ.intersectQRSHistory($scope.selectedQRSList);
 				console.log("BEIOWN ALSO");
 			}
 		};
