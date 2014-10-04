@@ -2,10 +2,27 @@ var doraServices = angular.module('doraServices', []);
 
 doraServices.service('QRSServ', [
 	function(){
+		var historyLimit = 10;
 		var QRSHistory = [];
 		return {
 			addToQRSHistory: function(QRS){
+				//Limiting size of QRSHistory
+				while (QRSHistory.length >= historyLimit){
+					QRSHistory.shift();
+				}
 				QRSHistory.push(QRS);
+			},
+			removeFromQRSHistory: function(QRS){
+				var index;
+				if (QRS === parseInt(QRS)) {
+					index = QRS;
+				} else {
+					index = QRSHistory.indexOf(QRS);
+				}
+
+				if (index > -1) {
+					QRSHistory.splice(index, 1);
+				}
 			},
 			getQRSHistory: function(){
 				return QRSHistory;
@@ -166,6 +183,8 @@ doraServices.service('MapServ', [
 
 			  map.addLayer(vectorLayer);
 			  vectorLayer.addFeatures(features);
+
+			  return vectorLayer; // for testability
 			}
 		}
 	}
