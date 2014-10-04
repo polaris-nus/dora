@@ -20,7 +20,7 @@ doraServices.service('QRSServ', [
 					index = QRSHistory.indexOf(QRS);
 				}
 
-				if (index > -1) {
+				if (index > -1 && index < QRSHistory.length) {
 					QRSHistory.splice(index, 1);
 				}
 			},
@@ -123,8 +123,7 @@ doraServices.service('MapServ', [
 	        new OpenLayers.Control.Zoom({
 	        	zoomInId: "customZoomIn",
 	          zoomOutId: "customZoomOut"
-	        }),
-	        new OpenLayers.Control.MousePosition()
+	        })
 	    ],
 	    layers: [
 	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {buffer: 2}),
@@ -170,7 +169,7 @@ doraServices.service('MapServ', [
 		drawPolygonControls.activate();
 
 		return {
-			generatePoints: function(coordinates) {
+			generateClusterLayer: function(coordinates) {
 				var wktParser = new OpenLayers.Format.WKT({
 					externalProjection: 'EPSG:4326',  //from WSG84
 					internalProjection: 'EPSG:900913' //to Spherical Mercator Projection

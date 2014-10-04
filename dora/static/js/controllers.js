@@ -42,7 +42,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 				$http.get(domain + port + path).success(function(QRS) {
 					QRSServ.addToQRSHistory(QRS);
-					MapServ.generatePoints(QRSServ.getQRSCoordinates(QRS)); 
+					MapServ.generateClusterLayer(QRSServ.getQRSCoordinates(QRS)); 
 				})
 			}
 

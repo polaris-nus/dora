@@ -201,7 +201,7 @@ describe('Dora services', function() {
 
     it('should add a vector layer with 1 point marker', function() {
       var coordinates = ['POINT (131.9055123729999900 -87.8140864197000040)']
-      var vectorLayer = MapServ.generatePoints(coordinates);
+      var vectorLayer = MapServ.generateClusterLayer(coordinates);
       expect(vectorLayer.features.length).toBe(1);
     });
 
