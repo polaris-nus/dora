@@ -120,13 +120,11 @@ doraServices.service('MapServ', [
 	      new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: false})
 	    ]
 		});
-
 		var center = [0,0];
 		var zoom = 2;
 		map.setCenter(center, zoom);
 		
 		var clusterStrategy = new OpenLayers.Strategy.Cluster();
-
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				pointRadius: 10,
@@ -156,7 +154,6 @@ doraServices.service('MapServ', [
 		map.addLayer(polygonLayer);
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
-		drawPolygonControls.activate();
 
 		return {
 			addClusterLayer: function(QRS) {
@@ -178,30 +175,37 @@ doraServices.service('MapServ', [
 			    features.push(vectorFeature);
 			  }
 
-			  var vectorLayer = new OpenLayers.Layer.Vector('Vectorlayer',{
+			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
 					styleMap: clusterMarkerStyle,
 					strategies: [clusterStrategy]
 			  });
 
-			  map.addLayer(vectorLayer);
-			  vectorLayer.addFeatures(features);
+			  //console.log(clusterLayer.id);
+			  //QRS.mapLayerId = clusterLayer.id;
 
-			  return vectorLayer; // for testability
+			  map.addLayer(clusterLayer);
+			  clusterLayer.addFeatures(features);
+
+			  return clusterLayer; // for testability
 			},
-			setClusterLayerVisibility: function(layerId, boolean) {
-				//Need a property to identify QRS, UUID?
+			setClusterLayerVisibility: function(QRS, boolean) {
+				//var clusterLayer = map.getLayer(QRS.mapLayerid);
+				//clusterLayer.display(boolean);
 			},
 			removeClusterLayer: function(QRS) {
-				//get ID from QRS
+				//var clusterLayer = map.getLayer(QRS.mapLayerid);
+				//clusterLayer.destroy();
 			},
 			activatePolygonLayer: function() {
-				// activate + visible(?)
+				//visibility?
+				drawPolygonControls.activate();
 			},
 			decactivatePolygonLayer: function() {
-				// deactivate + invisible(?)
+				drawPolygonControls.deactivate();
 			},
 			getPolygons: function() {
-				//clear polygons from layer
+				//clear polygons from layer?
+				//polygonLayer.features[i].geometry.getVertices();
 				return null;
 			}
 		}
