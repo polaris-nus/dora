@@ -123,7 +123,8 @@ doraServices.service('MapServ', [
 	        new OpenLayers.Control.Zoom({
 	        	zoomInId: "customZoomIn",
 	          zoomOutId: "customZoomOut"
-	        })
+	        }),
+	        new OpenLayers.Control.MousePosition()
 	    ],
 	    layers: [
 	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {buffer: 2}),
@@ -161,6 +162,12 @@ doraServices.service('MapServ', [
 				}
 			})
 		});
+
+		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+		map.addLayer(polygonLayer);
+		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
+		map.addControl(drawPolygonControls);
+		drawPolygonControls.activate();
 
 		return {
 			generatePoints: function(coordinates) {
