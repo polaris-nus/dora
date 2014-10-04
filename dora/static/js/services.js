@@ -1,39 +1,29 @@
 var doraServices = angular.module('doraServices', []);
 
-doraServices.service('QRSServ', [
-	function(){
+doraServices.service('QRSServ', [ 'MapServ',
+	function(MapServ){
 		var historyLimit = 10;
 		var QRSHistory = [];
 		return {
 			addToQRSHistory: function(QRS){
 				//Limiting size of QRSHistory
 				while (QRSHistory.length >= historyLimit){
-					QRSHistory.shift();
-				}
-				QRSHistory.push(QRS);
-			},
-			removeFromQRSHistory: function(QRS){
-				var index;
-				if (QRS === parseInt(QRS)) {
-					index = QRS;
-				} else {
-					index = QRSHistory.indexOf(QRS);
+					MapServ.removeClusterLayer(QRSHistory.shift());
 				}
 
-				if (index > -1 && index < QRSHistory.length) {
-					QRSHistory.splice(index, 1);
+				QRSHistory.push(QRS);
+				MapServ.addClusterLayer(QRS); 
+			},
+			removeFromQRSHistory: function(QRS){
+				var index = QRSHistory.indexOf(QRS);
+
+				if (index > -1) {
+					QRSHistory.splice(index, 1)[0];
+					MapServ.removeClusterLayer(QRS);
 				}
 			},
 			getQRSHistory: function(){
 				return QRSHistory;
-			},
-			getQRSCoordinates: function(QRS){
-				var coordinates = [];
-				for(index in QRS.assigned) {
-					var encounter = QRS.assigned[index];
-					coordinates.push(encounter.location.coords);
-				}
-				return coordinates;
 			},
 			unionQRSHistory: function(unionList){
 				//Initialize data structures
@@ -169,7 +159,13 @@ doraServices.service('MapServ', [
 		drawPolygonControls.activate();
 
 		return {
-			generateClusterLayer: function(coordinates) {
+			addClusterLayer: function(QRS) {
+				var coordinates = [];
+				for(index in QRS.assigned) {
+					var encounter = QRS.assigned[index];
+					coordinates.push(encounter.location.coords);
+				}
+
 				var wktParser = new OpenLayers.Format.WKT({
 					externalProjection: 'EPSG:4326',  //from WSG84
 					internalProjection: 'EPSG:900913' //to Spherical Mercator Projection
@@ -191,6 +187,22 @@ doraServices.service('MapServ', [
 			  vectorLayer.addFeatures(features);
 
 			  return vectorLayer; // for testability
+			},
+			setClusterLayerVisibility: function(layerId, boolean) {
+				//Need a property to identify QRS, UUID?
+			},
+			removeClusterLayer: function(QRS) {
+				//get ID from QRS
+			},
+			activatePolygonLayer: function() {
+				// activate + visible(?)
+			},
+			decactivatePolygonLayer: function() {
+				// deactivate + invisible(?)
+			},
+			getPolygons: function() {
+				//clear polygons from layer
+				return null;
 			}
 		}
 	}

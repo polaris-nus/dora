@@ -3,16 +3,20 @@ describe('Dora services', function() {
 	beforeEach(module('doraServices'));
 
 	describe('QRSServ', function() {
-		var QRSServ;
+		var QRSServ, QRS1, QRS2, QRS3;
 
 		beforeEach(inject(function(_QRSServ_) {
       QRSServ = _QRSServ_;
-      var QRS1 = {
+      QRS1 = {
         'assigned':[
           {
             "disease": "EBOLA",
             "patient": {
               "uuid": "one"
+            },
+            "location": {
+              "coords": "POINT (-87.1134192674000050 -4.0753749522299998)",
+              "alt": "alt!"
             }
           }
         ],
@@ -26,12 +30,16 @@ describe('Dora services', function() {
         ]
       };
 
-      var QRS2 = {
+      QRS2 = {
         'assigned':[
           {
             "disease": "TB",
             "patient": {
               "uuid": "four"
+            },
+            "location": {
+              "coords": "POINT (158.4795246920000100 74.5477679921000060)",
+              "alt": "alt!"
             }
           }
         ],
@@ -45,12 +53,16 @@ describe('Dora services', function() {
         ]
       };
 
-      var QRS3 = {
+      QRS3 = {
         'assigned':[
           {
             "disease": "HIV",
             "patient": {
               "uuid": "six"
+            },
+            "location": {
+              "coords": "POINT (40.3393490166000030 -41.1745275103999970)",
+              "alt": "alt!"
             }
           }
         ],
@@ -76,40 +88,16 @@ describe('Dora services', function() {
     it('should limit to 10 QRS in QRSHistory', function() {
       
       for(var i = 0; i < 15; i++) {
-        var QRSstub = {
-        'assigned':[
-          {
-            "disease": "HIV",
-            "patient": {
-              "uuid": "six"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "HIV",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ]
-      };
-        QRSServ.addToQRSHistory(QRSstub);
+        QRSServ.addToQRSHistory(QRS1);
       }
       expect(QRSServ.getQRSHistory().length).toBe(10);
     });
 
     it('should remove specified QRS from QRSHistory', function() {
-      var toBeRemovedObj = QRSServ.getQRSHistory()[1];
-      QRSServ.removeFromQRSHistory(toBeRemovedObj);
+      var toBeRemoved = QRSServ.getQRSHistory()[1];
+      QRSServ.removeFromQRSHistory(toBeRemoved);
       expect(QRSServ.getQRSHistory().length).toBe(2);
-      expect(QRSServ.getQRSHistory().indexOf(toBeRemovedObj)).toBe(-1);
-
-      var index = 1
-      var toBeRemovedInd = QRSServ.getQRSHistory()[index];
-      QRSServ.removeFromQRSHistory(index);
-      expect(QRSServ.getQRSHistory().length).toBe(1);
-      expect(QRSServ.getQRSHistory().indexOf(toBeRemovedInd)).toBe(-1);
+      expect(QRSServ.getQRSHistory().indexOf(toBeRemoved)).toBe(-1);
     });
 
     it('should union two or more QRS', function() {
@@ -119,18 +107,30 @@ describe('Dora services', function() {
             "disease": "EBOLA",
             "patient": {
               "uuid": "one"
+            },
+            "location": {
+              "coords": "POINT (-87.1134192674000050 -4.0753749522299998)",
+              "alt": "alt!"
             }
           },
           {
             "disease": "TB",
             "patient": {
               "uuid": "four"
+            },
+            "location": {
+              "coords": "POINT (158.4795246920000100 74.5477679921000060)",
+              "alt": "alt!"
             }
           },
           {
             "disease": "HIV",
             "patient": {
               "uuid": "six"
+            },
+            "location": {
+              "coords": "POINT (40.3393490166000030 -41.1745275103999970)",
+              "alt": "alt!"
             }
           }
         ],
@@ -200,8 +200,28 @@ describe('Dora services', function() {
     }));
 
     it('should add a vector layer with 1 point marker', function() {
-      var coordinates = ['POINT (131.9055123729999900 -87.8140864197000040)']
-      var vectorLayer = MapServ.generateClusterLayer(coordinates);
+      var QRS = {
+        "assigned" : [
+          {
+            "disease": "HIV",
+            "patient": {
+                "family_name": "obed",
+                "uuid": "2c5787df-c09f-4d08-a1a6-ce7ec07abc33",
+                "given_name": "wheaton",
+                "dob": "July 3, 1989, 10:47 a.m.",
+                "gender": "F"
+            },
+            "created_date": "Nov. 25, 2011, 1:28 p.m.",
+            "modified_date": "Nov. 25, 2011, 1:28 p.m.",
+            "location": {
+                "coords": "POINT (131.9055123729999900 -87.8140864197000040)",
+                "alt": "alt!"
+            }
+          }
+        ],
+        "unassigned" : []
+      }
+      var vectorLayer = MapServ.addClusterLayer(QRS);
       expect(vectorLayer.features.length).toBe(1);
     });
 
