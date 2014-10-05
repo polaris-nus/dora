@@ -193,8 +193,10 @@ doraServices.service('MapServ', [
 				}
 			},
 			removeClusterLayer: function(QRS) {
-				//var clusterLayer = map.getLayer(QRS.mapLayerId);
-				//clusterLayer.destroy();
+				var clusterLayer = map.getLayer(QRS.mapLayerId);
+				if (clusterLayer) {
+					clusterLayer.destroy();
+				}
 			},
 			activatePolygonLayer: function() {
 				//visibility?
