@@ -124,6 +124,7 @@ doraServices.service('MapServ', [
 		var zoom = 2;
 		map.setCenter(center, zoom);
 		
+		// POSSIBLE BUG! Clustering may be buggy if more than one vector cluster layer exist!
 		var clusterStrategy = new OpenLayers.Strategy.Cluster();
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
@@ -171,7 +172,6 @@ doraServices.service('MapServ', [
 				var features = [];
 			  for (index in coordinates){
 			    var vectorFeature = wktParser.read(coordinates[index])
-			    console.log(vectorFeature.geometry.getBounds());
 			    features.push(vectorFeature);
 			  }
 
@@ -180,20 +180,20 @@ doraServices.service('MapServ', [
 					strategies: [clusterStrategy]
 			  });
 
-			  //console.log(clusterLayer.id);
-			  //QRS.mapLayerId = clusterLayer.id;
-
+			  QRS.mapLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
 			  clusterLayer.addFeatures(features);
 
 			  return clusterLayer; // for testability
 			},
 			setClusterLayerVisibility: function(QRS, boolean) {
-				//var clusterLayer = map.getLayer(QRS.mapLayerid);
-				//clusterLayer.display(boolean);
+				var clusterLayer = map.getLayer(QRS.mapLayerId);
+				if (clusterLayer) {
+					clusterLayer.display(boolean);
+				}
 			},
 			removeClusterLayer: function(QRS) {
-				//var clusterLayer = map.getLayer(QRS.mapLayerid);
+				//var clusterLayer = map.getLayer(QRS.mapLayerId);
 				//clusterLayer.destroy();
 			},
 			activatePolygonLayer: function() {

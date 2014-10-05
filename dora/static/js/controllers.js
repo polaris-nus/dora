@@ -51,8 +51,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 	}
 ]);
 
-doraControllers.controller('QueryResultController', ['$scope', 'QRSServ',
-	function($scope, QRSServ){
+doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapServ',
+	function($scope, QRSServ, MapServ){
 		$scope.QRSHistory = QRSServ.getQRSHistory();
 		$scope.selectedQRSList = [];
 		$scope.selectionFlag = false;
