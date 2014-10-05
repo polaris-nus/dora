@@ -123,9 +123,12 @@ doraServices.service('MapServ', [
 		var center = [0,0];
 		var zoom = 2;
 		map.setCenter(center, zoom);
-		
-		// POSSIBLE BUG! Clustering may be buggy if more than one vector cluster layer exist!
-		var clusterStrategy = new OpenLayers.Strategy.Cluster();
+
+		var wktParser = new OpenLayers.Format.WKT({
+			externalProjection: 'EPSG:4326',  //from WSG84
+			internalProjection: 'EPSG:900913' //to Spherical Mercator Projection
+		});
+
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				pointRadius: 10,
@@ -164,16 +167,13 @@ doraServices.service('MapServ', [
 					coordinates.push(encounter.location.coords);
 				}
 
-				var wktParser = new OpenLayers.Format.WKT({
-					externalProjection: 'EPSG:4326',  //from WSG84
-					internalProjection: 'EPSG:900913' //to Spherical Mercator Projection
-				});
-
 				var features = [];
 			  for (index in coordinates){
 			    var vectorFeature = wktParser.read(coordinates[index])
 			    features.push(vectorFeature);
 			  }
+
+				var clusterStrategy = new OpenLayers.Strategy.Cluster();
 
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
 					styleMap: clusterMarkerStyle,
@@ -186,10 +186,10 @@ doraServices.service('MapServ', [
 
 			  return clusterLayer; // for testability
 			},
-			setClusterLayerVisibility: function(QRS, boolean) {
+			toggleClusterLayerVisibility: function(QRS) {
 				var clusterLayer = map.getLayer(QRS.mapLayerId);
 				if (clusterLayer) {
-					clusterLayer.display(boolean);
+					clusterLayer.setVisibility(!clusterLayer.getVisibility());
 				}
 			},
 			removeClusterLayer: function(QRS) {

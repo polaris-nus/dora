@@ -58,12 +58,14 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.selectionFlag = false;
 		$scope.selectionFunction = '';
 
-		// can init/set to null?
-		$scope.displayedQRS = {};
-
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 		};
+
+		$scope.toggleQRSMarkers = function(index) {
+			$scope.doubleClickedQRS = $scope.QRSHistory[index];
+			MapServ.toggleClusterLayerVisibility($scope.doubleClickedQRS);
+		}
 
 		$scope.selectQRS = function(QRS){
 			var indexOfQRS = $scope.selectedQRSList.indexOf(QRS);
