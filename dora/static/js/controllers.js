@@ -105,10 +105,19 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					QRS.locationFeature = location;
 					QRSServ.addToQRSHistory(QRS);
 				});
+				
+				$scope.disease = "";
+				$scope.filters = [];
+				location = "";
+				
+				$scope.available = {
+					location: true,
+					gender: true,
+					age_range: true
+				};
 			}
 			
-			$scope.disease = "";
-			$scope.filters = [];
+
 
 		};
 	}
