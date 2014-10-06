@@ -161,25 +161,31 @@ doraServices.service('MapServ', [
 
 		return {
 			addClusterLayer: function(QRS) {
+				// Extract coordinates for encounters
 				var coordinates = [];
 				for(index in QRS.assigned) {
 					var encounter = QRS.assigned[index];
 					coordinates.push(encounter.location.coords);
 				}
 
+				// Create point markers given coordinates
 				var features = [];
 			  for (index in coordinates){
 			    var vectorFeature = wktParser.read(coordinates[index])
 			    features.push(vectorFeature);
 			  }
 
-				var clusterStrategy = new OpenLayers.Strategy.Cluster();
+			  // Append polygons from polygon layer
+			  features = features.concat(polygonLayer.features); // test!
+				polygonLayer.removeAllFeatures();
 
+				var clusterStrategy = new OpenLayers.Strategy.Cluster();
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
 					styleMap: clusterMarkerStyle,
 					strategies: [clusterStrategy]
 			  });
 
+			  // Create mapLayerId property to link QRS with respective cluster layer
 			  QRS.mapLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
 			  clusterLayer.addFeatures(features);
@@ -199,16 +205,18 @@ doraServices.service('MapServ', [
 				}
 			},
 			activatePolygonLayer: function() {
-				//visibility?
 				drawPolygonControls.activate();
+				polygonLayer.setVisibility(true);
 			},
 			decactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
+				polygonLayer.setVisibility(false);
+			},
+			clearPolygonLayer: function() {		
+				polygonLayer.removeAllFeatures();
 			},
 			getPolygons: function() {
-				//clear polygons from layer?
-				//polygonLayer.features[i].geometry.getVertices();
-				return null;
+				return wktParser.write(polygonLayer.features);
 			}
 		}
 	}

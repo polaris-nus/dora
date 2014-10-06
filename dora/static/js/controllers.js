@@ -34,11 +34,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.doneDrawing = function(filter){
+			MapServ.decactivatePolygonLayer();
 			filter.value = MapServ.getPolygons();
 		};
 		
 		$scope.cancelDrawing = function(filters, $index) {
-			MapServ.removeClusterLayer();
+			MapServ.decactivatePolygonLayer();
+			MapServ.clearPolygonLayer();
 			filters.splice($index, 1)
 		};
 
