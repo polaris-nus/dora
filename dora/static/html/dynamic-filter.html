@@ -1,0 +1,24 @@
+<div class="filter above" outside-click="collapseIfFilterTypeIsNotEmpty(filter)">
+
+<button class="btn btn-default filter above" ng-hide="filter.visibility"
+			ng-click="filter.visibility=true">{{filterTypeName(filter.type)}}: {{filter.value}}</button>
+
+<div class="filter above" ng-show="filter.visibility">
+	<select class="filter form-control" ng-model="filter.type"
+		style="width: 100px;" ng-change="filter.value=''">
+		<option value="age_range">Age Range</option>
+		<option value="gender">Gender</option>
+	</select>
+
+	<div class="filter" ng-show="filter.type == 'age_range'"">
+		<input ng-model="filter.value" type="text"/>
+	</div>
+
+	<div class="filter" ng-show="filter.type == 'gender'">
+		<input ng-model="filter.value" type="radio" name="gender"
+			value="M"/>Male<input ng-model="filter.value" type="radio"
+			name="gender" value="F"/>Female
+	</div>
+</div>
+
+</div>
