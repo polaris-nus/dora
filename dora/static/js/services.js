@@ -5,7 +5,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 		var historyLimit = 10;
 		var QRSHistory = [];
 		return {
-			addToQRSHistory: function(QRS){
+			addToQRSHistory: function (QRS){
 				//Limiting size of QRSHistory
 				while (QRSHistory.length >= historyLimit){
 					MapServ.removeClusterLayer(QRSHistory.shift());
@@ -42,7 +42,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 						unionQRS.unassigned.push(unassignedList[j]);
 					}
 				}
-				QRSHistory.push(unionQRS);
+				this.addToQRSHistory(unionQRS);
 				return unionQRS;
 			},
 			intersectQRSHistory: function(intersectList){
@@ -89,7 +89,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 					populateIntersectQRS(unassignedList, 'unassigned');	
 				}
 
-				QRSHistory.push(intersectQRS);
+				this.addToQRSHistory(intersectQRS);
 
 				return intersectQRS;
 			}

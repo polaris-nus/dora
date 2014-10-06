@@ -155,9 +155,27 @@ describe('Dora services', function() {
           }
         ]
       };
+
+
       var QRSHistory = QRSServ.getQRSHistory();
       QRSServ.unionQRSHistory([0,1,2]);
-    	expect(QRSHistory[3]).toEqual(unionAnswer);
+      assignedList = QRSHistory[3].assigned;
+      unassignedList = QRSHistory[3].unassigned;
+      assignedAnswer = unionAnswer.assigned;
+      unassignedAnswer = unionAnswer.unassigned;
+
+      //Start Testing - Need to test the two lists separately due to the extra ID field added in.
+      expect(assignedList.length).toBe(assignedAnswer.length);
+      for (var i = 0; i < assignedList.length; i++) {
+        expect(assignedList[i]).toEqual(assignedAnswer[i]);
+      }
+
+      expect(unassignedList.length).toBe(unassignedAnswer.length);
+      for (var i = 0; i < unassignedList.length; i++) {
+        expect(unassignedList[i]).toEqual(unassignedAnswer[i]);
+      }
+
+
     });
 
 
@@ -187,7 +205,21 @@ describe('Dora services', function() {
       };
       var QRSHistory = QRSServ.getQRSHistory();      
       QRSServ.intersectQRSHistory([0,1,2]);
-      expect(QRSHistory[3]).toEqual(intersectAnswer);
+      assignedList = QRSHistory[3].assigned;
+      unassignedList = QRSHistory[3].unassigned;
+      assignedAnswer = intersectAnswer.assigned;
+      unassignedAnswer = intersectAnswer.unassigned;
+
+      //Start Testing - Need to test the two lists separately due to the extra ID field added in.
+      expect(assignedList.length).toBe(assignedAnswer.length);
+      for (var i = 0; i < assignedList.length; i++) {
+        expect(assignedList[i]).toEqual(assignedAnswer[i]);
+      }
+
+      expect(unassignedList.length).toBe(unassignedAnswer.length);
+      for (var i = 0; i < unassignedList.length; i++) {
+        expect(unassignedList[i]).toEqual(unassignedAnswer[i]);
+      }
     });
 
 	});
