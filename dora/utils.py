@@ -28,7 +28,10 @@ def parse_request(request):
 			q_object &= Q(patient__gender=patient_gender_filter)
 			
 		if (location_filter):
-			q_object &= Q(patient__coordinates__within=location_filter)
+			q_object_geometry = Q()
+			for geometry in location_filter:
+				q_object_geometry |= Q(patient__coordinates__within=geometry)
+			q_object &= q_object_geometry
 	
 		if (age_range_filter):
 			q_object_age_range = Q()
