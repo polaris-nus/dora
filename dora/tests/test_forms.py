@@ -8,7 +8,7 @@ class QueryFormTestCase(TestCase):
         form_data = {'disease': 'footrot',
                      'age_range': '2-5 , 3 - 4, 100 - 150  ',
                      'gender': 'm',
-                     'location': 'POINT (3.4 2.4)'}
+                     'location': 'GEOMETRYCOLLECTION(POINT (3.4 2.4))'}
         form = QueryForm(form_data)
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['gender'], 'M')
@@ -17,7 +17,7 @@ class QueryFormTestCase(TestCase):
         form_data = {'disease': 'cough',
                      'age_range': '2  -5 ',
                      'gender': 'f',
-                     'location': 'POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))'}
+                     'location': 'GEOMETRYCOLLECTION(POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10)))'}
         form = QueryForm(form_data)
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['gender'], 'F')
@@ -26,7 +26,7 @@ class QueryFormTestCase(TestCase):
         #having no age_range is permitted
         form_data = {'disease': 'Pneumonia',
                      'gender': 'M',
-                     'location': 'MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5)))'}
+                     'location': 'GEOMETRYCOLLECTION(MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5))))'}
         form = QueryForm(form_data)
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['gender'], 'M')
