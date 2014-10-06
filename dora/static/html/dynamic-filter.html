@@ -1,7 +1,7 @@
 <div class="filter above" outside-click="collapseIfFilterTypeIsNotEmpty(filter)">
 
 <button class="btn btn-default filter above" ng-hide="filter.visibility"
-			ng-click="filterVisibilityChanged(filter)">{{filterTypeName(filter.type)}}: {{filter.value}}</button>
+			ng-click="filterVisibilityChanged(filter)">{{filterText(filter)}}</button>
 
 <div class="filter above" ng-show="filter.visibility">
 	<select class="filter form-control" ng-model="filter.type"

@@ -17,13 +17,24 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			}
 		};
 		
+		$scope.collapseIfFilterTypeIsNotEmpty = function(filter){
+			filter.visibility = filter.type==='';
+		};
+		
+		$scope.filterText = function(filter){
+			if (filter.type === "gender") return "Gender: " + filter.value;
+			else if (filter.type === "age_range") return "Age Range: " + filter.value;
+			else if (filter.type === "location") return "Location";
+			else return "Unknown Filter Type: ";
+		};
+		
 		$scope.filterTypeChanged = function(filter){
 			filter.value = "";
 			
 			if (filter.type === "location") {
 				MapServ.activatePolygonLayer();
 			}
-		}
+		};
 		
 		$scope.filterVisibilityChanged = function(filter) {
 			filter.visibility = true;
@@ -36,6 +47,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.doneDrawing = function(filter){
 			MapServ.decactivatePolygonLayer();
 			filter.value = MapServ.getPolygons();
+			filter.visibility = false;
+			
+			console.log(filter.value);
 		};
 		
 		$scope.cancelDrawing = function(filters, $index) {
@@ -48,7 +62,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			console.log($scope.disease);
 			// Basic check before pulling data from backend
 			if ($scope.disease && $scope.disease != '') {
-				var url = window.location.host + "/query";
 				
 				params = {};
 				params.disease = $scope.disease;
