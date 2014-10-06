@@ -1,13 +1,13 @@
 import uuid, datetime, random
 from string import Template
 
-LATEST_BACKDATE_YEARS = 5
+LATEST_BACKDATE_YEARS = 2
 OLDEST_PERSON = 75
 DIAGNOSIS_CONCEPT = '104889a3-b6fa-4cdc-b232-d3b73e924cd1'
 LOCATION_GPS_CONCEPT = '022f8c4f-ca4b-4d2f-b8c6-20a77bea9065'
 TEMPLATE_ROOT = 'templates/sample_generator_templates/'
-NUMBER_OF_SUBJECTS = 750*10
-NUMBER_OF_ENCOUNTERS = 1500*10
+NUMBER_OF_SUBJECTS = 20*10
+NUMBER_OF_ENCOUNTERS = 30*10
 
 encounter_counter = 1
 observation_counter = 1
@@ -118,16 +118,17 @@ for i in range(0, NUMBER_OF_ENCOUNTERS):
 	observation_counter = observation_counter + 1;
 
 	#and Location GPS for the encounter
-	observation_uuid = uuid.uuid4()
-	longitude = random.uniform(-179.99, 180) 
-	latitude = random.uniform(-89.99, 90) 
-	altitude = random.uniform(0, 20) 
-	observation_value = "(" + str(longitude) + ", " + str(latitude) + ", " + str(altitude) +")"
-	observation_concept = LOCATION_GPS_CONCEPT
-	observation_node = "1a"
-	observation_dictionary = {'observation_number':observation_counter, 'observation_node':observation_node, 'observation_value':observation_value, 'observation_concept':observation_concept, 'observation_uuid':observation_uuid, 'created_date':created_date, 'encounter_uuid': encounter_uuid}
-	observation_json = observation_json + observation_template.substitute(observation_dictionary) + ",\n"
-	observation_counter = observation_counter + 1;
+	if (not (random.randint(0,4)%5 == 0)):
+		observation_uuid = uuid.uuid4()
+		longitude = random.uniform(-16, 8) 
+		latitude = random.uniform(6.5, 28.5) 
+		altitude = random.uniform(0, 20) 
+		observation_value = "(" + str(longitude) + ", " + str(latitude) + ", " + str(altitude) +")"
+		observation_concept = LOCATION_GPS_CONCEPT
+		observation_node = "1a"
+		observation_dictionary = {'observation_number':observation_counter, 'observation_node':observation_node, 'observation_value':observation_value, 'observation_concept':observation_concept, 'observation_uuid':observation_uuid, 'created_date':created_date, 'encounter_uuid': encounter_uuid}
+		observation_json = observation_json + observation_template.substitute(observation_dictionary) + ",\n"
+		observation_counter = observation_counter + 1;
 
 
 print default_db_items_up + location_json + procedure_json + subject_json + encounter_json + observation_json + default_db_items_down
