@@ -18,8 +18,21 @@ body { overflow: hidden; }
 .row { position: relative; margin-top: 20px; }
 
 .filter {
-  display: inline;
+  display: inline-block;
+  margin-right: 3px;
+  margin-bottom: 5px;
   //margin-left: 10px;
+}
+
+.below {
+	position: absolute;
+	display:block;
+	margin-top: 5px;
+}
+
+.top-align {
+	vertical:align: top;
+	white-space: nowrap;
 }
 
 .btn-circle {

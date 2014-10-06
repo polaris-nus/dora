@@ -6,6 +6,12 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.disease = "";
 		$scope.filters = [];
 		var location = "";
+		
+		$scope.available = {
+			location: true,
+			gender: true,
+			age_range: true
+		};
 
 		$scope.addFilter = function() {
 			//if array of filters is empty or last filter type is not set
@@ -20,6 +26,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.collapseIfFilterTypeIsNotEmpty = function(filter){
 			filter.visibility = filter.type==='';
+			
+			if (filter.type === "location") {
+				$scope.doneDrawing();
+			}
 		};
 		
 		$scope.filterText = function(filter){
@@ -31,6 +41,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.filterTypeChanged = function(filter){
 			filter.value = "";
+			
+			$scope.available[filter.type] = false;
+			filter.selected = true;
 			
 			if (filter.type === "location") {
 				MapServ.activatePolygonLayer();
@@ -55,6 +68,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.cancelDrawing = function(filters, $index) {
+			$scope.available.location = true;
 			MapServ.decactivatePolygonLayer();
 			MapServ.clearPolygonLayer();
 			filters.splice($index, 1)
