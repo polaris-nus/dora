@@ -17,13 +17,13 @@
   <script src="/static/js/app.js"></script>
   <script src="/static/js/controllers.js"></script>
   <script src="/static/js/services.js"></script>
+  <script src="/static/js/directives.js"></script>
   <script src="/static/js/qrspanel.js"></script>
 
 </head>
 {% verbatim %}
 <body>
 
-  <!-- <div class="controls-container"> -->
   <div class="container">
 
     <div id="map">
@@ -45,33 +45,10 @@
           </div>
         </div>
 
-		<div class="filter above">
-			<button ng-repeat="filter in queryFilters"
-				class="filter btn btn-default">{{filter.value}}</button>
-		</div>
-	
-		<div class="filter above" ng-show="filterFormVisibility">
-			<select class="filter form-control" ng-model="filterFormType"
-				style="width: 100px;">
-				<option value="age">Age</option>
-				<option value="gender">Gender</option>
-			</select>
-	
-			<div class="filter" ng-show="filterFormType == 'age'">
-				<input ng-model="filterFormValue" type="number" />
-			</div>
-	
-			<div class="filter" ng-show="filterFormType == 'gender'">
-				<input ng-model="filterFormValue" type="radio" name="gender"
-					value="M" />Male <input ng-model="filterFormValue" type="radio"
-					name="gender" value="F" />Female
-			</div>
-			<button type="button" class="btn btn-info" ng-click="addFilter()">Done</button>
-		</div>
-	
+		<dynamic-filter ng-repeat="filter in filters"></dynamic-filter>
 	
 		<button type="button" class="btn btn-info above"
-			ng-click="filterFormVisibility = true">+ Filter</button>
+			ng-click="addFilter()">+ Filter</button>
 
 	</div>
 
@@ -105,8 +82,6 @@
           </div>
         </div>
       </div>
-
-      <!-- </div> -->
     </div>
   </div>
 

@@ -3,50 +3,45 @@ var doraControllers = angular.module('doraControllers', []);
 doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
 	function($scope, QRSServ, $http, MapServ){
 
-		$scope.queryString = '';
-		$scope.queryFilters = [];
-		
-		$scope.filterFormVisibility = false;
-		$scope.filterFormType = '';
-		$scope.filterFormValue = '';
+		$scope.disease = "";
+		$scope.filters = [];
 
-		$scope.addFilter = function(){
-			var filter = {};
-			filter.type = $scope.filterFormType;
-			filter.value = $scope.filterFormValue;
-			$scope.queryFilters.push(filter);
-			
-			$scope.filterFormType = '';
-			$scope.filterFormValue = '';
-			$scope.filterFormVisibility = false;
+		$scope.addFilter = function() {
+			//if array of filters is empty or last filter type is not set
+			if ($scope.filters.length==0 || $scope.filters[$scope.filters.length-1].type != '') {
+				$scope.filters.push({
+					type: "",
+					value: "",
+					visibility: true
+				});
+			}
 		};
 
 		$scope.submitQuery = function(){
-			var query = {};
-			query.string = $scope.queryString;
-			query.filters = $scope.queryFilters;
 
 			// Basic check before pulling data from backend
-			if (query.string && query.string != '') {
-				var domain = 'http://127.0.0.1';
-				var port = ':'+'8000/';
-				var path = 'query/?disease='+ query.string ;
-
-				for (index in query.filters) {
-					var filter = query.filters[index];
-					// Can only query gender for now, in future just append filter.type to path.
-					if(filter.type == 'gender') {
-						path += '&gender=' + filter.value;
-					}
+			if ($scope.disease && $scope.disease != '') {
+				var url = window.location.host + "/query";
+				
+				params = {};
+				params.disease = $scope.disease;
+				
+				for (filterIndex in $scope.filters){
+					params[$scope.filters[filterIndex].type] = $scope.filters[filterIndex].value;
 				}
-
-				$http.get(domain + port + path).success(function(QRS) {
+				
+				$http({
+					url: "/query",
+					method: "GET",
+					params: params
+				}).success(function(data) {
 					QRSServ.addToQRSHistory(QRS);
-				})
+				});
 			}
+			
+			$scope.disease = "";
+			$scope.filters = [];
 
-			$scope.queryString = '';
-			$scope.queryFilters = [];
 		};
 	}
 ]);
