@@ -81,6 +81,7 @@
         <button type="button" class="btn btn-success" ng-click="selectionFunction = 'union'; selectionFlag = true;">UNION!</button>
         <button type="button" class="btn btn-success" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">INTERSECT!</button>
         <button type="button" class="btn btn-info" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
+        <button type="button" class="btn btn-info" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
       </div>
       <div class="col-xs-1 above">
         <div ng-repeat="qrs in QRSHistory">
