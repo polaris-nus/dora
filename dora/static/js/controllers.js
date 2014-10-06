@@ -103,7 +103,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		$scope.toggleQRSMarkers = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
-			MapServ.toggleClusterLayerVisibility($scope.doubleClickedQRS);
+			MapServ.toggleVectorLayerVisibility($scope.doubleClickedQRS);
 		}
 
 		//--Start Union intersection Methods--//

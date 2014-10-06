@@ -8,18 +8,18 @@ doraServices.service('QRSServ', [ 'MapServ',
 			addToQRSHistory: function (QRS){
 				//Limiting size of QRSHistory
 				while (QRSHistory.length >= historyLimit){
-					MapServ.removeClusterLayer(QRSHistory.shift());
+					MapServ.removeVectorLayer(QRSHistory.shift());
 				}
 
 				QRSHistory.push(QRS);
-				MapServ.addClusterLayer(QRS); 
+				MapServ.addVectorLayer(QRS); 
 			},
 			removeFromQRSHistory: function(QRS){
 				var index = QRSHistory.indexOf(QRS);
 
 				if (index > -1) {
 					QRSHistory.splice(index, 1)[0];
-					MapServ.removeClusterLayer(QRS);
+					MapServ.removeVectorLayer(QRS);
 				}
 			},
 			getQRSHistory: function(){
@@ -160,24 +160,19 @@ doraServices.service('MapServ', [
 		map.addControl(drawPolygonControls);
 
 		return {
-			addClusterLayer: function(QRS) {
+			addVectorLayer: function(QRS) {
 				// Extract coordinates for encounters
 				var coordinates = [];
 				for(index in QRS.assigned) {
 					var encounter = QRS.assigned[index];
 					coordinates.push(encounter.location.coords);
 				}
-
 				// Create point markers given coordinates
 				var features = [];
 			  for (index in coordinates){
-			    var vectorFeature = wktParser.read(coordinates[index])
+			    var vectorFeature = wktParser.read(coordinates[index]);
 			    features.push(vectorFeature);
 			  }
-
-			  // Append polygons from polygon layer
-			  features = features.concat(polygonLayer.features); // test!
-				polygonLayer.removeAllFeatures();
 
 				var clusterStrategy = new OpenLayers.Strategy.Cluster();
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
@@ -190,18 +185,34 @@ doraServices.service('MapServ', [
 			  map.addLayer(clusterLayer);
 			  clusterLayer.addFeatures(features);
 
-			  return clusterLayer; // for testability
+			  // Check and create location filter layer
+			  if (QRS.locationFeature) {
+			  	var locationFeature = wktParser.read(QRS.locationFeature);
+			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
+			  	QRS.locationLayerId = locationLayer.id;
+			  	map.addLayer(locationLayer);
+			  	locationLayer.addFeatures(locationFeature);
+			  }
+
 			},
-			toggleClusterLayerVisibility: function(QRS) {
-				var clusterLayer = map.getLayer(QRS.mapLayerId);
-				if (clusterLayer) {
+			toggleVectorLayerVisibility: function(QRS) {
+				if (QRS.mapLayerId) {
+					var clusterLayer = map.getLayer(QRS.mapLayerId);
 					clusterLayer.setVisibility(!clusterLayer.getVisibility());
 				}
+				if (QRS.locationLayerId) {
+					var locationLayer = map.getLayer(QRS.locationLayerId);
+					locationLayer.setVisibility(!locationLayer.getVisibility());
+				}
 			},
-			removeClusterLayer: function(QRS) {
-				var clusterLayer = map.getLayer(QRS.mapLayerId);
-				if (clusterLayer) {
+			removeVectorLayer: function(QRS) {
+				if (QRS.mapLayerId) {
+					var clusterLayer = map.getLayer(QRS.mapLayerId);
 					clusterLayer.destroy();
+				}
+				if (QRS.locationLayerId) {
+					var locationLayer = map.getLayer(QRS.locationLayerId);
+					locationLayer.destroy();
 				}
 			},
 			activatePolygonLayer: function() {
@@ -215,7 +226,7 @@ doraServices.service('MapServ', [
 			clearPolygonLayer: function() {		
 				polygonLayer.removeAllFeatures();
 			},
-			getPolygons: function() {
+			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);
 			}
 		}
