@@ -18,7 +18,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 
 		$scope.submitQuery = function(){
-
+			console.log($scope.disease);
 			// Basic check before pulling data from backend
 			if ($scope.disease && $scope.disease != '') {
 				var url = window.location.host + "/query";
@@ -30,11 +30,14 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					params[$scope.filters[filterIndex].type] = $scope.filters[filterIndex].value;
 				}
 				
+				console.log("here");
+				
 				$http({
 					url: "/query",
 					method: "GET",
 					params: params
-				}).success(function(data) {
+				}).success(function(QRS) {
+				
 					QRSServ.addToQRSHistory(QRS);
 				});
 			}
