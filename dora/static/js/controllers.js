@@ -5,6 +5,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 		$scope.disease = "";
 		$scope.filters = [];
+		var location = "";
 
 		$scope.addFilter = function() {
 			//if array of filters is empty or last filter type is not set
@@ -48,6 +49,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			MapServ.decactivatePolygonLayer();
 			filter.value = MapServ.getPolygons();
 			filter.visibility = false;
+			location = filter.value;
 			
 			console.log(filter.value);
 		};
@@ -77,7 +79,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					method: "GET",
 					params: params
 				}).success(function(QRS) {
-				
+					QRS.locationFeature = location;
 					QRSServ.addToQRSHistory(QRS);
 				});
 			}
