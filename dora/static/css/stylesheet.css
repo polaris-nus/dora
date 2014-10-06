@@ -32,6 +32,12 @@ body { overflow: hidden; }
   border-width:3px;
 }
 
+.side-margin {
+  margin:0px;
+  margin-left:3px;
+  margin-right:3px;
+}
+
 html, body{
     margin: 0;
     width: 100%;
