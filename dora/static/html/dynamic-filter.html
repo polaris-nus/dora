@@ -1,13 +1,14 @@
 <div class="filter above" outside-click="collapseIfFilterTypeIsNotEmpty(filter)">
 
 <button class="btn btn-default filter above" ng-hide="filter.visibility"
-			ng-click="filter.visibility=true">{{filterTypeName(filter.type)}}: {{filter.value}}</button>
+			ng-click="filterVisibilityChanged(filter)">{{filterTypeName(filter.type)}}: {{filter.value}}</button>
 
 <div class="filter above" ng-show="filter.visibility">
 	<select class="filter form-control" ng-model="filter.type"
-		style="width: 100px;" ng-change="filter.value=''">
+		style="width: 100px;" ng-change="filterTypeChanged(filter)">
 		<option value="age_range">Age Range</option>
 		<option value="gender">Gender</option>
+		<option value="location">Location</option>
 	</select>
 
 	<div class="filter" ng-show="filter.type == 'age_range'"">
@@ -19,6 +20,9 @@
 			value="M"/>Male<input ng-model="filter.value" type="radio"
 			name="gender" value="F"/>Female
 	</div>
+	
+	<button class="btn btn-success filter above" ng-show="filter.type == 'location'" ng-click="doneDrawing(filter)">Done</button>
+	<button class="btn btn-danger filter above" ng-show="filter.type == 'location'" ng-click="cancelDrawing(filters, $index)">Cancel</button>
 </div>
 
 </div>

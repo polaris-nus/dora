@@ -16,6 +16,31 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				});
 			}
 		};
+		
+		$scope.filterTypeChanged = function(filter){
+			filter.value = "";
+			
+			if (filter.type === "location") {
+				MapServ.activatePolygonLayer();
+			}
+		}
+		
+		$scope.filterVisibilityChanged = function(filter) {
+			filter.visibility = true;
+			
+			if (filter.type === "location") {
+				MapServ.activatePolygonLayer();
+			}
+		};
+		
+		$scope.doneDrawing = function(filter){
+			filter.value = MapServ.getPolygons();
+		};
+		
+		$scope.cancelDrawing = function(filters, $index) {
+			MapServ.removeClusterLayer();
+			filters.splice($index, 1)
+		};
 
 		$scope.submitQuery = function(){
 			console.log($scope.disease);
