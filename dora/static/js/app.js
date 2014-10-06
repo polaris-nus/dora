@@ -1,5 +1,5 @@
 var doraApp = angular.module('doraApp', [
 	'doraControllers',
 	'doraServices',
-	'doraDIrectives'
+	'doraDirectives'
 	]);
