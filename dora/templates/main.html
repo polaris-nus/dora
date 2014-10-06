@@ -52,35 +52,41 @@
 
 	</div>
 
-    <div class="row" ng-controller="QueryResultController">
-
-      <div class="above">
-        <button type="button" class="btn btn-success" ng-click="selectionFunction = 'union'; selectionFlag = true;">UNION!</button>
-        <button type="button" class="btn btn-success" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">INTERSECT!</button>
-        <button type="button" class="btn btn-info" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
-        <button type="button" class="btn btn-info" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
-      </div>
-      <div class="col-xs-1 above">
-        <div ng-repeat="qrs in QRSHistory">
-          <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
-        </div>
-      </div>
-
-      <div class="col-xs-3 above">      
-        <div class="panel panel-success">
-          <div class="panel-heading">
-            <h3 class="panel-title" id="qrs-panel-title">Query Result Set</h3>
-          </div>
-          <div class="panel-body" id="qrs-panel-body">  
-            <div id="pie-chart"></div>
-            <div id="line-chart"></div>
-
-            <button type="button" class="btn btn-success" id="togglePL">patient list</button>
-            <div id="pl"></div>
-            {{displayedQRS | json}}
+    <div ng-controller="QueryResultController">
+      
+      <div class="row">
+        
+        <div class="col-xs-1 above">
+          <div ng-repeat="qrs in QRSHistory">
+            <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
           </div>
         </div>
+
+        <div class="col-xs-3 above">      
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title" id="qrs-panel-title">Query Result Set</h3>
+            </div>
+            <div class="panel-body" id="qrs-panel-body">  
+              <div id="pie-chart"></div>
+              <div id="line-chart"></div>
+
+              <button type="button" class="btn btn-success" id="togglePL">patient list</button>
+              <div id="pl"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
+
+      <div class="btn-group above">
+          <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'union'; selectionFlag = true;">UNION!</button>
+          <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">INTERSECT!</button>
+      </div>
+      <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle side-margin above">{{selectedQRSList[$index]}}</button>
+      <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
+      <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
+
     </div>
   </div>
 
