@@ -1,7 +1,9 @@
 <div class="filter above" outside-click="collapseIfFilterTypeIsNotEmpty(filter)">
 
 <div class="btn btn-default above" ng-show="filter.selected"
-		ng-click="filterVisibilityChanged(filter)">{{filterText(filter)}}</div>
+		ng-click="filterVisibilityChanged(filter)">{{filterText(filter)}}&nbsp;&nbsp;&nbsp;
+		<span ng-click="destroyElement(filters, $index)" class="glyphicon glyphicon-remove"></span>
+</div>
 
 <div class="above" ng-show="filter.visibility">
 	<select class="filter form-control" ng-model="filter.type" ng-hide="filter.selected"
@@ -23,7 +25,7 @@
 	</div>
 	
 	<div class="below">
-		<button class="btn btn-success above" ng-show="filter.type == 'location'" ng-click="doneDrawing(filter)">Done</button>
+		<button class="btn btn-success above" ng-show="filter.type == 'location'" ng-click="doneDrawing(filter)">Save Polygon</button>
 		<button class="btn btn-danger above" ng-show="filter.type == 'location'" ng-click="cancelDrawing(filters, $index)">Cancel</button>
 	</div>
 </div>

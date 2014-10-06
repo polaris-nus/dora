@@ -32,6 +32,15 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			}
 		};
 		
+		$scope.destroyElement = function(filters, $index) {
+			$scope.available[filters[$index].type] = true;
+		
+			if (filters[$index].type === 'location') {
+				MapServ.decactivatePolygonLayer();
+			}
+			filters.splice($index, 1);
+		};
+		
 		$scope.filterText = function(filter){
 			if (filter.type === "gender") return "Gender: " + filter.value;
 			else if (filter.type === "age_range") return "Age Range: " + filter.value;
