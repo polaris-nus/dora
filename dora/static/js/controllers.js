@@ -37,6 +37,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 			if (filters[$index].type === 'location') {
 				MapServ.decactivatePolygonLayer();
+				MapServ.clearPolygonLayer();
 			}
 			filters.splice($index, 1);
 		};
@@ -72,8 +73,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			filter.value = MapServ.getPolygons();
 			filter.visibility = false;
 			location = filter.value;
-			console.log("location" + location);
-			// console.log(filter.value);
 		};
 		
 		$scope.cancelDrawing = function(filters, $index) {
@@ -84,7 +83,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 
 		$scope.submitQuery = function(){
-			// console.log($scope.disease);
 			// Basic check before pulling data from backend
 			if ($scope.disease && $scope.disease != '') {
 				
@@ -101,7 +99,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					params: params
 				}).success(function(QRS) {
 					QRS.locationFeature = location;
-					console.log("QRS.lF" + QRS.locationFeature);
 					QRSServ.addToQRSHistory(QRS);
 					location = "";
 				});
@@ -155,9 +152,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 					$scope.selectedQRSList.splice(indexOfQRS, 1);
 				}
 			}
-
-			// console.log(QRS);
-			// console.log($scope.selectedQRSList);
 		};
 
 		$scope.unionIntersectQRS = {

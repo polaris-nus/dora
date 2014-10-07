@@ -185,7 +185,7 @@ doraServices.service('MapServ', [
 			  map.addLayer(clusterLayer);
 			  clusterLayer.addFeatures(features);
 
-			  // Check and create location filter layer
+			  // Check and create location polygon layer
 			  console.log(QRS.locationFeature);
 			  if (QRS.locationFeature) {
 			  	var locationFeature = wktParser.read(QRS.locationFeature);
