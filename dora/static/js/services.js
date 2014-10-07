@@ -186,6 +186,7 @@ doraServices.service('MapServ', [
 			  clusterLayer.addFeatures(features);
 
 			  // Check and create location filter layer
+			  console.log(QRS.locationFeature);
 			  if (QRS.locationFeature) {
 			  	var locationFeature = wktParser.read(QRS.locationFeature);
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');

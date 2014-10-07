@@ -72,8 +72,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			filter.value = MapServ.getPolygons();
 			filter.visibility = false;
 			location = filter.value;
-			
-			console.log(filter.value);
+			console.log("location" + location);
+			// console.log(filter.value);
 		};
 		
 		$scope.cancelDrawing = function(filters, $index) {
@@ -84,7 +84,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 
 		$scope.submitQuery = function(){
-			console.log($scope.disease);
+			// console.log($scope.disease);
 			// Basic check before pulling data from backend
 			if ($scope.disease && $scope.disease != '') {
 				
@@ -95,21 +95,20 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					params[$scope.filters[filterIndex].type] = $scope.filters[filterIndex].value;
 				}
 				
-				console.log("here");
-				
 				$http({
 					url: "/query",
 					method: "GET",
 					params: params
 				}).success(function(QRS) {
 					QRS.locationFeature = location;
+					console.log("QRS.lF" + QRS.locationFeature);
 					QRSServ.addToQRSHistory(QRS);
+					location = "";
 				});
 				
 				$scope.disease = "";
 				$scope.filters = [];
-				location = "";
-				
+						
 				$scope.available = {
 					location: true,
 					gender: true,
@@ -157,18 +156,16 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				}
 			}
 
-			console.log(QRS);
-			console.log($scope.selectedQRSList);
+			// console.log(QRS);
+			// console.log($scope.selectedQRSList);
 		};
 
 		$scope.unionIntersectQRS = {
 			union: function(){
 				$scope.newQRS = QRSServ.unionQRSHistory($scope.selectedQRSList);
-				console.log("union called");
 			},
 			intersect: function(){
 				$scope.newQRS = QRSServ.intersectQRSHistory($scope.selectedQRSList);
-				console.log("intersect called");
 			}
 		};
 
