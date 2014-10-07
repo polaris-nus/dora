@@ -1,0 +1,262 @@
+
+{
+  "pk": 1,
+  "model": "tasks.status",
+  "fields": {
+    "current": "Assigned"
+  }
+},
+{
+  "pk": 2,
+  "model": "tasks.status",
+  "fields": {
+    "current": "Completed"
+  }
+},
+{
+  "pk": 3,
+  "model": "tasks.status",
+  "fields": {
+    "current": "Rejected"
+  }
+},
+{
+  "pk": 4,
+  "model": "tasks.status",
+  "fields": {
+    "current": "In Progress"
+  }
+},
+{
+  "pk": 5,
+  "model": "tasks.status",
+  "fields": {
+    "current": "Reviewed"
+  }
+},
+{
+  "pk": 10,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "ed4e608e-5e9f-4610-bec7-df9e2a8ecd73",
+    "created": "2014-03-16T21:05:56",
+    "started": null,
+    "completed": null,
+    "modified": "2014-03-16T21:05:56",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-05-09T00:00:00"
+  }
+},
+{
+  "pk": 11,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "3d38da67-6839-4540-8684-da30d95acf97",
+    "created": "2014-03-16T21:05:56",
+    "started": null,
+    "completed": null,
+    "modified": "2014-03-16T21:13:46",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-04-01T00:00:00"
+  }
+},
+{
+  "pk": 12,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "6ed3a031-700d-495f-904b-8a4619c34b19",
+    "created": "2014-03-17T17:26:20",
+    "started": null,
+    "completed": null,
+    "modified": "2014-03-17T17:27:17",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-03-28T00:00:00"
+  }
+},
+{
+  "pk": 13,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "83046b7d-cf10-456d-b2ca-09ee959113b8",
+    "created": "2014-03-17T17:26:20",
+    "started": null,
+    "completed": null,
+    "modified": "2014-03-17T17:27:10",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-04-28T00:00:00"
+  }
+},
+{
+  "pk": 14,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "0651801e-95bc-4d40-87c1-5b93125c1976",
+    "created": "2014-03-25T19:11:57",
+    "started": null,
+    "completed": null,
+    "modified": "2014-03-25T19:11:57",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-06-20T00:00:00"
+  }
+},
+{
+  "pk": 15,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "eddec2a4-6ba8-4870-a667-6b7cb55ed84d",
+    "created": "2014-03-25T19:11:57",
+    "started": null,
+    "completed": null,
+    "modified": "2014-03-25T19:11:57",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-03-06T00:00:00"
+  }
+},
+{
+  "pk": 16,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "b6b0f897-40c5-4fb2-935a-dff0b709f217",
+    "created": "2014-04-08T19:25:48",
+    "started": null,
+    "completed": null,
+    "modified": "2014-04-08T19:25:48",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-04-10T00:00:00"
+  }
+},
+{
+  "pk": 17,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "efb95ab2-1084-4cd1-9ef4-2ef55a8989e5",
+    "created": "2014-04-08T19:25:48",
+    "started": null,
+    "completed": null,
+    "modified": "2014-04-08T19:25:48",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-05-10T00:00:00"
+  }
+},
+{
+  "pk": 18,
+  "model": "tasks.task",
+  "fields": {
+    "status": 1,
+    "concept": "521b0825-14c9-49e5-a95e-462a01e2ae05",
+    "uuid": "deed84e0-ce39-43c5-8afe-a2be2a39d956",
+    "created": "2014-05-05T12:55:52",
+    "started": null,
+    "completed": null,
+    "modified": "2014-05-05T12:55:52",
+    "voided": false,
+    "assigned_to": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "due_on": "2014-05-10T23:59:00"
+  }
+},
+{
+  "pk": 10,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "7ac6f734-be5a-4b2c-b211-ff523a87bc02"
+  }
+},
+{
+  "pk": 11,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "7ac6f734-be5a-4b2c-b211-ff523a87bc02"
+  }
+},
+{
+  "pk": 12,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "b6768b60-2e03-48b2-a9ef-59e903aba201"
+  }
+},
+{
+  "pk": 13,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "b6768b60-2e03-48b2-a9ef-59e903aba201"
+  }
+},
+{
+  "pk": 14,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "a8d18201-07b3-437d-bf8b-db510e4a7ce8",
+    "subject": "e67ee4a9-87ef-4f83-85a4-42e9aab7f8f9"
+  }
+},
+{
+  "pk": 15,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "a8d18201-07b3-437d-bf8b-db510e4a7ce8",
+    "subject": "e67ee4a9-87ef-4f83-85a4-42e9aab7f8f9"
+  }
+},
+{
+  "pk": 16,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "1f8f2ecd-8d59-407a-b692-763984d3a5dc"
+  }
+},
+{
+  "pk": 17,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "1f8f2ecd-8d59-407a-b692-763984d3a5dc"
+  }
+},
+{
+  "pk": 18,
+  "model": "tasks.encountertask",
+  "fields": {
+    "encounter": null,
+    "procedure": "5299055a-c5e6-47e7-b649-dc17dac6019b",
+    "subject": "7ac6f734-be5a-4b2c-b211-ff523a87bc02"
+  }
+}
+]

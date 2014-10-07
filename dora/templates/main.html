@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" ng-app="doraApp">
+<head>
+  <meta charset="utf-8">
+  <title>Dora - Iteration 1</title>
+  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/ol2/style.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
+  
+  <script src="/static/angular/angular.js"></script>
+  <script src="/static/jquery/jquery.js"></script>
+  <!--<script src="/static/bootstrap/js/bootstrap.min.js"></script>-->
+  <script src='/static/ol2/ol.js'></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/controllers.js"></script>
+  <script src="/static/js/services.js"></script>
+  <script src="/static/js/directives.js"></script>
+  <script src="/static/js/qrspanel.js"></script>
+
+</head>
+{% verbatim %}
+<body>
+
+  <div class="container">
+
+    <div id="map">
+      <div id="customZoom">
+        <a href="#customZoomIn" id="customZoomIn">+</a>
+        <a href="#customZoomOut" id="customZoomOut">-</a>
+      </div>
+    </div>
+
+    <div class="row" ng-controller="QueryFormController"> 
+        <div class="col-xs-4 above">
+          <div class="input-group">
+            <input ng-model="disease" type="search" placeholder="Enter medical condition here" class="form-control" />
+            <div class="input-group-btn">
+              <button class="btn btn-info" ng-click="submitQuery()">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+		<dynamic-filter class="top-align" ng-repeat="filter in filters"></dynamic-filter>
+	
+		<button type="button" class="btn btn-info above top-align"
+			ng-click="addFilter()">+ Filter</button>
+
+	</div>
+
+    <div ng-controller="QueryResultController">
+      
+      <div class="row">
+        
+        <div class="col-xs-1 above">
+          <div ng-repeat="qrs in QRSHistory">
+            <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
+          </div>
+        </div>
+
+        <div class="col-xs-3 above">      
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title" id="qrs-panel-title">Query Result Set</h3>
+            </div>
+            <div class="panel-body" id="qrs-panel-body">  
+              <div id="pie-chart"></div>
+              <div id="line-chart"></div>
+
+              <button type="button" class="btn btn-success" id="togglePL">patient list</button>
+              <div id="pl"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-group above">
+          <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'union'; selectionFlag = true;">UNION!</button>
+          <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">INTERSECT!</button>
+      </div>
+      <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle side-margin above">{{selectedQRSList[$index]}}</button>
+      <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
+      <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
+
+    </div>
+  </div>
+
+  {% endverbatim %}
+  <!-- scripts loaded after html-->
+
+</body>
+
+</html>

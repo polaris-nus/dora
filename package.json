@@ -1,0 +1,22 @@
+{
+  "name": "dora",
+  "private": true,
+  "version": "0.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "karma": "^0.12.23",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-jasmine": "^0.1.5",
+    "karma-junit-reporter": "^0.2.2",
+    "protractor": "^1.1.1"
+  },
+  "scripts": {
+    "pretest": "npm install",
+    "test": "karma start ./dora/static/test/karma.conf.js",
+    "test-single-run": "karma start ./dora/static/test/karma.conf.js  --single-run",
+    "preupdate-webdriver": "npm install",
+    "update-webdriver": "webdriver-manager update",
+    "preprotractor": "npm run update-webdriver",
+    "protractor": "protractor e2e-tests/protractor.conf.js"
+  }
+}

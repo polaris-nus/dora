@@ -1,0 +1,17 @@
+{
+  "pk": $subject_number,
+  "model": "core.subject",
+  "fields": {
+    "family_name": "$family_name",
+    "uuid": "$subject_uuid",
+    "created": "$created_date",
+    "dob": "$birth_date",
+    "gender": "$subject_gender",
+    "image": "",
+    "modified": "$created_date",
+    "voided": false,
+    "system_id": "20190011",
+    "given_name": "$given_name",
+    "location": "$location_uuid"
+  }
+}
