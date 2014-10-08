@@ -165,7 +165,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		$scope.executeUnionIntersection = function(){
 			if ($scope.selectedQRSList.length === 0) {return 0;}
-			console.log($scope.selectionFunction);
 			$scope.unionIntersectQRS[$scope.selectionFunction]();
 			$scope.resetUnionIntersectVariables();
 		};

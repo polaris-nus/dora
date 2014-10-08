@@ -180,20 +180,26 @@ doraServices.service('MapServ', [
 					strategies: [clusterStrategy]
 			  });
 
+			  var returnedLayers = {};
+
 			  // Create mapLayerId property to link QRS with respective cluster layer
 			  QRS.mapLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
+			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
+			  
 
 			  // Check and create location polygon layer
-			  console.log(QRS.locationFeature);
 			  if (QRS.locationFeature) {
 			  	var locationFeature = wktParser.read(QRS.locationFeature);
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
 			  	QRS.locationLayerId = locationLayer.id;
 			  	map.addLayer(locationLayer);
+			  	returnedLayers.locationLayer = locationLayer;
 			  	locationLayer.addFeatures(locationFeature);
 			  }
+
+			  return returnedLayers; // for testability
 
 			},
 			toggleVectorLayerVisibility: function(QRS) {

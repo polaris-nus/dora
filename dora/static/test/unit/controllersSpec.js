@@ -15,17 +15,9 @@ describe('Dora controllers', function() {
       ctrl = $controller('QueryFormController', {$scope: scope});
     }));
 
-    it('should add a new filter in "queryFilters" model', function() {
-    	expect(scope.queryFilters).toEqual([]);
-
-    	scope.filterFormType = 'gender';
-    	scope.filterFormValue = 'M';
-    	scope.addFilter();
-
-    	expect(scope.queryFilters).toEqual(
-    		[{type: 'gender', value: 'M'}]);
-    	expect(scope.filterFormType).toBe('');
-    	expect(scope.filterFormValue).toBe('');
+    // QueryFormController Specs go here!
+    it('should do something', function() {
+      expect(true).toBe(true);
     });
 
 	});

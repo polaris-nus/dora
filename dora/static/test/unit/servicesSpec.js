@@ -1,13 +1,9 @@
 describe('Dora services', function() {
+  var QRS1, QRS2, QRS3;
 
 	beforeEach(module('doraServices'));
-
-	describe('QRSServ', function() {
-		var QRSServ, QRS1, QRS2, QRS3;
-
-		beforeEach(inject(function(_QRSServ_) {
-      QRSServ = _QRSServ_;
-      QRS1 = {
+  beforeEach(function() {
+    QRS1 = {
         'assigned':[
           {
             "disease": "EBOLA",
@@ -75,7 +71,13 @@ describe('Dora services', function() {
           }
         ]
       };
+  });
 
+	describe('QRSServ', function() {
+		var QRSServ;
+
+		beforeEach(inject(function(_QRSServ_) {
+      QRSServ = _QRSServ_;
       QRSServ.addToQRSHistory(QRS1);
       QRSServ.addToQRSHistory(QRS2);
       QRSServ.addToQRSHistory(QRS3);
@@ -86,7 +88,6 @@ describe('Dora services', function() {
     });
 
     it('should limit to 10 QRS in QRSHistory', function() {
-      
       for(var i = 0; i < 15; i++) {
         QRSServ.addToQRSHistory(QRS1);
       }
@@ -156,7 +157,6 @@ describe('Dora services', function() {
         ]
       };
 
-
       var QRSHistory = QRSServ.getQRSHistory();
       QRSServ.unionQRSHistory([0,1,2]);
       assignedList = QRSHistory[3].assigned;
@@ -174,7 +174,6 @@ describe('Dora services', function() {
       for (var i = 0; i < unassignedList.length; i++) {
         expect(unassignedList[i]).toEqual(unassignedAnswer[i]);
       }
-
 
     });
 
@@ -224,7 +223,7 @@ describe('Dora services', function() {
 
 	});
 
-  describe('MapServ', function(){
+  ddescribe('MapServ', function(){
     var MapServ;
     
     beforeEach(inject(function(_MapServ_){
@@ -232,29 +231,8 @@ describe('Dora services', function() {
     }));
 
     it('should add a vector layer with 1 point marker', function() {
-      var QRS = {
-        "assigned" : [
-          {
-            "disease": "HIV",
-            "patient": {
-                "family_name": "obed",
-                "uuid": "2c5787df-c09f-4d08-a1a6-ce7ec07abc33",
-                "given_name": "wheaton",
-                "dob": "July 3, 1989, 10:47 a.m.",
-                "gender": "F"
-            },
-            "created_date": "Nov. 25, 2011, 1:28 p.m.",
-            "modified_date": "Nov. 25, 2011, 1:28 p.m.",
-            "location": {
-                "coords": "POINT (131.9055123729999900 -87.8140864197000040)",
-                "alt": "alt!"
-            }
-          }
-        ],
-        "unassigned" : []
-      }
-      var vectorLayer = MapServ.addClusterLayer(QRS);
-      expect(vectorLayer.features.length).toBe(1);
+      var returnedLayers = MapServ.addVectorLayer(QRS1);
+      expect(returnedLayers.clusterLayer.features.length).toBe(1);
     });
 
   });
