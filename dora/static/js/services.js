@@ -182,13 +182,12 @@ doraServices.service('MapServ', [
 
 			  var returnedLayers = {};
 
-			  // Create mapLayerId property to link QRS with respective cluster layer
-			  QRS.mapLayerId = clusterLayer.id;
+			  // Create clusterLayerId property to link QRS with respective cluster layer
+			  QRS.clusterLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
 			  
-
 			  // Check and create location polygon layer
 			  if (QRS.locationFeature) {
 			  	var locationFeature = wktParser.read(QRS.locationFeature);
@@ -203,8 +202,8 @@ doraServices.service('MapServ', [
 
 			},
 			toggleVectorLayerVisibility: function(QRS) {
-				if (QRS.mapLayerId) {
-					var clusterLayer = map.getLayer(QRS.mapLayerId);
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.setVisibility(!clusterLayer.getVisibility());
 				}
 				if (QRS.locationLayerId) {
@@ -213,8 +212,8 @@ doraServices.service('MapServ', [
 				}
 			},
 			removeVectorLayer: function(QRS) {
-				if (QRS.mapLayerId) {
-					var clusterLayer = map.getLayer(QRS.mapLayerId);
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.destroy();
 				}
 				if (QRS.locationLayerId) {
