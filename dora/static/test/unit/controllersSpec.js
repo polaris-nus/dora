@@ -4,21 +4,73 @@ describe('Dora controllers', function() {
 	beforeEach(module('doraServices'));
 
 	describe('QueryFormController', function() {
-		var scope, ctrl, $httpBackend;
+		var scope, ctrl, $httpBackend, MapServ;
 
-		beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
-      $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('http://127.0.0.1:8000/query/?disease=hiv').
-          respond({json: 'expected data here'});
+		beforeEach(inject(function(_MapServ_, _$httpBackend_, $rootScope, $controller) {
+      		$httpBackend = _$httpBackend_;
+      		MapServ = _MapServ_;
+      		$httpBackend.expectGET('http://127.0.0.1:8000/query/?disease=hiv').
+          			respond({json: 'expected data here'});
 
-      scope = $rootScope.$new();
-      ctrl = $controller('QueryFormController', {$scope: scope});
-    }));
+      		scope = $rootScope.$new();
+      		ctrl = $controller('QueryFormController', {$scope: scope});
+    	}));
 
-    // QueryFormController Specs go here!
-    it('should do something', function() {
-      expect(true).toBe(true);
-    });
+    	// QueryFormController Specs go here!
+    	it('should add a new filter', function() {
+      		scope.addFilter();
+      		expect(scope.filters).toEqual([{type:"", value: "", visibility: true},]);
+    	});
+    	
+    	it('should not add a new filter if the last filter type is not chosen', function() {
+      		scope.addFilter();
+      		expect(scope.filters).toEqual([{type:"", value: "", visibility: true},]);
+    	
+    		scope.addFilter();
+    		expect(scope.filters).toEqual([{type:"", value: "", visibility: true},]);
+    	
+    		scope.filters[0].type = "gender";
+    		scope.addFilter();
+    		expect(scope.filters).toEqual([{type:"gender", value: "", visibility: true},
+    										{type:"", value: "", visibility: true}]);
+    	});
+    	
+    	it('should display correct button names', function(){
+    		filter = {type: 'gender', value: 'M', visibility: true};
+    		expect(scope.filterText(filter)).toEqual("Gender: M");
+    		
+    		filter = {type: 'gender', value: 'F', visibility: true};
+    		expect(scope.filterText(filter)).toEqual("Gender: F");
+    		
+    		filter = {type: 'location', value: 'GEOMETRYCOLLECTION(MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5))))', visibility: true};
+    		expect(scope.filterText(filter)).toEqual("Location");
+    		
+    		filter = {type: 'age_range', value: '2-5, 40-50', visibility: true};
+    		expect(scope.filterText(filter)).toEqual("Age Range: 2-5, 40-50");
+    	});
+    	
+    	it('should destroy the element correctly', function(){
+    		filters = [
+    			{type: 'location', value: 'GEOMETRYCOLLECTION(MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5))))', visibility: true},
+    			{type: 'gender', value: 'F', visibility: false},
+    			{type: 'age_range', value: '2-5', visibility: false}
+    		];
+    		
+    		spyOn(MapServ, "deactivatePolygonLayer");
+    		spyOn(MapServ, "clearPolygonLayer");
+    		scope.destroyElement(filters, 0);
+    		expect(MapServ.deactivatePolygonLayer).toHaveBeenCalled();
+    		expect(MapServ.clearPolygonLayer).toHaveBeenCalled();
+    		expect(filters).toEqual([{type: 'gender', value: 'F', visibility: false},
+    							{type: 'age_range', value: '2-5', visibility: false}]);
+    		
+    		MapServ.deactivatePolygonLayer.reset();
+    		MapServ.clearPolygonLayer.reset();
+    		scope.destroyElement(filters, 1);
+    		expect(MapServ.deactivatePolygonLayer).not.toHaveBeenCalled();
+    		expect(MapServ.clearPolygonLayer).not.toHaveBeenCalled();
+    		expect(filters).toEqual([{type: 'gender', value: 'F', visibility: false}]);
+    	});
 
 	});
 
