@@ -36,7 +36,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			$scope.available[filters[$index].type] = true;
 		
 			if (filters[$index].type === 'location') {
-				MapServ.decactivatePolygonLayer();
+				MapServ.deactivatePolygonLayer();
 				MapServ.clearPolygonLayer();
 			}
 			filters.splice($index, 1);
@@ -69,7 +69,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.doneDrawing = function(filter){
-			MapServ.decactivatePolygonLayer();
+			MapServ.deactivatePolygonLayer();
 			filter.value = MapServ.getPolygons();
 			filter.visibility = false;
 			location = filter.value;
@@ -77,7 +77,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.cancelDrawing = function(filters, $index) {
 			$scope.available.location = true;
-			MapServ.decactivatePolygonLayer();
+			MapServ.deactivatePolygonLayer();
 			MapServ.clearPolygonLayer();
 			filters.splice($index, 1)
 		};

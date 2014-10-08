@@ -225,7 +225,7 @@ doraServices.service('MapServ', [
 				drawPolygonControls.activate();
 				polygonLayer.setVisibility(true);
 			},
-			decactivatePolygonLayer: function() {
+			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
 				polygonLayer.setVisibility(false);
 			},
