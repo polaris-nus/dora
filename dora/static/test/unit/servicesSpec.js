@@ -46,7 +46,8 @@ describe('Dora services', function() {
               "uuid": "three"
             }
           }
-        ]
+        ],
+        'locationFeature': 'GEOMETRYCOLLECTION(POLYGON((-16.171874999996632 16.13026201203599,-10.019531249996126 5.790896812872936,-3.515624999996452 13.239945499287394,-16.171874999996632 16.13026201203599)))'
       };
 
       QRS3 = {
@@ -230,9 +231,18 @@ describe('Dora services', function() {
       MapServ = _MapServ_;
     }));
 
-    it('should add a vector layer with 1 point marker', function() {
+    it('should add a vector layer with 1 point marker to map', function() {
       var returnedLayers = MapServ.addVectorLayer(QRS1);
+      expect(QRS1.clusterLayerId).toBeDefined();
       expect(returnedLayers.clusterLayer.features.length).toBe(1);
+    });
+
+    it('should add a vector layer and a polygon layer to map', function() {
+      var returnedLayers = MapServ.addVectorLayer(QRS2);
+      expect(QRS2.clusterLayerId).toBeDefined();
+      expect(QRS2.locationLayerId).toBeDefined();
+      expect(returnedLayers.clusterLayer).toBeDefined();
+      expect(returnedLayers.locationLayer).toBeDefined();
     });
 
   });
