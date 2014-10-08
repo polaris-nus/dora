@@ -99,7 +99,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					params: params
 				}).success(function(QRS) {
 					QRS.locationFeature = location;
+					console.log(location);
 					QRSServ.addToQRSHistory(QRS);
+					MapServ.clearPolygonLayer();
 					location = "";
 				});
 				
