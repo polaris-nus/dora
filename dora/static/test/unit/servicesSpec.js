@@ -224,7 +224,7 @@ describe('Dora services', function() {
 
 	});
 
-  ddescribe('MapServ', function(){
+  describe('MapServ', function(){
     var MapServ;
     
     beforeEach(inject(function(_MapServ_){
