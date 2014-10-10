@@ -25,7 +25,7 @@
 	</div>
 	
 	<div class="below" ng-show="filter.type == 'location'">
-		<button class="btn btn-success above" ng-click="doneDrawing(filter)">Apply Polygon</button><br>
+		<button type="button" class="btn btn-success" ng-click="doneDrawing(filter)">Apply Polygon</button><br>
 		<input ng-model="mapServMode" type="radio" ng-change="changeMode(mapServMode)" name="mapServMode" value="drawing" checked>Drawing&nbsp;&nbsp;
 		<input ng-model="mapServMode" type="radio" ng-change="changeMode(mapServMode)" name="mapServMode" value="modifying">Modifying
 	</div>
