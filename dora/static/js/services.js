@@ -277,6 +277,7 @@ doraServices.service('MapServ', [
 			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
 				polygonLayer.setVisibility(false);
+				modifyPolygonControls.deactivate();
 			},
 			clearPolygonLayer: function() {		
 				polygonLayer.removeAllFeatures();
