@@ -31,13 +31,18 @@ doraServices.service('QRSServ', [ 'MapServ',
 				var unionQRS = {};
 				unionQRS.assigned = [];
 				unionQRS.unassigned = [];
+				encounterHash = {};
 
 				for (var i=0; i<unionList.length;i++) {
 				if (unionList[i] >= QRSHistory.length) { return 0; } //if the given list is faulty, we don't do anything, and return a 0.
 					var assignedList = QRSHistory[unionList[i]].assigned;
 					var unassignedList = QRSHistory[unionList[i]].unassigned;
 					for (var j=0; j<assignedList.length; j++) { //loop through array of objects with coordinates in the given Historical QRS
-						unionQRS.assigned.push(assignedList[j]);
+						var encounterUuid = assignedList[j].uuid;
+						if (encounterHash[encounterUuid] != 1) {
+							unionQRS.assigned.push(assignedList[j]);
+							encounterHash[encounterUuid] = 1;
+						}
 					}
 					for (var j=0; j<unassignedList.length; j++) { //loop through array of objects with coordinates in the given Historical QRS
 						unionQRS.unassigned.push(unassignedList[j]);
