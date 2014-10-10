@@ -1,3 +1,4 @@
+var testingdata = [];
 var doraControllers = angular.module('doraControllers', []);
 
 doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
@@ -34,7 +35,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.destroyElement = function(filters, $index) {
 			$scope.available[filters[$index].type] = true;
-		
+
 			if (filters[$index].type === 'location') {
 				MapServ.deactivatePolygonLayer();
 				MapServ.clearPolygonLayer();
@@ -107,7 +108,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				
 				$scope.disease = "";
 				$scope.filters = [];
-						
+
 				$scope.available = {
 					location: true,
 					gender: true,
@@ -115,11 +116,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				};
 			}
 			
-
-
 		};
 	}
-]);
+	]);
 
 doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapServ',
 	function($scope, QRSServ, MapServ){
@@ -132,12 +131,67 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
+			updateChartOneDS();
+			drawChart();
 		};
 
 		$scope.toggleQRSMarkers = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
 			MapServ.toggleVectorLayerVisibility($scope.doubleClickedQRS);
 		}
+
+		//--Start Chart Methods part1--//
+		updateChartOneDS = function(){
+			var yearCount = {};
+
+			for (index in $scope.displayedQRS.assigned){
+				var dateString = $scope.displayedQRS.assigned[index].created_date;
+				var year = dateString.split(",")[1];
+				if(yearCount[year]){
+					yearCount[year]+=1;
+				}else{
+					yearCount[year]=1;
+				}	
+			}
+
+			yearCount = sortOnKeys(yearCount);
+
+			count = 0;
+			last = 0;
+			for(index in yearCount){
+				if(count>0){
+					yearCount[index] += last;
+				}
+				last = yearCount[index];
+				count+=1;
+			}
+
+			testingdata.push(["Year","Number"]);
+			for(index in yearCount){
+				testingdata.push([index,yearCount[index]]);
+			}
+
+			console.log(testingdata);
+		}
+
+function sortOnKeys(dict) {
+    var sorted = [];
+    for(var key in dict) {
+        sorted[sorted.length] = key;
+    }
+    sorted.sort();
+
+    var tempDict = {};
+    for(var i = 0; i < sorted.length; i++) {
+        tempDict[sorted[i]] = dict[sorted[i]];
+    }
+
+    return tempDict;
+}
+
+
+
+		//--End Chart Methods part1--//
 
 		//--Start Union intersection Methods--//
 		$scope.resetUnionIntersectVariables = function(){
@@ -173,4 +227,53 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		};
 		//--End Union intersection Methods--// 
 	}
-]);
+	]);
+
+//--Start Chart Methods part2--//
+google.load('visualization', '1.0', {'packages':['corechart']});
+google.setOnLoadCallback(drawChart);
+
+// testingdata = [['Year', 'New'],
+// 	['2009',  107],
+// 	['2010',  117],
+// 	['2011',  66],
+// 	['2012',  103],
+// 	['2013',  10],
+// 	['2014',  7]
+// 	];
+
+function drawChart() {
+  // Create the data table.
+//   var data = new google.visualization.DataTable();
+//   data.addColumn('string', 'Topping');
+//   data.addColumn('number', 'Slices');
+//   data.addRows([
+//     ['Alive', 52],
+//     ['Dead', 18],
+//     ['Cured', 30],
+//     ]);
+
+//   // Set chart options
+//   var options = {title:'Current Condition of Patients',
+//   pieSliceText: 'label',
+//   chartArea:{left:10,top:30,width:'100%',height:'70%'}
+// };
+
+//   // Instantiate and draw our chart, passing in some options.
+//   var chart = new google.visualization.PieChart(document.getElementById('pie-chart'));
+//   chart.draw(data, options);
+
+var data2 = google.visualization.arrayToDataTable(testingdata);
+
+var options2 = {
+	title: 'Patient Number',
+	curveType: 'function',
+	chartArea:{left:30,top:30,width:'80%',height:'50%'},
+	legend: { position: 'none'}
+};
+
+var chart2 = new google.visualization.LineChart(document.getElementById('line-chart'));
+
+chart2.draw(data2, options2);
+}
+		//--End Chart Methods part2--//
