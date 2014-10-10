@@ -128,6 +128,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.selectionFlag = false;
 		$scope.selectionFunction = '';
 		$scope.newQRS = {};
+		$scope.displayedQRS = {};
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];

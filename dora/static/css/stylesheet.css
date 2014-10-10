@@ -36,13 +36,20 @@ body { overflow: hidden; }
 }
 
 .btn-circle {
+  position: relative;
   width: 30px;
   height: 30px;
   text-align: center;
   padding: 0px;
   border-radius: 100%;
-  margin:6px;
+  margin-bottom:8px;
+  margin-left: -60px;
   border-width:3px;
+}
+
+.qrspanel{
+  position: relative;
+  margin-left: -80px;
 }
 
 .side-margin {
