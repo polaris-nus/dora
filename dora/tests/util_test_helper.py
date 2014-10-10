@@ -85,6 +85,7 @@ def setup_create_json_obj_list_results():
 	results = [[],[]]
 	json_template = loader.get_template('json_obj_template')
 	results[0].append(json_template.render(Context({
+		"encounter_uuid": str(0),
 		"disease_name":'TUBERCOLOSIS', 
 		"patient_uuid":'0', 
 		"patient_family_name":'0', 
@@ -97,6 +98,7 @@ def setup_create_json_obj_list_results():
 		"altitude":"alt!"
 	})))
 	results[0].append(json_template.render(Context({
+		"encounter_uuid": str(2),
 		"disease_name":'TUBERCOLOSIS', 
 		"patient_uuid":'2', 
 		"patient_family_name":'2', 

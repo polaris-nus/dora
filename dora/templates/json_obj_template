@@ -1,4 +1,5 @@
 {
+    "uuid": "{{ encounter_uuid }}"
     "disease": "{{ disease_name }}",
     "patient": {
         "family_name": "{{ patient_family_name }}",
