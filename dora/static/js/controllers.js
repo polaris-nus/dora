@@ -6,6 +6,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.disease = "";
 		$scope.filters = [];
 		var location = "";
+		$scope.mapServMode = "drawing";
 		
 		$scope.available = {
 			location: true,
@@ -28,7 +29,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			filter.visibility = filter.type==='';
 			
 			if (filter.type === "location") {
-				$scope.doneDrawing();
+				$scope.doneDrawing(filter);
 			}
 		};
 		
@@ -53,6 +54,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			filter.value = "";
 			
 			$scope.available[filter.type] = false;
+			
+			console.log($scope.available);
+			
 			filter.selected = true;
 			
 			if (filter.type === "location") {
@@ -75,11 +79,14 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			location = filter.value;
 		};
 		
-		$scope.cancelDrawing = function(filters, $index) {
-			$scope.available.location = true;
-			MapServ.deactivatePolygonLayer();
-			MapServ.clearPolygonLayer();
-			filters.splice($index, 1)
+		$scope.changeMode = function(newValue) {
+			console.log(newValue);
+			if (newValue == 'drawing') {
+				MapServ.deactivatePolygonModify();
+			}
+			else if (newValue == 'modifying') {
+				MapServ.activatePolygonModify();
+			}
 		};
 
 		$scope.submitQuery = function(){
@@ -114,9 +121,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					age_range: true
 				};
 			}
-			
-
-
 		};
 	}
 ]);

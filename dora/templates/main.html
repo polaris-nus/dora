@@ -33,12 +33,13 @@
       </div>
     </div>
 
-    <div class="row" ng-controller="QueryFormController"> 
+    <div class="row" ng-controller="QueryFormController">
+    	<form ng-submit="submitQuery()">
         <div class="col-xs-4 above">
           <div class="input-group">
             <input ng-model="disease" type="search" placeholder="Enter medical condition here" class="form-control" />
             <div class="input-group-btn">
-              <button class="btn btn-info" ng-click="submitQuery()">
+              <button type="submit" class="btn btn-info"">
                 <span class="glyphicon glyphicon-search"></span>
               </button>
             </div>
@@ -49,6 +50,8 @@
 	
 		<button type="button" class="btn btn-info above top-align"
 			ng-click="addFilter()">+ Filter</button>
+			
+		</form>
 
 	</div>
 
