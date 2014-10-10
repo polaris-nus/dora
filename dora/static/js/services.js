@@ -270,7 +270,7 @@ doraServices.service('MapServ', [
 				modifyPolygonControls.activate();
 			},
 			deactivatePolygonModify: function() {
-				drawPolygonControls.activate();
+				this.activatePolygonLayer();
 				modifyPolygonControls.deactivate();
 			},
 			getPolygons: function() { 
