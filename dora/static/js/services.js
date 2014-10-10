@@ -55,16 +55,24 @@ doraServices.service('QRSServ', [ 'MapServ',
 				hashTable.assigned = {};
 				hashTable.unassigned = {};
 
+				//flag is either assigned or unassigned
 				var populateHashTable = function(list, flag) {
+					change = {}; //checks whether the current UUID has already been modified this round.
 					for (var j=0; j<list.length; j++) {
-						if (hashTable[flag][list[j].patient.uuid] == null) {
-							hashTable[flag][list[j].patient.uuid] = 1;
+						patientUuid = list[j].patient.uuid;
+						if (hashTable[flag][patientUuid] == null) {
+							hashTable[flag][patientUuid] = 1;
+							change[patientUuid] = 1;
 						} else {
-							hashTable[flag][list[j].patient.uuid] += 1;
+							if (change[patientUuid] != 1) { //if this patientUuid has not been modified already
+								hashTable[flag][list[j].patient.uuid] += 1;
+								change[patientUuid] = 1; //make this patientUuid dirty
+							}
 						}
 					}
 				};
 
+				//flag is either assigned or unassigned
 				var populateIntersectQRS = function(list, flag) {
 					for (var j=0; j<list.length; j++) {
 						if (hashTable[flag][list[j].patient.uuid] == intersectList.length) {
@@ -91,6 +99,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 				}
 
 				this.addToQRSHistory(intersectQRS);
+				console.log(JSON.stringify(intersectQRS));
 
 				return intersectQRS;
 			}
