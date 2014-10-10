@@ -159,6 +159,7 @@ doraServices.service('MapServ', [
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
 
+
 		return {
 			addVectorLayer: function(QRS) {
 				// Extract coordinates for encounters
@@ -224,6 +225,32 @@ doraServices.service('MapServ', [
 			activatePolygonLayer: function() {
 				drawPolygonControls.activate();
 				polygonLayer.setVisibility(true);
+
+				// undo/redo event handlers
+				OpenLayers.Event.observe(document, "keydown", function(evt) {
+					var handled = false;
+					switch (evt.keyCode) {
+				    case 90: // z
+			        if (evt.metaKey || evt.ctrlKey) {
+			            drawPolygonControls.undo();
+			            handled = true;
+			        }
+				        break;
+				    case 89: // y
+			        if (evt.metaKey || evt.ctrlKey) {
+			            drawPolygonControls.redo();
+			            handled = true;
+			        }
+			        break;
+				    case 27: // esc
+			        drawPolygonControls.cancel();
+			        handled = true;
+			        break;
+					}
+					if (handled) {
+					    OpenLayers.Event.stop(evt);
+					}
+				});
 			},
 			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
