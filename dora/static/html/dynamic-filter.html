@@ -15,18 +15,19 @@
 	
 
 	<div class="below" ng-show="filter.type == 'age_range'"">
-		<input ng-model="filter.value" type="text"/>
+		<input ng-model="filter.value" type="text">
 	</div>
 
 	<div class="below" ng-show="filter.type == 'gender'">
 		<input ng-model="filter.value" type="radio" name="gender"
-			value="M"/>Male&nbsp;&nbsp;<input ng-model="filter.value" type="radio"
-			name="gender" value="F"/>Female
+			value="M">Male&nbsp;&nbsp;<input ng-model="filter.value" type="radio"
+			name="gender" value="F">Female
 	</div>
 	
-	<div class="below">
-		<button class="btn btn-success above" ng-show="filter.type == 'location'" ng-click="doneDrawing(filter)">Save Polygon</button>
-		<button class="btn btn-danger above" ng-show="filter.type == 'location'" ng-click="cancelDrawing(filters, $index)">Cancel</button>
+	<div class="below" ng-show="filter.type == 'location'">
+		<button class="btn btn-success above" ng-click="doneDrawing(filter)">Apply Polygon</button><br>
+		<input ng-model="mapServMode" type="radio" ng-change="changeMode(mapServMode)" name="mapServMode" value="drawing" checked>Drawing&nbsp;&nbsp;
+		<input ng-model="mapServMode" type="radio" ng-change="changeMode(mapServMode)" name="mapServMode" value="modifying">Modifying
 	</div>
 </div>
 
