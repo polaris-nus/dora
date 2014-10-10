@@ -58,7 +58,7 @@
         
         <div class="col-xs-1 above">
           <div ng-repeat="qrs in QRSHistory">
-            <button type="button" class="btn btn-success btn-circle" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
+            <button type="button" class="btn btn-success btn-circle btn-color-{{$index}}" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
           </div>
         </div>
 
