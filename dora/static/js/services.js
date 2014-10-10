@@ -54,6 +54,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 				var hashTable = {};
 				hashTable.assigned = {};
 				hashTable.unassigned = {};
+				encounterHash = {};
 
 				//flag is either assigned or unassigned
 				var populateHashTable = function(list, flag) {
@@ -75,8 +76,9 @@ doraServices.service('QRSServ', [ 'MapServ',
 				//flag is either assigned or unassigned
 				var populateIntersectQRS = function(list, flag) {
 					for (var j=0; j<list.length; j++) {
-						if (hashTable[flag][list[j].patient.uuid] == intersectList.length) {
+						if (hashTable[flag][list[j].patient.uuid] == intersectList.length && encounterHash[list[j].uuid] != 1) {
 							intersectQRS[flag].push(list[j]);
+							encounterHash[list[j].uuid] = 1;
 						}
 					}
 				};
