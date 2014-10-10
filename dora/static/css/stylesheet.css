@@ -23,7 +23,7 @@ body { overflow: hidden; }
 }
 
 .top-align {
-	vertical:align: top;
+	vertical-align: top;
 	white-space: nowrap;
 }
 

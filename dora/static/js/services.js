@@ -142,7 +142,7 @@ doraServices.service('MapServ', [
 	    ]
 		});
 		var center = [0,0];
-		var zoom = 2;
+		var zoom = 3;
 		map.setCenter(center, zoom);
 
 		var wktParser = new OpenLayers.Format.WKT({
