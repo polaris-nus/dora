@@ -12,7 +12,8 @@ doraServices.service('QRSServ', [ 'MapServ',
 				}
 
 				QRSHistory.push(QRS);
-				MapServ.addVectorLayer(QRS); 
+				MapServ.addVectorLayer(QRS);
+				// RETURN BOOLEAN FOR ADD SUCCESS
 			},
 			removeFromQRSHistory: function(QRS){
 				var index = QRSHistory.indexOf(QRS);
@@ -229,7 +230,6 @@ doraServices.service('MapServ', [
 			},
 			activatePolygonLayer: function() {
 				drawPolygonControls.activate();
-				modifyPolygonControls.activate();
 				polygonLayer.setVisibility(true);
 
 				// undo/redo event handlers
@@ -260,11 +260,18 @@ doraServices.service('MapServ', [
 			},
 			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
 				polygonLayer.setVisibility(false);
 			},
 			clearPolygonLayer: function() {		
 				polygonLayer.removeAllFeatures();
+			},
+			activatePolygonModify: function() {
+				drawPolygonControls.deactivate();
+				modifyPolygonControls.activate();
+			},
+			deactivatePolygonModify: function() {
+				drawPolygonControls.activate();
+				modifyPolygonControls.deactivate();
 			},
 			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);
