@@ -21,7 +21,7 @@ body { overflow: hidden; }
   display: inline-block;
   margin-right: 3px;
   margin-bottom: 5px;
-  //margin-left: 10px;
+  /*margin-left: 10px;*/
 }
 
 .below {
@@ -36,12 +36,14 @@ body { overflow: hidden; }
 }
 
 .btn-circle {
+  position: relative;
+  margin-left: -40px;
   width: 30px;
   height: 30px;
   text-align: center;
   padding: 0px;
   border-radius: 100%;
-  margin:6px;
+  margin-bottom:6px;
   border-width:3px;
 }
 
@@ -70,10 +72,11 @@ html, body{
 }
 #customZoom {
     z-index: 1001;
-    position: relative;
+    position: absolute;
     top: 10px;
-    left: 1100px;
+    right: 100px;
 }
+
 #customZoom a {
     text-decoration: none;
     position: absolute;
