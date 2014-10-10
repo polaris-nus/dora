@@ -11,6 +11,10 @@ doraServices.service('QRSServ', [ 'MapServ',
 					MapServ.removeVectorLayer(QRSHistory.shift());
 				}
 
+				for(index in QRSHistory) {
+					MapServ.setVectorLayerToInvisible(QRSHistory[index]);
+				}
+
 				QRSHistory.push(QRS);
 				MapServ.addVectorLayer(QRS);
 				// RETURN BOOLEAN FOR ADD SUCCESS
@@ -184,6 +188,18 @@ doraServices.service('MapServ', [
 
 		return {
 			addVectorLayer: function(QRS) {
+				var returnedLayers = {};
+
+			  // Check and create location polygon layer
+			  if (QRS.locationFeature) {
+			  	var locationFeature = wktParser.read(QRS.locationFeature);
+			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
+			  	QRS.locationLayerId = locationLayer.id;
+			  	map.addLayer(locationLayer);
+			  	returnedLayers.locationLayer = locationLayer;
+			  	locationLayer.addFeatures(locationFeature);
+			  }
+
 				// Extract coordinates for encounters
 				var coordinates = [];
 				for(index in QRS.assigned) {
@@ -203,23 +219,11 @@ doraServices.service('MapServ', [
 					strategies: [clusterStrategy]
 			  });
 
-			  var returnedLayers = {};
-
 			  // Create clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
-			  
-			  // Check and create location polygon layer
-			  if (QRS.locationFeature) {
-			  	var locationFeature = wktParser.read(QRS.locationFeature);
-			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
-			  	QRS.locationLayerId = locationLayer.id;
-			  	map.addLayer(locationLayer);
-			  	returnedLayers.locationLayer = locationLayer;
-			  	locationLayer.addFeatures(locationFeature);
-			  }
 
 			  return returnedLayers; // for testability
 
@@ -232,6 +236,16 @@ doraServices.service('MapServ', [
 				if (QRS.locationLayerId) {
 					var locationLayer = map.getLayer(QRS.locationLayerId);
 					locationLayer.setVisibility(!locationLayer.getVisibility());
+				}
+			},
+			setVectorLayerToInvisible: function(QRS) {
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					clusterLayer.setVisibility(false);
+				}
+				if (QRS.locationLayerId) {
+					var locationLayer = map.getLayer(QRS.locationLayerId);
+					locationLayer.setVisibility(false);
 				}
 			},
 			removeVectorLayer: function(QRS) {
