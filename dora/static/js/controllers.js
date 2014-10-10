@@ -172,6 +172,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				count+=1;
 			}
 
+			testingdata = [];
 			testingdata.push(["Year","Number"]);
 			for(index in yearCount){
 				testingdata.push([index,yearCount[index]]);
