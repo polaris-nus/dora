@@ -158,7 +158,12 @@ doraServices.service('MapServ', [
 		map.addLayer(polygonLayer);
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
+		var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
+		map.addControl(modifyPolygonControls);
 
+		modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
+		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
+		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
 
 		return {
 			addVectorLayer: function(QRS) {
@@ -224,6 +229,7 @@ doraServices.service('MapServ', [
 			},
 			activatePolygonLayer: function() {
 				drawPolygonControls.activate();
+				modifyPolygonControls.activate();
 				polygonLayer.setVisibility(true);
 
 				// undo/redo event handlers
@@ -254,6 +260,7 @@ doraServices.service('MapServ', [
 			},
 			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
+				modifyPolygonControls.deactivate();
 				polygonLayer.setVisibility(false);
 			},
 			clearPolygonLayer: function() {		
