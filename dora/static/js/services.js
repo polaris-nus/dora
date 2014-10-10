@@ -11,8 +11,13 @@ doraServices.service('QRSServ', [ 'MapServ',
 					MapServ.removeVectorLayer(QRSHistory.shift());
 				}
 
+				for(index in QRSHistory) {
+					MapServ.setVectorLayerToInvisible(QRSHistory[index]);
+				}
+
 				QRSHistory.push(QRS);
-				MapServ.addVectorLayer(QRS); 
+				MapServ.addVectorLayer(QRS);
+				// RETURN BOOLEAN FOR ADD SUCCESS
 			},
 			removeFromQRSHistory: function(QRS){
 				var index = QRSHistory.indexOf(QRS);
@@ -30,13 +35,18 @@ doraServices.service('QRSServ', [ 'MapServ',
 				var unionQRS = {};
 				unionQRS.assigned = [];
 				unionQRS.unassigned = [];
+				encounterHash = {};
 
 				for (var i=0; i<unionList.length;i++) {
 				if (unionList[i] >= QRSHistory.length) { return 0; } //if the given list is faulty, we don't do anything, and return a 0.
 					var assignedList = QRSHistory[unionList[i]].assigned;
 					var unassignedList = QRSHistory[unionList[i]].unassigned;
 					for (var j=0; j<assignedList.length; j++) { //loop through array of objects with coordinates in the given Historical QRS
-						unionQRS.assigned.push(assignedList[j]);
+						var encounterUuid = assignedList[j].uuid;
+						if (encounterHash[encounterUuid] != 1) {
+							unionQRS.assigned.push(assignedList[j]);
+							encounterHash[encounterUuid] = 1;
+						}
 					}
 					for (var j=0; j<unassignedList.length; j++) { //loop through array of objects with coordinates in the given Historical QRS
 						unionQRS.unassigned.push(unassignedList[j]);
@@ -53,21 +63,31 @@ doraServices.service('QRSServ', [ 'MapServ',
 				var hashTable = {};
 				hashTable.assigned = {};
 				hashTable.unassigned = {};
+				encounterHash = {};
 
+				//flag is either assigned or unassigned
 				var populateHashTable = function(list, flag) {
+					change = {}; //checks whether the current UUID has already been modified this round.
 					for (var j=0; j<list.length; j++) {
-						if (hashTable[flag][list[j].patient.uuid] == null) {
-							hashTable[flag][list[j].patient.uuid] = 1;
+						patientUuid = list[j].patient.uuid;
+						if (hashTable[flag][patientUuid] == null) {
+							hashTable[flag][patientUuid] = 1;
+							change[patientUuid] = 1;
 						} else {
-							hashTable[flag][list[j].patient.uuid] += 1;
+							if (change[patientUuid] != 1) { //if this patientUuid has not been modified already
+								hashTable[flag][list[j].patient.uuid] += 1;
+								change[patientUuid] = 1; //make this patientUuid dirty
+							}
 						}
 					}
 				};
 
+				//flag is either assigned or unassigned
 				var populateIntersectQRS = function(list, flag) {
 					for (var j=0; j<list.length; j++) {
-						if (hashTable[flag][list[j].patient.uuid] == intersectList.length) {
+						if (hashTable[flag][list[j].patient.uuid] == intersectList.length && encounterHash[list[j].uuid] != 1) {
 							intersectQRS[flag].push(list[j]);
+							encounterHash[list[j].uuid] = 1;
 						}
 					}
 				};
@@ -90,6 +110,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 				}
 
 				this.addToQRSHistory(intersectQRS);
+				console.log(JSON.stringify(intersectQRS));
 
 				return intersectQRS;
 			}
@@ -167,6 +188,18 @@ doraServices.service('MapServ', [
 
 		return {
 			addVectorLayer: function(QRS) {
+				var returnedLayers = {};
+
+			  // Check and create location polygon layer
+			  if (QRS.locationFeature) {
+			  	var locationFeature = wktParser.read(QRS.locationFeature);
+			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
+			  	QRS.locationLayerId = locationLayer.id;
+			  	map.addLayer(locationLayer);
+			  	returnedLayers.locationLayer = locationLayer;
+			  	locationLayer.addFeatures(locationFeature);
+			  }
+
 				// Extract coordinates for encounters
 				var coordinates = [];
 				for(index in QRS.assigned) {
@@ -186,23 +219,11 @@ doraServices.service('MapServ', [
 					strategies: [clusterStrategy]
 			  });
 
-			  var returnedLayers = {};
-
 			  // Create clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
-			  
-			  // Check and create location polygon layer
-			  if (QRS.locationFeature) {
-			  	var locationFeature = wktParser.read(QRS.locationFeature);
-			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
-			  	QRS.locationLayerId = locationLayer.id;
-			  	map.addLayer(locationLayer);
-			  	returnedLayers.locationLayer = locationLayer;
-			  	locationLayer.addFeatures(locationFeature);
-			  }
 
 			  return returnedLayers; // for testability
 
@@ -217,6 +238,16 @@ doraServices.service('MapServ', [
 					locationLayer.setVisibility(!locationLayer.getVisibility());
 				}
 			},
+			setVectorLayerToInvisible: function(QRS) {
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					clusterLayer.setVisibility(false);
+				}
+				if (QRS.locationLayerId) {
+					var locationLayer = map.getLayer(QRS.locationLayerId);
+					locationLayer.setVisibility(false);
+				}
+			},
 			removeVectorLayer: function(QRS) {
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
@@ -229,7 +260,6 @@ doraServices.service('MapServ', [
 			},
 			activatePolygonLayer: function() {
 				drawPolygonControls.activate();
-				modifyPolygonControls.activate();
 				polygonLayer.setVisibility(true);
 
 				// undo/redo event handlers
@@ -260,11 +290,19 @@ doraServices.service('MapServ', [
 			},
 			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
 				polygonLayer.setVisibility(false);
+				modifyPolygonControls.deactivate();
 			},
 			clearPolygonLayer: function() {		
 				polygonLayer.removeAllFeatures();
+			},
+			activatePolygonModify: function() {
+				drawPolygonControls.deactivate();
+				modifyPolygonControls.activate();
+			},
+			deactivatePolygonModify: function() {
+				this.activatePolygonLayer();
+				modifyPolygonControls.deactivate();
 			},
 			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);

@@ -65,6 +65,7 @@ def create_json_obj_list(query_result_set):
 		json_template = loader.get_template('json_obj_template')
 		for query_result in query_result_set:
 			context_args = {}
+			context_args['encounter_uuid'] = query_result.uuid
 			context_args['disease_name'] = query_result.disease.name
 			context_args['patient_uuid'] = query_result.patient.uuid
 			context_args['patient_family_name'] = query_result.patient.family_name
