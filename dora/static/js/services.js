@@ -306,6 +306,17 @@ doraServices.service('MapServ', [
 			},
 			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);
+			},
+			temporalSliderFeaturesToggle: function(QRS) {
+				//Pre-cond: Features List Must be sorted by date
+				//Will be called whenever the temporal slider is called
+				//Will only loop through the QRS-es that are currently visible -> Called when toggle visible
+				//Need an array to keep track which QRSes are visible and which are not
+				//Step 1: Take in temporal slider min max date.
+				//Step 2: LHS: for features whose date < slider.minDate -> remove and put into LeftStack from left to right
+				//Step 2.1: LHS: if LeftStack.peek().date > slider.minDate -> pop and put back into front of features list
+				//Step 3: RHS: for features whose date > slider.maxDate -> remove and put into RightStack from right to left
+				//Step 3.1: RHS: if RightStack.peek().date < slider.maxDate -> pop and put back into back of features list
 			}
 		}
 	}
