@@ -284,3 +284,34 @@ var chart2 = new google.visualization.LineChart(document.getElementById('line-ch
 chart2.draw(data2, options2);
 }
 		//--End Chart Methods part2--//
+
+
+//--Start TemporalSlider Controller--//
+doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'MapServ',
+	function($scope, QRSServ, MapServ){
+
+		$scope.sliderModifier = function(arg) {
+			$("#slider").dateRangeSlider(arg);
+		};
+
+		//Initialize slider
+		$scope.sliderModifier({
+			defaultValues:{
+				min: new Date()-30, //default is one month
+				max: new Date()
+			},
+			bounds:{
+			    min: new Date(2012, 0, 1), //This value should be changed to the latest date available
+			    max: new Date()
+			}
+		});
+
+		$scope.sliderModifier({range:{min: {days: 7}}});
+		$scope.sliderModifier({symmetricPositionning: true});
+		
+	}
+]);
+
+//--End TemporalSlider Controller--//
+
+
