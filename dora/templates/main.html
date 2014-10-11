@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
   <link rel="stylesheet" type="text/css" href="/static/ol2/style.css">
   <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
+  <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.custom.css">
+  <link rel="stylesheet" href="/static/angular-modules/slider/css/classic.css">
   
   <script src="/static/angular/angular.js"></script>
   <script src="/static/jquery/jquery.js"></script>
@@ -19,6 +21,9 @@
   <script src="/static/js/services.js"></script>
   <script src="/static/js/directives.js"></script>
   <script src="/static/js/qrspanel.js"></script>
+
+  <script src="/static/jquery-ui/jquery-ui.custom.js"></script>
+  <script src="/static/angular-modules/slider/jQDateRangeSlider-min.js"></script>
 
 </head>
 {% verbatim %}
@@ -72,24 +77,29 @@
               <!--   <div id="pie-chart"></div> -->
               <div id="line-chart"></div>
 
-            <!--   <button type="button" class="btn btn-success" id="togglePL">patient list</button>
-            <div id="pl"></div> -->
+              <!--   <button type="button" class="btn btn-success" id="togglePL">patient list</button>
+              <div id="pl"></div> -->
+            </div>
           </div>
         </div>
+
       </div>
 
+
+      <div class="btn-group above">
+        <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'union'; selectionFlag = true;">Union</button>
+        <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">Intersect</button>
+      </div>
+      <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle side-margin above">{{selectedQRSList[$index]}}</button>
+      <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
+      <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
     </div>
 
-
-    <div class="btn-group above">
-      <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'union'; selectionFlag = true;">UNION!</button>
-      <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">INTERSECT!</button>
+    <div ng-controller="TemporalSliderController" class="above" style="width:50%;padding-bottom:20px;padding-top:20px;position:relative;float:right">
+      <div id="slider"></div>
     </div>
-    <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle side-margin above">{{selectedQRSList[$index]}}</button>
-    <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
-    <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
+
   </div>
-</div>
 
 {% endverbatim %}
 <!-- scripts loaded after html-->
