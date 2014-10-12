@@ -264,6 +264,17 @@ doraServices.service('MapServ', [
 			    features.push(vectorFeature);
 			  }
 
+				features.sort(function (a,b) {
+					dateA = Date.parse(a.attributes.date);
+					dateB = Date.parse(b.attributes.date);
+					if (dateA < dateB)
+						return -1;
+					if (dateA > dateB)
+						return 1;
+					return 0;
+				});
+
+
 				var clusterStrategy = new OpenLayers.Strategy.Cluster();
 				clusterStrategy.distance = 30;
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
