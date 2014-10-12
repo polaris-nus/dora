@@ -107,7 +107,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					params: params
 				}).success(function(QRS) {
 					QRS.locationFeature = location;
-					console.log(location);
 					QRSServ.addToQRSHistory(QRS);
 					MapServ.clearPolygonLayer();
 					location = "";
@@ -177,8 +176,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			for(index in yearCount){
 				testingdata.push([index,yearCount[index]]);
 			}
-
-			console.log(testingdata);
 		}
 
 function sortOnKeys(dict) {
