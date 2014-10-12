@@ -153,7 +153,7 @@ doraServices.service('MapServ', [
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				pointRadius: "${radius}",
-			  fillColor: "#3399CC",
+			  fillColor: "${color}",
 			  fillOpacity: 1,
 			  strokeColor: "#fff",
 			  strokeWidth: 2,
@@ -177,6 +177,12 @@ doraServices.service('MapServ', [
               pix = Math.min(feature.attributes.count, 7) + pix;
             }
             return pix;
+					},
+					color: function(feature) {
+						if(feature.cluster) {
+              return feature.cluster[0].attributes.featureColor;
+            }
+            return 'black'; // should never be used!
 					}
 				}
 			})
@@ -217,6 +223,7 @@ doraServices.service('MapServ', [
 				var features = [];
 			  for (index in coordinates){
 			    var vectorFeature = wktParser.read(coordinates[index]);
+			    vectorFeature.attributes = {featureColor: 'crimson'};
 			    features.push(vectorFeature);
 			  }
 
@@ -325,6 +332,43 @@ doraServices.service('MapServ', [
 				//Step 2.1: LHS: if LeftStack.peek().date > slider.minDate -> pop and put back into front of features list
 				//Step 3: RHS: for features whose date > slider.maxDate -> remove and put into RightStack from right to left
 				//Step 3.1: RHS: if RightStack.peek().date < slider.maxDate -> pop and put back into back of features list
+			}
+		}
+	}
+]);
+
+doraServices.service('PaletteServ', [
+	function(){
+		var palette = [
+			{colour:'Crimson', inUse: false},
+			{colour:'GoldenRod', inUse: false},
+			{colour:'Gold', inUse: false},
+			{colour:'GreenYellow', inUse: false},
+			{colour:'ForestGreen', inUse: false},
+			{colour:'DeepSkyBlue', inUse: false},
+			{colour:'DodgerBlue', inUse: false},
+			{colour:'MidnightBlue', inUse: false},
+			{colour:'Indigo', inUse: false},
+			{colour:'MediumVioletRed', inUse: false}
+		]
+
+		return {
+			useNextColor: function() {
+				for(index in palette) {
+					if(!palette[index].inUse) {
+						palette[index].inUse = true;
+						return palette[index].colour;
+					}
+				}
+				return null; // all colors in use
+			},
+			releaseColor: function(colour) {
+				for(index in palette) {
+					if(palette[index].color.localeCompare(colour) == 0) {
+						palette[index].inUse = false;
+						break;
+					}
+				}
 			}
 		}
 	}
