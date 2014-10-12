@@ -151,7 +151,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 			for (index in $scope.displayedQRS.assigned){
 				var dateString = $scope.displayedQRS.assigned[index].created_date;
-				var year = dateString.split(",")[1];
+				//var year = dateString.split(",")[1];
+				var year = dateString.split("-")[0];
 				if(yearCount[year]){
 					yearCount[year]+=1;
 				}else{
@@ -288,23 +289,34 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 	function($scope, QRSServ, MapServ){
 
 		$scope.sliderModifier = function(arg) {
-			$("#slider").dateRangeSlider(arg);
+			return $("#slider").dateRangeSlider(arg);
 		};
 
 		//Initialize slider
+		var defaultMax = new Date();
+		var defaultMin = new Date();
+		var defaultRange = 30;
+		defaultMin.setDate(defaultMax.getDate() - defaultRange);
 		$scope.sliderModifier({
 			defaultValues:{
-				min: new Date()-30, //default is one month
-				max: new Date()
+				min: defaultMin, //default is one month
+				max: defaultMax
 			},
 			bounds:{
 			    min: new Date(2012, 0, 1), //This value should be changed to the latest date available
 			    max: new Date()
 			}
 		});
+		var values = $scope.sliderModifier("values");
+		MapServ.setSliderMinMax(values.min, values.max);
 
 		$scope.sliderModifier({range:{min: {days: 7}}});
 		$scope.sliderModifier({symmetricPositionning: true});
+
+		$("#slider").bind("valuesChanging", function(e, data){
+			MapServ.setSliderMinMax(data.values.min, data.values.max);
+			MapServ.temporalSliderFeaturesToggle();
+		});
 		
 	}
 ]);
