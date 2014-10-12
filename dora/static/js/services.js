@@ -1,20 +1,23 @@
 var doraServices = angular.module('doraServices', []);
 
-doraServices.service('QRSServ', [ 'MapServ',
-	function(MapServ){
+doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
+	function(MapServ, PaletteServ){
 		var historyLimit = 10;
 		var QRSHistory = [];
 		return {
 			addToQRSHistory: function (QRS){
 				//Limiting size of QRSHistory
 				while (QRSHistory.length >= historyLimit){
-					MapServ.removeVectorLayer(QRSHistory.shift());
+					var removedQRS = QRSHistory.shift();
+					MapServ.removeVectorLayer(removedQRS);
+					PaletteServ.releaseColor(removedQRS.color);
 				}
 
 				for(index in QRSHistory) {
 					MapServ.setVectorLayerToInvisible(QRSHistory[index]);
 				}
 
+				QRS.color = PaletteServ.useNextColor();
 				QRSHistory.push(QRS);
 				MapServ.addVectorLayer(QRS);
 				// RETURN BOOLEAN FOR ADD SUCCESS
@@ -25,6 +28,7 @@ doraServices.service('QRSServ', [ 'MapServ',
 				if (index > -1) {
 					QRSHistory.splice(index, 1)[0];
 					MapServ.removeVectorLayer(QRS);
+					PaletteServ.releaseColor(QRS);
 				}
 			},
 			getQRSHistory: function(){
@@ -223,7 +227,7 @@ doraServices.service('MapServ', [
 				var features = [];
 			  for (index in coordinates){
 			    var vectorFeature = wktParser.read(coordinates[index]);
-			    vectorFeature.attributes = {featureColor: 'crimson'};
+			    vectorFeature.attributes = {featureColor: QRS.color};
 			    features.push(vectorFeature);
 			  }
 
