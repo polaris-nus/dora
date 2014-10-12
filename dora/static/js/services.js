@@ -282,7 +282,6 @@ doraServices.service('MapServ', [
 			  clusterLayerFeatures[clusterLayer.id]['leftStack'] = [];
 			  clusterLayerFeatures[clusterLayer.id]['rightStack'] = [];
 
-			  console.log(slider);
 			  this.temporalSliderFeaturesToggle();
 
 			  // Adding layer to selectControls
@@ -307,7 +306,7 @@ doraServices.service('MapServ', [
 					var locationLayer = map.getLayer(QRS.locationLayerId);
 					locationLayer.setVisibility(!locationLayer.getVisibility());
 				}
-				console.log(visibleLayers);
+				//console.log(visibleLayers);
 			},
 			setVectorLayerToInvisible: function(QRS) {
 				if (QRS.clusterLayerId) {
@@ -467,9 +466,9 @@ doraServices.service('MapServ', [
 					addBackFromLeftStackMoreThanMinDate(features,leftStack);
 					addBackFromrightStackLessThanMaxDate(features,rightStack);
 
-					console.log(features);
+					/*console.log(features);
 					console.log(leftStack);
-					console.log(rightStack);
+					console.log(rightStack);*/
 
 					redrawFeatures(clusterLayer, features);
 				}
