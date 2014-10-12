@@ -360,6 +360,20 @@ doraServices.service('MapServ', [
 			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);
 			},
+			plotCentriod: function(QRS) {
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					if(clusterLayer.getVisibility()) {
+						var clusterGeometries = [];
+						for(index in clusterLayer.features) {
+							clusterGeometries.push(clusterLayer.features[index].geometry);
+						}
+						var geometryCollection = new OpenLayers.Geometry.Collection(clusterGeometries);
+						var centroid = geometryCollection.getCentroid();
+						// THEN DO WHAT?! put in new layer || put in clusterLayer (learn to customize cluster strategy)
+					}
+				}
+			},
 			temporalSliderFeaturesToggle: function(QRS) {
 				//Pre-cond: Features List Must be sorted by date
 				//Will be called whenever the temporal slider is called

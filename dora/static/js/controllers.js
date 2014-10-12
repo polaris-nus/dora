@@ -231,7 +231,7 @@ function sortOnKeys(dict) {
 		};
 		//--End Union intersection Methods--// 
 	}
-	]);
+]);
 
 //--Start Chart Methods part2--//
 google.load('visualization', '1.0', {'packages':['corechart']});
