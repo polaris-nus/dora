@@ -232,6 +232,10 @@ doraServices.service('MapServ', [
 		map.addControl(selectFeatureControls);
 		selectFeatureControls.activate();
 		
+		var visibleLayers = [];
+		var clusterLayerFeatures = {};
+		var slider = {};
+		
 		return {
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
@@ -250,13 +254,13 @@ doraServices.service('MapServ', [
 				var coordinates = [];
 				for(index in QRS.assigned) {
 					var encounter = QRS.assigned[index];
-					coordinates.push(encounter.location.coords);
+					coordinates.push({coords: encounter.location.coords, created: encounter.created_date.split(' ')[0]});
 				}
 				// Create point markers given coordinates
 				var features = [];
 			  for (index in coordinates){
-			    var vectorFeature = wktParser.read(coordinates[index]);
-			    vectorFeature.attributes = {featureColor: QRS.color};
+			    var vectorFeature = wktParser.read(coordinates[index].coords);
+			    vectorFeature.attributes = {featureColor: QRS.color, date: coordinates[index].created};
 			    features.push(vectorFeature);
 			  }
 
@@ -272,6 +276,14 @@ doraServices.service('MapServ', [
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
+			  visibleLayers.push(clusterLayer.id);
+			  clusterLayerFeatures[clusterLayer.id] = {};
+			  clusterLayerFeatures[clusterLayer.id]['features'] = features;
+			  clusterLayerFeatures[clusterLayer.id]['leftStack'] = [];
+			  clusterLayerFeatures[clusterLayer.id]['rightStack'] = [];
+
+			  console.log(slider);
+			  this.temporalSliderFeaturesToggle();
 
 			  // Adding layer to selectControls
 			  var selectControlsLayers = selectFeatureControls.layers || [selectFeatureControls.layer];
@@ -285,16 +297,25 @@ doraServices.service('MapServ', [
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.setVisibility(!clusterLayer.getVisibility());
+					if (clusterLayer.getVisibility()) {
+						visibleLayers.push(QRS.clusterLayerId);
+					} else if (visibleLayers.indexOf(QRS.clusterLayerId) != -1) {
+						visibleLayers.splice(visibleLayers.indexOf(QRS.clusterLayerId),1);
+					}
 				}
 				if (QRS.locationLayerId) {
 					var locationLayer = map.getLayer(QRS.locationLayerId);
 					locationLayer.setVisibility(!locationLayer.getVisibility());
 				}
+				console.log(visibleLayers);
 			},
 			setVectorLayerToInvisible: function(QRS) {
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.setVisibility(false);
+					if (visibleLayers.indexOf(QRS.clusterLayerId) != -1) {
+						visibleLayers.splice(visibleLayers.indexOf(QRS.clusterLayerId),1);
+					}
 				}
 				if (QRS.locationLayerId) {
 					var locationLayer = map.getLayer(QRS.locationLayerId);
@@ -374,16 +395,89 @@ doraServices.service('MapServ', [
 					}
 				}
 			},
-			temporalSliderFeaturesToggle: function(QRS) {
-				//Pre-cond: Features List Must be sorted by date
-				//Will be called whenever the temporal slider is called
-				//Will only loop through the QRS-es that are currently visible -> Called when toggle visible
-				//Need an array to keep track which QRSes are visible and which are not
-				//Step 1: Take in temporal slider min max date.
-				//Step 2: LHS: for features whose date < slider.minDate -> remove and put into LeftStack from left to right
-				//Step 2.1: LHS: if LeftStack.peek().date > slider.minDate -> pop and put back into front of features list
-				//Step 3: RHS: for features whose date > slider.maxDate -> remove and put into RightStack from right to left
-				//Step 3.1: RHS: if RightStack.peek().date < slider.maxDate -> pop and put back into back of features list
+			setSliderMinMax: function(min, max) {
+				slider.min = min;
+				slider.max = max;
+			},
+			temporalSliderFeaturesToggle: function() {
+				var minDate = Date.parse(slider.min);
+				var maxDate = Date.parse(slider.max);
+
+				function redrawFeatures(clusterLayer, features) {
+					clusterLayer.removeAllFeatures();
+			  		clusterLayer.addFeatures(features);
+				}
+
+				function peek(array) {
+					if (array.length === 0) {return null}
+					else {
+						return array[array.length-1];
+					}
+				}
+
+				function removeFeaturesLessThanMinDate(features,leftStack) {
+					if (features.length != 0) {
+						firstDate = Date.parse(features[0].attributes.date);
+						while (features.length > 0 && firstDate < minDate) {
+							leftStack.push(features.shift());
+							if (features.length != 0) { firstDate = Date.parse(features[0].attributes.date); }
+						}
+					}
+				}
+
+				function addBackFromLeftStackMoreThanMinDate(features,LeftStack) {
+					if (leftStack.length != 0) {
+						leftStackTopDate = Date.parse(peek(leftStack).attributes.date);
+						while (leftStack.length != 0 && leftStackTopDate >= minDate) {
+							features.unshift(leftStack.pop());
+							if (leftStack.length != 0) { leftStackTopDate = Date.parse(peek(leftStack).attributes.date); }
+						}
+					}
+				}
+
+				function removeFeaturesMoreThanMaxDate(features,rightStack) {
+					if (features.length != 0) {
+						lastDate = Date.parse(peek(features).attributes.date);
+						while (features.length > 0 && lastDate > maxDate) {
+							rightStack.push(features.pop());
+							if (features.length != 0) { lastDate = Date.parse(peek(features).attributes.date); }
+						}
+					}
+				}
+
+				function addBackFromrightStackLessThanMaxDate(features,LeftStack) {
+					if (rightStack.length != 0) {
+						rightStackTopDate = Date.parse(peek(rightStack).attributes.date);
+						while (rightStack.length != 0 && rightStackTopDate <= maxDate) {
+							features.push(rightStack.pop());
+							if (rightStack.length != 0) { rightStackTopDate = Date.parse(peek(rightStack).attributes.date); }
+						}
+					}
+				}
+
+				function toggleMarkerVisibility(clusterLayerId) {
+					//DONE! -- Step 1: Take in temporal slider min max date.
+					clusterLayer = map.getLayer(clusterLayerId);
+					features = clusterLayerFeatures[clusterLayerId].features;
+					leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
+					rightStack = clusterLayerFeatures[clusterLayerId].rightStack;
+
+					removeFeaturesLessThanMinDate(features,leftStack);
+					removeFeaturesMoreThanMaxDate(features,rightStack);
+					addBackFromLeftStackMoreThanMinDate(features,leftStack);
+					addBackFromrightStackLessThanMaxDate(features,rightStack);
+
+					console.log(features);
+					console.log(leftStack);
+					console.log(rightStack);
+
+					redrawFeatures(clusterLayer, features);
+				}
+
+				for (var i=0; i<visibleLayers.length;i++) {
+					toggleMarkerVisibility(visibleLayers[i]);
+				}
+
 			}
 		}
 	}
