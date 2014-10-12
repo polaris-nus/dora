@@ -213,7 +213,7 @@ doraServices.service('MapServ', [
 			toggle: true,
 			onSelect: function(feature) {
 				selectedFeature = feature;
-        popup = new OpenLayers.Popup.Framed("clusterpopup", 
+        popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
                      feature.geometry.getBounds().getCenterLonLat(),
                      null,
                      "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
