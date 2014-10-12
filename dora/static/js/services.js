@@ -114,7 +114,6 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
 				}
 
 				this.addToQRSHistory(intersectQRS);
-				console.log(JSON.stringify(intersectQRS));
 
 				return intersectQRS;
 			}
@@ -189,20 +188,30 @@ doraServices.service('MapServ', [
             return 'black'; // should never be used!
 					}
 				}
-			})
+			}),
+			select: {
+        fillColor: "#8aeeef",
+        strokeColor: "#32a8a9"
+      }
 		});
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 		map.addLayer(polygonLayer);
+		
+		// Adding Map Controls
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
+		
 		var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
-		map.addControl(modifyPolygonControls);
-
 		modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
 		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
 		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
+		map.addControl(modifyPolygonControls);
 
+		var selectFeatureControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector('stub'), {multiple: true, toggle: true});
+		map.addControl(selectFeatureControls);
+		selectFeatureControls.activate();
+		
 		return {
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
@@ -243,6 +252,11 @@ doraServices.service('MapServ', [
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
+
+			  // Adding layer to selectControls
+			  var selectControlsLayers = selectFeatureControls.layers || [selectFeatureControls.layer];
+			  selectControlsLayers.push(clusterLayer);
+			  selectFeatureControls.setLayer(selectControlsLayers);
 
 			  return returnedLayers; // for testability
 
