@@ -152,7 +152,7 @@ doraServices.service('MapServ', [
 
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
-				pointRadius: 10,
+				pointRadius: "${radius}",
 			  fillColor: "#3399CC",
 			  fillOpacity: 1,
 			  strokeColor: "#fff",
@@ -163,13 +163,20 @@ doraServices.service('MapServ', [
 			  label : "${count}",
 			                
 			  fontColor: "#fff",
-			  fontSize: "12px",
+			  fontSize: "10px",
 			  fontFamily: "Arial, sans serif",
 			  labelAlign: "cm",
 			}, {
 				context: {
 					count: function(feature) {
 						return feature.cluster ? feature.cluster.length : '1';
+					},
+					radius: function(feature) {
+						var pix = 8;
+            if(feature.cluster) {
+              pix = Math.min(feature.attributes.count, 7) + pix;
+            }
+            return pix;
 					}
 				}
 			})
@@ -214,6 +221,7 @@ doraServices.service('MapServ', [
 			  }
 
 				var clusterStrategy = new OpenLayers.Strategy.Cluster();
+				clusterStrategy.distance = 30;
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
 					styleMap: clusterMarkerStyle,
 					strategies: [clusterStrategy]
