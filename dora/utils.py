@@ -54,7 +54,7 @@ def parse_request(request):
 def get_query_result_set(query):
 	if (query == None):
 		return None	
-	return Encounter.objects.filter(query).order_by('patient__uuid')
+	return Encounter.objects.filter(query).order_by('created')
 
 #Creates a list of json objects from the given query_result_set
 def create_json_obj_list(query_result_set):
@@ -70,10 +70,10 @@ def create_json_obj_list(query_result_set):
 			context_args['patient_uuid'] = query_result.patient.uuid
 			context_args['patient_family_name'] = query_result.patient.family_name
 			context_args['patient_given_name'] = query_result.patient.given_name
-			context_args['patient_dob'] = query_result.patient.dob
+			context_args['patient_dob'] = str(query_result.patient.dob)
 			context_args['patient_gender'] = query_result.patient.gender
-			context_args['created_date'] = query_result.created
-			context_args['modified_date'] = query_result.modified
+			context_args['created_date'] = str(query_result.created)
+			context_args['modified_date'] = str(query_result.modified)
 			context_args['coordinates'] = "None"
 			context_args['altitude'] = "alt!"
 
