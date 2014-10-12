@@ -208,7 +208,27 @@ doraServices.service('MapServ', [
 		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
 		map.addControl(modifyPolygonControls);
 
-		var selectFeatureControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector('stub'), {multiple: true, toggle: true});
+		var selectFeatureControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector('stub'), {
+			multiple: true,
+			toggle: true,
+			onSelect: function(feature) {
+				selectedFeature = feature;
+        popup = new OpenLayers.Popup.Framed("clusterpopup", 
+                     feature.geometry.getBounds().getCenterLonLat(),
+                     null,
+                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
+                     null, true, function(){
+                     	selectFeatureControls.unselect(selectedFeature);
+                     });
+        feature.popup = popup;
+        map.addPopup(popup);
+			},
+			onUnselect: function(feature) {
+				map.removePopup(feature.popup);
+        feature.popup.destroy();
+        feature.popup = null;
+			}
+		});
 		map.addControl(selectFeatureControls);
 		selectFeatureControls.activate();
 		
