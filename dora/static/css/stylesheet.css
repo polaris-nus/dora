@@ -7,13 +7,17 @@ body { overflow: hidden; }
 
 .above { z-index: 45; position: relative;}
 
-.row { position: relative; margin-top: 20px; }
+#searchbox{
+  position: relative; 
+  margin-top: 20px;
+  margin-left: 20px;
+  width: 400px;
+  display: inline-block;
+}
 
 .filter {
   display: inline-block;
-  margin-right: 3px;
-  margin-bottom: 5px;
-  //margin-left: 10px;
+  margin-left: 10px;
 }
 
 .below {
@@ -23,8 +27,16 @@ body { overflow: hidden; }
 }
 
 .top-align {
-	vertical-align: top;
-	white-space: nowrap;
+  margin-top: 20px;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+#qrsbuttons{
+  width: 40px;
+  margin-left: 20px;
+  margin-top: 10px;
+  display: inline-block;
 }
 
 .btn-circle {
@@ -35,13 +47,14 @@ body { overflow: hidden; }
   padding: 0px;
   border-radius: 100%;
   margin-bottom:8px;
-  margin-left: -60px;
   border-width:3px;
 }
 
-.qrspanel{
+#qrspanel{
   position: relative;
-  margin-left: -80px;
+  margin-top: 10px;
+  width: 356px;
+  display: inline-block;
 }
 
 .side-margin {
@@ -51,9 +64,9 @@ body { overflow: hidden; }
 }
 
 html, body{
-    margin: 0;
-    width: 100%;
-    height: 100%;
+  margin: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #map {
@@ -64,32 +77,48 @@ html, body{
 
 /* MAP CONTROLS STYLING */
 .olControlAttribution {
-    bottom: 5px;
-    font-size: smaller;
+  bottom: 5px;
+  font-size: smaller;
 }
 #customZoom {
-    z-index: 1001;
-    position: relative;
-    top: 10px;
-    left: 1100px;
+  z-index: 1001;
+  position: relative;
+  top: 20px;
+  float: right;
+  right: 70px;
 }
+
 #customZoom a {
-    text-decoration: none;
-    position: absolute;
-    display: block;
-    width: 50px;
-    text-align: center;
-    font-weight: bold;
-    color: #fff;
-    background: #369;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+  text-decoration: none;
+  position: absolute;
+  display: block;
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  background: #369;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
 #customZoom a:hover {
-    background: #036;
+  background: #036;
 }
 #customZoomOut {
-    top: 30px;
+  top: 30px;
+}
+
+#union-intersection{
+  vertical-align: bottom;
+  margin-left: 20px;
+}
+
+#slider{
+  /*vertical-align: bottom;*/
+width:50%;
+padding-bottom:20px;
+padding-top:20px;
+margin-left: 20px;
+float:left;
 }
 
 /* QRS STYLES*/
