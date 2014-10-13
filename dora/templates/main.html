@@ -56,11 +56,13 @@
 
   <div ng-controller="QueryResultController">
 
+
     <div class="above" id="qrsbuttons">
       <div ng-repeat="qrs in QRSHistory">
         <button type="button" class="btn btn-success btn-circle btn-color-{{$index}}" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
       </div>
     </div>
+
 
     <div class="above" id="qrspanel">  
       <!-- ng-show="{{QRSHistory}}"    -->

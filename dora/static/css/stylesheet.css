@@ -155,18 +155,21 @@ html, body{
   border-color: #550000;
   background-image: linear-gradient(#AA3939, #801515);
 }
-.btn-color-0:hover { 
+.btn-color-0:hover,
+.btn-color-0:focus { 
   background-color:#D46A6A;
   border-color: #550000;
   background-image: linear-gradient(#D46A6A, #D46A6A);
 }
+
 
 .btn-color-1 {
   background-color: #FCA815;
   border-color: #A16700;
   background-image: linear-gradient(#FCA815, #CC8201);
 }
-.btn-color-1:hover { 
+.btn-color-1:hover,
+.btn-color-1:focus { 
   background-color:#FFBB45;
   border-color: #A16700;
   background-image: linear-gradient(#FFBB45, #FFBB45);
@@ -177,7 +180,8 @@ html, body{
   border-color: #AC8C00;
   background-image: linear-gradient(#FFD51E, #DBB200);
 }
-.btn-color-2:hover { 
+.btn-color-2:hover,
+.btn-color-2:focus { 
   background-color:#FFDD49;
   border-color: #AC8C00;
   background-image: linear-gradient(#FFDD49, #FFDD49);
