@@ -1,11 +1,3 @@
-/*.controls-container{
-  position:absolute;
-  top:0;
-  left:0;
-  z-index: 99999999;
-}
-*/
-
 body { overflow: hidden; }
 
 #map { position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; }
@@ -15,13 +7,17 @@ body { overflow: hidden; }
 
 .above { z-index: 45; position: relative;}
 
-.row { position: relative; margin-top: 20px; }
+#searchbox{
+  position: relative; 
+  margin-top: 20px;
+  margin-left: 20px;
+  width: 400px;
+  display: inline-block;
+}
 
 .filter {
   display: inline-block;
-  margin-right: 3px;
-  margin-bottom: 5px;
-  /*margin-left: 10px;*/
+  margin-left: 10px;
 }
 
 .below {
@@ -31,20 +27,34 @@ body { overflow: hidden; }
 }
 
 .top-align {
-	vertical:align: top;
-	white-space: nowrap;
+  margin-top: 20px;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+#qrsbuttons{
+  width: 40px;
+  margin-left: 20px;
+  margin-top: 10px;
+  display: inline-block;
 }
 
 .btn-circle {
   position: relative;
-  margin-left: -40px;
   width: 30px;
   height: 30px;
   text-align: center;
   padding: 0px;
   border-radius: 100%;
-  margin-bottom:6px;
+  margin-bottom:8px;
   border-width:3px;
+}
+
+#qrspanel{
+  position: relative;
+  margin-top: 10px;
+  width: 356px;
+  display: inline-block;
 }
 
 .side-margin {
@@ -54,9 +64,9 @@ body { overflow: hidden; }
 }
 
 html, body{
-    margin: 0;
-    width: 100%;
-    height: 100%;
+  margin: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #map {
@@ -67,31 +77,157 @@ html, body{
 
 /* MAP CONTROLS STYLING */
 .olControlAttribution {
-    bottom: 5px;
-    font-size: smaller;
+  bottom: 5px;
+  font-size: smaller;
 }
 #customZoom {
-    z-index: 1001;
-    position: absolute;
-    top: 10px;
-    right: 100px;
+  z-index: 1001;
+  position: relative;
+  top: 20px;
+  float: right;
+  right: 70px;
 }
 
 #customZoom a {
-    text-decoration: none;
-    position: absolute;
-    display: block;
-    width: 50px;
-    text-align: center;
-    font-weight: bold;
-    color: #fff;
-    background: #369;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+  text-decoration: none;
+  position: absolute;
+  display: block;
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  background: #369;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
 #customZoom a:hover {
-    background: #036;
+  background: #036;
 }
 #customZoomOut {
-    top: 30px;
+  top: 30px;
+}
+
+#union-intersection{
+  vertical-align: bottom;
+  margin-left: 20px;
+}
+
+#slider{
+  /*vertical-align: bottom;*/
+width:50%;
+padding-bottom:20px;
+padding-top:20px;
+margin-left: 20px;
+float:left;
+}
+
+/* QRS STYLES*/
+.btn-color-0 {
+  background-color: #AA3939;
+  border-color: #550000;
+  background-image: linear-gradient(#AA3939, #801515);
+}
+.btn-color-0:hover { 
+  background-color:#D46A6A;
+  border-color: #550000;
+  background-image: linear-gradient(#D46A6A, #D46A6A);
+}
+
+.btn-color-1 {
+  background-color: #FCA815;
+  border-color: #A16700;
+  background-image: linear-gradient(#FCA815, #CC8201);
+}
+.btn-color-1:hover { 
+  background-color:#FFBB45;
+  border-color: #A16700;
+  background-image: linear-gradient(#FFBB45, #FFBB45);
+}
+
+.btn-color-2 {
+  background-color: #FFD51E;
+  border-color: #AC8C00;
+  background-image: linear-gradient(#FFD51E, #DBB200);
+}
+.btn-color-2:hover { 
+  background-color:#FFDD49;
+  border-color: #AC8C00;
+  background-image: linear-gradient(#FFDD49, #FFDD49);
+}
+
+.btn-color-3 {
+  background-color: #97D02F;
+  border-color: #598902;
+  background-image: linear-gradient(#97D02F, #76AD14);
+}
+.btn-color-3:hover { 
+  background-color:#B0E353;
+  border-color: #598902;
+  background-image: linear-gradient(#B0E353, #B0E353);
+}
+
+.btn-color-4 {
+  background-color: #25A450;
+  border-color: #026C26;
+  background-image: linear-gradient(#25A450, #108939);
+}
+.btn-color-4:hover { 
+  background-color:#41B368;
+  border-color: #026C26;
+  background-image: linear-gradient(#41B368, #41B368);
+}
+
+.btn-color-5 {
+  background-color: #256B8D;
+  border-color: #06415E;
+  background-image: linear-gradient(#256B8D, #135676);
+}
+.btn-color-5:hover { 
+  background-color:#3D7C9B;
+  border-color: #06415E;
+  background-image: linear-gradient(#3D7C9B, #3D7C9B);
+}
+
+.btn-color-6 {
+  background-color: #333D9A;
+  border-color: #0F1766;
+  background-image: linear-gradient(#333D9A, #1E2781);
+}
+.btn-color-6:hover { 
+  background-color:#4C55A9;
+  border-color: #0F1766;
+  background-image: linear-gradient(#4C55A9, #4C55A9);
+}
+
+.btn-color-7 {
+  background-color: #592C98;
+  border-color: #300A65;
+  background-image: linear-gradient(#592C98, #43187F);
+}
+.btn-color-7:hover { 
+  background-color:#6E46A6;
+  border-color: #300A65;
+  background-image: linear-gradient(#6E46A6, #6E46A6);
+}
+
+.btn-color-8 {
+  background-color: #A92681;
+  border-color: #70024F;
+  background-image: linear-gradient(#A92681, #8D1067);
+}
+.btn-color-8:hover { 
+  background-color:#B94395;
+  border-color: #70024F;
+  background-image: linear-gradient(#B94395, #B94395);
+}
+
+.btn-color-9 {
+  background-color: #CD2E53;
+  border-color: #880221;
+  background-image: linear-gradient(#CD2E53, #AB1437);
+}
+.btn-color-9:hover { 
+  background-color:#E15273;
+  border-color: #880221;
+  background-image: linear-gradient(#E15273, #E15273);
 }
