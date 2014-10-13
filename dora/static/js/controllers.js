@@ -287,6 +287,7 @@ chart2.draw(data2, options2);
 //--Start TemporalSlider Controller--//
 doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'MapServ',
 	function($scope, QRSServ, MapServ){
+		$scope.sliderVisible = true;
 
 		$scope.sliderModifier = function(arg) {
 			return $("#slider").dateRangeSlider(arg);

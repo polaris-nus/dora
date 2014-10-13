@@ -92,9 +92,13 @@
 
   </div>
 
-  <div ng-controller="TemporalSliderController" class="above" id="slider">
-  </div>
 
+  <div ng-controller="TemporalSliderController" class="above" id="slider-div"> 
+    <div ng-show="sliderVisible" id="slider"></div>
+    <button type="submit" ng-click="sliderVisible=!sliderVisible" class="above" id="slider_btn">
+      <img src="/static/1.png" width="26" height="24" alt="submit" />
+    </button>
+  </div>
 
   {% endverbatim %}
   <!-- scripts loaded after html-->

@@ -113,16 +113,29 @@ html, body{
   margin-left: 20px;
 }
 
+#slider-div{
+  position: absolute;
+  width: 40%;
+  right: 35px;
+  bottom: 25px;
+}
+
 #slider{
-  /*vertical-align: bottom;*/
-width:40%;
-padding-bottom:20px;
-padding-top:20px;
-margin-left: 20px;
-position: absolute;
-bottom: 30px;
-float: right;
-right: 100px;
+  position: absolute;
+  width:100%;
+  padding-bottom:20px;
+  padding-top:20px;
+  bottom: 5px;
+  right: 60px;
+}
+
+#slider_btn{
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  width:40px;
+  border-width:0px;
+  background: transparent;
 }
 
 /* QRS STYLES*/
