@@ -100,7 +100,7 @@ html, body{
   position: absolute;
   bottom: 120px;
   float: right;
-  right: 70px;
+  right: 60px;
 }
 
 #customZoom a {
@@ -115,6 +115,7 @@ html, body{
   border: 1px solid #ccc;
   border-radius: 3px;
 }
+
 #customZoom a:hover {
   background: #036;
 }
@@ -131,7 +132,7 @@ html, body{
 #slider-div{
   position: absolute;
   width: 40%;
-  right: 35px;
+  right: 25px;
   bottom: 25px;
 }
 
@@ -141,7 +142,7 @@ html, body{
   padding-bottom:20px;
   padding-top:20px;
   bottom: 5px;
-  right: 60px;
+  right: 120px;
 }
 
 #slider_btn{

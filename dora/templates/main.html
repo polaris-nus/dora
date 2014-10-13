@@ -68,15 +68,16 @@
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
-            
+
+<button type="submit" ng-click="export" class="above" id="export_btn">
+      <img src="/static/1.png" width="26" height="24" alt="submit" />
+    </button>
 
         </div>
         <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
           <!-- {{displayedQRS}} -->
           <!--   <div id="pie-chart"></div> -->
           <div id="line-chart"></div>
-          <!--   <button type="button" class="btn btn-success" id="togglePL">patient list</button>
-          <div id="pl"></div> -->
         </div>
       </div>
     </div>

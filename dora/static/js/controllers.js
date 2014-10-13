@@ -109,6 +109,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					QRS.locationFeature = location;
 					QRSServ.addToQRSHistory(QRS);
 					MapServ.clearPolygonLayer();
+
 					location = "";
 				});
 				
@@ -134,7 +135,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.newQRS = {};
 		$scope.displayedQRS = {};
 		$scope.panelVisible = true;
-		
+		// $scope.selectedQRSIndex = -1;
+
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateChartOneDS();
@@ -144,10 +146,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.toggleQRSMarkers = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
 			MapServ.toggleVectorLayerVisibility($scope.doubleClickedQRS);
-		}
-
-		$scope.removeQRS = function(index) {
-			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
 		}
 
 		//--Start Chart Methods part1--//
@@ -184,22 +182,20 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
-function sortOnKeys(dict) {
-    var sorted = [];
-    for(var key in dict) {
-        sorted[sorted.length] = key;
-    }
-    sorted.sort();
+		function sortOnKeys(dict) {
+			var sorted = [];
+			for(var key in dict) {
+				sorted[sorted.length] = key;
+			}
+			sorted.sort();
 
-    var tempDict = {};
-    for(var i = 0; i < sorted.length; i++) {
-        tempDict[sorted[i]] = dict[sorted[i]];
-    }
+			var tempDict = {};
+			for(var i = 0; i < sorted.length; i++) {
+				tempDict[sorted[i]] = dict[sorted[i]];
+			}
 
-    return tempDict;
-}
-
-
+			return tempDict;
+		}
 
 		//--End Chart Methods part1--//
 
@@ -237,20 +233,11 @@ function sortOnKeys(dict) {
 		};
 		//--End Union intersection Methods--// 
 	}
-]);
+	]);
 
 //--Start Chart Methods part2--//
 google.load('visualization', '1.0', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
-
-// testingdata = [['Year', 'New'],
-// 	['2009',  107],
-// 	['2010',  117],
-// 	['2011',  66],
-// 	['2012',  103],
-// 	['2013',  10],
-// 	['2014',  7]
-// 	];
 
 function drawChart() {
   // Create the data table.
@@ -288,7 +275,6 @@ chart2.draw(data2, options2);
 }
 		//--End Chart Methods part2--//
 
-
 //--Start TemporalSlider Controller--//
 doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'MapServ',
 	function($scope, QRSServ, MapServ){
@@ -311,8 +297,8 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 			bounds:{
 			    min: new Date(2012, 0, 1), //This value should be changed to the latest date available
 			    max: new Date()
-			}
-		});
+			  }
+			});
 		var values = $scope.sliderModifier("values");
 		MapServ.setSliderMinMax(values.min, values.max);
 
@@ -325,8 +311,4 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		});
 		
 	}
-]);
-
-//--End TemporalSlider Controller--//
-
-
+	]);
