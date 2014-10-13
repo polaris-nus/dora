@@ -33,9 +33,10 @@ body { overflow: hidden; }
 }
 
 #qrsbuttons{
+  position: absolute;
+  top:70px;
   width: 40px;
   margin-left: 20px;
-  margin-top: 10px;
   display: inline-block;
 }
 
@@ -53,8 +54,18 @@ body { overflow: hidden; }
 #qrspanel{
   position: relative;
   margin-top: 10px;
-  width: 356px;
+  margin-left: 70px;
+  width: 350px;
   display: inline-block;
+}
+
+#qrs-panel-title:hover{
+  text-decoration: underline;
+}
+
+#qrs-panel-body{
+  max-height: 400px;
+  overflow-y: scroll; 
 }
 
 .side-margin {

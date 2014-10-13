@@ -66,9 +66,11 @@
       <!-- ng-show="{{QRSHistory}}"    -->
       <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title" id="qrs-panel-title"> Query Result Set for {{displayedQRS.assigned[0].disease}} </h3>
+          <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
+            
+
         </div>
-        <div class="panel-body" id="qrs-panel-body">  
+        <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
           <!-- {{displayedQRS}} -->
           <!--   <div id="pie-chart"></div> -->
           <div id="line-chart"></div>

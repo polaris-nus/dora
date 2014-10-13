@@ -133,7 +133,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.selectionFunction = '';
 		$scope.newQRS = {};
 		$scope.displayedQRS = {};
-
+		$scope.panelVisible = true;
+		
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateChartOneDS();
