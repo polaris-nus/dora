@@ -40,12 +40,18 @@ body { overflow: hidden; }
   position: absolute;
   top:70px;
   width: 40px;
-  margin-left: 20px;
+  margin-left: 0px;
   display: inline-block;
 }
 
+/*#placeholder{
+  width: 20px;
+  background-color: red;
+}*/
+
 .btn-circle {
   position: relative;
+  left: 20px;
   width: 30px;
   height: 30px;
   text-align: center;
@@ -53,6 +59,22 @@ body { overflow: hidden; }
   border-radius: 100%;
   margin-bottom:8px;
   border-width:3px;
+}
+
+#qrs-panel-title{
+  display: inline-block;
+}
+
+#qrs-panel-title:hover{
+  text-decoration: underline;
+}
+
+#export-btn{
+  border: 0px;
+  background: transparent;
+  display: inline-block;
+  position: absolute;
+  right: 10px;
 }
 
 #qrspanel{
@@ -63,9 +85,6 @@ body { overflow: hidden; }
   display: inline-block;
 }
 
-#qrs-panel-title:hover{
-  text-decoration: underline;
-}
 
 #qrs-panel-body{
   max-height: 400px;

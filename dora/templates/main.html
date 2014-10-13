@@ -56,10 +56,11 @@
 
   <div ng-controller="QueryResultController">
 
-
     <div class="above" id="qrsbuttons">
-      <div class="nowrap" ng-repeat="qrs in QRSHistory">
-        <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline"></span><button type="button" class="btn btn-success btn-circle btn-color-{{$index}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);" ng-mouseenter="hover=true" ng-mouseleave="hover=false">{{$index}}</button>
+      <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
+        <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" style="left:5px;"></span>
+       <!--  <span ng-show="!hover" id="placeholder"> </span> -->
+        <button type="button" class="btn btn-success btn-circle btn-color-{{$index}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);" ng-mouseenter="hover=true">{{$index}}</button>
       </div>
     </div>
 
@@ -68,6 +69,9 @@
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
+          <button type="submit" ng-click="exportQRS()" id="export-btn">
+            <img src="/static/images/export.png" width="20" height="20" alt="submit"/>
+          </button>
         </div>
         <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
           <!-- {{displayedQRS}} -->
@@ -95,7 +99,7 @@
   <div ng-controller="TemporalSliderController" class="above" id="slider-div"> 
     <div ng-show="sliderVisible" id="slider"></div>
     <button type="submit" ng-click="sliderVisible=!sliderVisible" class="above" id="slider_btn">
-      <img src="/static/1.png" width="26" height="24" alt="submit" />
+      <img src="/static/images/temporal-slider.png" width="26" height="24" alt="submit" />
     </button>
   </div>
 

@@ -196,8 +196,26 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 			return tempDict;
 		}
-
 		//--End Chart Methods part1--//
+
+		//--Start Export Methods--//
+
+		$scope.exportQRS = function(){
+			var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+			var csvContent = "data:text/csv;charset=utf-8,";
+			data.forEach(function(infoArray, index){
+				dataString = infoArray.join(",");
+				csvContent += index < infoArray.length ? dataString+ "\n" : dataString;
+			}); 
+			var encodedUri = encodeURI(csvContent);
+			var link = document.createElement("a");
+			link.setAttribute("href", encodedUri);
+			link.setAttribute("download", "my_data.csv");
+			link.click();
+			// window.open(encodedUri);
+		}
+
+		//--End Export Methods--//
 
 		//--Start Union intersection Methods--//
 		$scope.resetUnionIntersectVariables = function(){
