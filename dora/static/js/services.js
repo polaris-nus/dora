@@ -7,7 +7,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
 		return {
 			addToQRSHistory: function (QRS){
 				//Limiting size of QRSHistory
-				while (QRSHistory.length >= historyLimit){
+				while (QRSHistory.length > (historyLimit-1)){
 					var removedQRS = QRSHistory.shift();
 					MapServ.removeVectorLayer(removedQRS);
 					PaletteServ.releaseColor(removedQRS.color);
@@ -20,15 +20,15 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
 				QRS.color = PaletteServ.useNextColor();
 				QRSHistory.push(QRS);
 				MapServ.addVectorLayer(QRS);
-				// RETURN BOOLEAN FOR ADD SUCCESS
+				// RETURN BOOLEAN FOR ADD SUCCESS IF EMPTY DONT ADD!
 			},
 			removeFromQRSHistory: function(QRS){
 				var index = QRSHistory.indexOf(QRS);
 
 				if (index > -1) {
-					QRSHistory.splice(index, 1)[0];
+					QRSHistory.splice(index, 1);
 					MapServ.removeVectorLayer(QRS);
-					PaletteServ.releaseColor(QRS);
+					PaletteServ.releaseColor(QRS.color);
 				}
 			},
 			getQRSHistory: function(){
@@ -334,8 +334,26 @@ doraServices.service('MapServ', [
 			},
 			removeVectorLayer: function(QRS) {
 				if (QRS.clusterLayerId) {
+					// Manual cleanup on selectFeatureControls.layers
+					var selectControlsLayers = selectFeatureControls.layers || [selectFeatureControls.layer];
+					selectControlsLayers = selectControlsLayers.filter(
+						function(element) {
+							return element.id.localeCompare(QRS.clusterLayerId) !== 0
+						}
+					)
+					selectFeatureControls.setLayer(selectControlsLayers);
+
+					//Manual cleanup on visibleLayers and clusterLayerFeatures
+					visibleLayers = visibleLayers.filter(
+						function(element) {
+							return element.localeCompare(QRS.clusterLayerId) !== 0
+						}
+					)
+					delete clusterLayerFeatures[QRS.clusterLayerId];
+
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.destroy();
+
 				}
 				if (QRS.locationLayerId) {
 					var locationLayer = map.getLayer(QRS.locationLayerId);
@@ -496,16 +514,16 @@ doraServices.service('MapServ', [
 doraServices.service('PaletteServ', [
 	function(){
 		var palette = [
-			{colour:'Crimson', inUse: false},
-			{colour:'GoldenRod', inUse: false},
-			{colour:'Gold', inUse: false},
-			{colour:'GreenYellow', inUse: false},
-			{colour:'ForestGreen', inUse: false},
-			{colour:'DeepSkyBlue', inUse: false},
-			{colour:'DodgerBlue', inUse: false},
-			{colour:'MidnightBlue', inUse: false},
-			{colour:'Indigo', inUse: false},
-			{colour:'MediumVioletRed', inUse: false}
+			{color:'Crimson', inUse: false},
+			{color:'GoldenRod', inUse: false},
+			{color:'Gold', inUse: false},
+			{color:'GreenYellow', inUse: false},
+			{color:'ForestGreen', inUse: false},
+			{color:'DeepSkyBlue', inUse: false},
+			{color:'DodgerBlue', inUse: false},
+			{color:'MidnightBlue', inUse: false},
+			{color:'Indigo', inUse: false},
+			{color:'MediumVioletRed', inUse: false}
 		]
 
 		return {
@@ -513,14 +531,14 @@ doraServices.service('PaletteServ', [
 				for(index in palette) {
 					if(!palette[index].inUse) {
 						palette[index].inUse = true;
-						return palette[index].colour;
+						return palette[index].color;
 					}
 				}
 				return null; // all colors in use
 			},
-			releaseColor: function(colour) {
+			releaseColor: function(color) {
 				for(index in palette) {
-					if(palette[index].color.localeCompare(colour) == 0) {
+					if(palette[index].color.localeCompare(color) == 0) {
 						palette[index].inUse = false;
 						break;
 					}

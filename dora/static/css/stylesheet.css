@@ -7,6 +7,10 @@ body { overflow: hidden; }
 
 .above { z-index: 45; position: relative;}
 
+.inline {display: inline-block;}
+
+.nowrap{white-space: nowrap;}
+
 #searchbox{
   position: relative; 
   margin-top: 20px;

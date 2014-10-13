@@ -58,8 +58,8 @@
 
 
     <div class="above" id="qrsbuttons">
-      <div ng-repeat="qrs in QRSHistory">
-        <button type="button" class="btn btn-success btn-circle btn-color-{{$index}}" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
+      <div class="nowrap" ng-repeat="qrs in QRSHistory">
+        <span ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline"></span><button type="button" class="btn btn-success btn-circle btn-color-{{$index}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);">{{$index}}</button>
       </div>
     </div>
 

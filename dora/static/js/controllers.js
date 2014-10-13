@@ -146,6 +146,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			MapServ.toggleVectorLayerVisibility($scope.doubleClickedQRS);
 		}
 
+		$scope.removeQRS = function(index) {
+			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
+		}
+
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
 			var yearCount = {};
