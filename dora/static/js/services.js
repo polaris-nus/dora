@@ -4,8 +4,17 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
 	function(MapServ, PaletteServ){
 		var historyLimit = 10;
 		var QRSHistory = [];
+		var QRSLoadingStatus = {isLoading: false};
 		return {
+			getLoadingStatus: function(){
+				return QRSLoadingStatus;
+			},
+			initializeLoading: function(){
+				QRSLoadingStatus.isLoading = true;
+			},
 			addToQRSHistory: function (QRS){
+				QRSLoadingStatus.isLoading = false;
+
 				//Limiting size of QRSHistory
 				while (QRSHistory.length > (historyLimit-1)){
 					var removedQRS = QRSHistory.shift();

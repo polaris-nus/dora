@@ -93,7 +93,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.submitQuery = function(){
 			// Basic check before pulling data from backend
 			if ($scope.disease && $scope.disease != '') {
-				
+				QRSServ.initializeLoading();
+
 				params = {};
 				params.disease = $scope.disease;
 				
@@ -129,6 +130,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapServ',
 	function($scope, QRSServ, MapServ){
 		$scope.QRSHistory = QRSServ.getQRSHistory();
+		$scope.loadingStatus = QRSServ.getLoadingStatus();
 		$scope.selectedQRSList = [];
 		$scope.selectionFlag = false;
 		$scope.selectionFunction = '';

@@ -64,6 +64,7 @@
        <!--  <span ng-show="!hover" id="placeholder"> </span> -->
         <button type="button" class="btn btn-success btn-circle btn-color-{{$index}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);" ng-mouseenter="hover=true">{{$index}}</button>
       </div>
+      <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
     </div>
 
     <div class="above" id="qrspanel">  
