@@ -82,8 +82,8 @@ html, body{
 }
 #customZoom {
   z-index: 1001;
-  position: relative;
-  top: 20px;
+  position: absolute;
+  bottom: 120px;
   float: right;
   right: 70px;
 }
@@ -92,7 +92,7 @@ html, body{
   text-decoration: none;
   position: absolute;
   display: block;
-  width: 50px;
+  width: 30px;
   text-align: center;
   font-weight: bold;
   color: #fff;
@@ -108,17 +108,21 @@ html, body{
 }
 
 #union-intersection{
-  vertical-align: bottom;
+  position: absolute;
+  bottom: 20px;
   margin-left: 20px;
 }
 
 #slider{
   /*vertical-align: bottom;*/
-width:50%;
+width:40%;
 padding-bottom:20px;
 padding-top:20px;
 margin-left: 20px;
-float:left;
+position: absolute;
+bottom: 30px;
+float: right;
+right: 100px;
 }
 
 /* QRS STYLES*/
