@@ -309,6 +309,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		var defaultMin = new Date();
 		var defaultRange = 30;
 		defaultMin.setDate(defaultMax.getDate() - defaultRange);
+		
 		$scope.sliderModifier({
 			defaultValues:{
 				min: defaultMin, //default is one month
@@ -329,6 +330,5 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 			MapServ.setSliderMinMax(data.values.min, data.values.max);
 			MapServ.temporalSliderFeaturesToggle();
 		});
-		
 	}
 	]);
