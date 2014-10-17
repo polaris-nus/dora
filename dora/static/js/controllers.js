@@ -1,4 +1,6 @@
-var testingdata = [];
+var dataChartOne = [];
+var dataChartTwo = [];
+var dataChartThree = [];
 var doraControllers = angular.module('doraControllers', []);
 
 doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
@@ -142,6 +144,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateChartOneDS();
+			updateChartTwoDS();
+			// updateChartThreeDS();
 			drawChart();
 		};
 
@@ -177,10 +181,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				count+=1;
 			}
 
-			testingdata = [];
-			testingdata.push(["Year","Number"]);
+			dataChartOne = [];
+			dataChartOne.push(["Year","Number"]);
 			for(index in yearCount){
-				testingdata.push([index,yearCount[index]]);
+				dataChartOne.push([index,yearCount[index]]);
 			}
 		}
 
@@ -195,9 +199,46 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			for(var i = 0; i < sorted.length; i++) {
 				tempDict[sorted[i]] = dict[sorted[i]];
 			}
-
 			return tempDict;
 		}
+
+		updateChartTwoDS = function(){
+			var femaleCount=0;
+			var maleCount=0;
+
+			for (index in $scope.displayedQRS.assigned){
+				var sexString = $scope.displayedQRS.assigned[index].patient.gender;
+
+				if (sexString == "F"){
+					femaleCount+=1;
+				}else if(sexString =="M"){
+					maleCount+=1;
+				}else{
+					console.log("invalide sex");
+				}
+			}
+			console.log(femaleCount + ", "+maleCount);
+
+			dataChartTwo = [];
+			dataChartTwo.push(["Sex","percent"]);
+			dataChartTwo.push(["Male",maleCount]);
+			dataChartTwo.push(["Female",femaleCount]);
+		}
+
+		updateChartThreeDS = function(){
+			// for (index in $scope.displayedQRS.assigned){
+			// 	var dateString = $scope.displayedQRS.assigned[index].created_date;
+			// 	//var year = dateString.split(",")[1];
+			// }
+
+			// dataChartOne = [];
+			// dataChartOne.push(["Year","Number"]);
+			// for(index in yearCount){
+			// 	dataChartOne.push([index,yearCount[index]]);
+			// }
+		}
+
+
 		//--End Chart Methods part1--//
 
 		//--Start Export Methods--//
@@ -259,39 +300,43 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 google.load('visualization', '1.0', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
 
+// function drawChart() {
+
+//         var data = google.visualization.arrayToDataTable([
+//           ['Task', 'Hours per Day'],
+//           ['Work',     11],
+//           ['Eat',      2],
+//           ['Commute',  2],
+//           ['Watch TV', 2],
+//           ['Sleep',    7]
+//         ]);
+
+//         var options = {
+//           title: 'My Daily Activities'
+//         };
+
+//         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+//         chart.draw(data, options);
+//       }
 function drawChart() {
-  // Create the data table.
-//   var data = new google.visualization.DataTable();
-//   data.addColumn('string', 'Topping');
-//   data.addColumn('number', 'Slices');
-//   data.addRows([
-//     ['Alive', 52],
-//     ['Dead', 18],
-//     ['Cured', 30],
-//     ]);
+	var dataOne = google.visualization.arrayToDataTable(dataChartOne);
+	var optionsOne = {
+		title: 'Patient Number',
+		curveType: 'function',
+		chartArea:{left:30,top:30,width:'80%',height:'50%'},
+		legend: { position: 'none'}
+	};
+	var chartOne = new google.visualization.LineChart(document.getElementById('line-chart'));
+	chartOne.draw(dataOne, optionsOne);
 
-//   // Set chart options
-//   var options = {title:'Current Condition of Patients',
-//   pieSliceText: 'label',
-//   chartArea:{left:10,top:30,width:'100%',height:'70%'}
-// };
-
-//   // Instantiate and draw our chart, passing in some options.
-//   var chart = new google.visualization.PieChart(document.getElementById('pie-chart'));
-//   chart.draw(data, options);
-
-var data2 = google.visualization.arrayToDataTable(testingdata);
-
-var options2 = {
-	title: 'Patient Number',
-	curveType: 'function',
-	chartArea:{left:30,top:30,width:'80%',height:'50%'},
-	legend: { position: 'none'}
-};
-
-var chart2 = new google.visualization.LineChart(document.getElementById('line-chart'));
-
-chart2.draw(data2, options2);
+	var dataTwo = google.visualization.arrayToDataTable(dataChartTwo);
+	var optionsTwo = {
+		title: 'Gender Percent',
+		chartArea:{left:20,top:20,width:'80%',height:'80%'}
+	};
+	var chartTwo = new google.visualization.PieChart(document.getElementById('piechart'));
+	chartTwo.draw(dataTwo, optionsTwo);
 }
 		//--End Chart Methods part2--//
 
