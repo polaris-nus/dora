@@ -23,10 +23,12 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
 				}
 
 				for(index in QRSHistory) {
-					MapServ.setVectorLayerToInvisible(QRSHistory[index]);
+					QRSHistory[index].isVisible = false;
+					MapServ.setVectorLayerVisibility(QRSHistory[index], false);
 				}
 
 				QRS.color = PaletteServ.useNextColor();
+				QRS.isVisible = true;
 				QRSHistory.push(QRS);
 				MapServ.addVectorLayer(QRS);
 				// RETURN BOOLEAN FOR ADD SUCCESS IF EMPTY DONT ADD!
@@ -312,10 +314,10 @@ doraServices.service('MapServ', [
 			  return returnedLayers; // for testability
 
 			},
-			toggleVectorLayerVisibility: function(QRS) {
+			setVectorLayerVisibility: function(QRS, visibility) {
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					clusterLayer.setVisibility(!clusterLayer.getVisibility());
+					clusterLayer.setVisibility(visibility);
 					if (clusterLayer.getVisibility()) {
 						visibleLayers.push(QRS.clusterLayerId);
 					} else if (visibleLayers.indexOf(QRS.clusterLayerId) != -1) {
@@ -324,21 +326,7 @@ doraServices.service('MapServ', [
 				}
 				if (QRS.locationLayerId) {
 					var locationLayer = map.getLayer(QRS.locationLayerId);
-					locationLayer.setVisibility(!locationLayer.getVisibility());
-				}
-				//console.log(visibleLayers);
-			},
-			setVectorLayerToInvisible: function(QRS) {
-				if (QRS.clusterLayerId) {
-					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					clusterLayer.setVisibility(false);
-					if (visibleLayers.indexOf(QRS.clusterLayerId) != -1) {
-						visibleLayers.splice(visibleLayers.indexOf(QRS.clusterLayerId),1);
-					}
-				}
-				if (QRS.locationLayerId) {
-					var locationLayer = map.getLayer(QRS.locationLayerId);
-					locationLayer.setVisibility(false);
+					locationLayer.setVisibility(visibility);
 				}
 			},
 			removeVectorLayer: function(QRS) {

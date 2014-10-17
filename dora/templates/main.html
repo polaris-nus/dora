@@ -63,7 +63,7 @@
       <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
         <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" style="left:5px;"></span>
        <!--  <span ng-show="!hover" id="placeholder"> </span> -->
-        <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);" ng-mouseenter="hover=true">{{$index}}</button>
+        <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true">{{qrs.isVisible}}</button>
       </div>
       <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
     </div>
@@ -93,7 +93,7 @@
         <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">Intersect</button>
       </div>
 
-      <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle side-margin above">{{selectedQRSList[$index]}}</button>
+      <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle btn-color-{{QRSHistory[selectedQRSList[$index]].color.buttonStyleIndex}} side-margin above">{{selectedQRSList[$index]}}</button>
       <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
       <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
     </div>

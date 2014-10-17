@@ -149,9 +149,19 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			drawChart();
 		};
 
-		$scope.toggleQRSMarkers = function(index) {
+		$scope.toggleQRSVisibility = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
-			MapServ.toggleVectorLayerVisibility($scope.doubleClickedQRS);
+			var toggledVisibility = !$scope.doubleClickedQRS.isVisible;
+			$scope.doubleClickedQRS.isVisible = toggledVisibility
+			MapServ.setVectorLayerVisibility($scope.doubleClickedQRS, toggledVisibility);
+		}
+
+		$scope.visibility = function(index){
+			if ($scope.QRSHistory[index].isVisible) {
+				return "";
+			} else {
+				return "btn-invisible";
+			}
 		}
 
 		//--Start Chart Methods part1--//

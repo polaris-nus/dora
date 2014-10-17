@@ -49,18 +49,6 @@ body { overflow: hidden; }
   background-color: red;
 }*/
 
-.btn-circle {
-  position: relative;
-  left: 20px;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 0px;
-  border-radius: 100%;
-  margin-bottom:8px;
-  border-width:3px;
-}
-
 #qrs-panel-title{
   display: inline-block;
 }
@@ -174,7 +162,25 @@ html, body{
   background: transparent;
 }
 
-/* QRS STYLES*/
+/* QRS BUTTON STYLES*/
+.btn-circle {
+  position: relative;
+  left: 20px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 0px;
+  border-radius: 100%;
+  margin-bottom:8px;
+  border-width:3px;
+}
+
+.btn-invisible {
+  background: transparent;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
 .btn-color-0 {
   background-color: #AA3939;
   border-color: #550000;
