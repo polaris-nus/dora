@@ -114,6 +114,7 @@ html, body{
   bottom: 5px;
   font-size: smaller;
 }
+
 #customZoom {
   z-index: 1001;
   position: absolute;
@@ -186,7 +187,6 @@ html, body{
   background-image: linear-gradient(#D46A6A, #D46A6A);
 }
 
-
 .btn-color-1 {
   background-color: #FCA815;
   border-color: #A16700;
@@ -216,7 +216,8 @@ html, body{
   border-color: #598902;
   background-image: linear-gradient(#97D02F, #76AD14);
 }
-.btn-color-3:hover { 
+.btn-color-3:hover,
+.btn-color-3:focus { 
   background-color:#B0E353;
   border-color: #598902;
   background-image: linear-gradient(#B0E353, #B0E353);
@@ -227,7 +228,8 @@ html, body{
   border-color: #026C26;
   background-image: linear-gradient(#25A450, #108939);
 }
-.btn-color-4:hover { 
+.btn-color-4:hover,
+.btn-color-4:focus { 
   background-color:#41B368;
   border-color: #026C26;
   background-image: linear-gradient(#41B368, #41B368);
@@ -238,7 +240,8 @@ html, body{
   border-color: #06415E;
   background-image: linear-gradient(#256B8D, #135676);
 }
-.btn-color-5:hover { 
+.btn-color-5:hover,
+.btn-color-5:focus { 
   background-color:#3D7C9B;
   border-color: #06415E;
   background-image: linear-gradient(#3D7C9B, #3D7C9B);
@@ -249,7 +252,8 @@ html, body{
   border-color: #0F1766;
   background-image: linear-gradient(#333D9A, #1E2781);
 }
-.btn-color-6:hover { 
+.btn-color-6:hover,
+.btn-color-6:focus { 
   background-color:#4C55A9;
   border-color: #0F1766;
   background-image: linear-gradient(#4C55A9, #4C55A9);
@@ -260,7 +264,8 @@ html, body{
   border-color: #300A65;
   background-image: linear-gradient(#592C98, #43187F);
 }
-.btn-color-7:hover { 
+.btn-color-7:hover,
+.btn-color-7:focus { 
   background-color:#6E46A6;
   border-color: #300A65;
   background-image: linear-gradient(#6E46A6, #6E46A6);
@@ -271,7 +276,8 @@ html, body{
   border-color: #70024F;
   background-image: linear-gradient(#A92681, #8D1067);
 }
-.btn-color-8:hover { 
+.btn-color-8:hover,
+.btn-color-8:focus { 
   background-color:#B94395;
   border-color: #70024F;
   background-image: linear-gradient(#B94395, #B94395);
@@ -282,7 +288,8 @@ html, body{
   border-color: #880221;
   background-image: linear-gradient(#CD2E53, #AB1437);
 }
-.btn-color-9:hover { 
+.btn-color-9:hover,
+.btn-color-9:focus { 
   background-color:#E15273;
   border-color: #880221;
   background-image: linear-gradient(#E15273, #E15273);

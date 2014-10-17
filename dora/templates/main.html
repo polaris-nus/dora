@@ -2,7 +2,7 @@
 <html lang="en" ng-app="doraApp">
 <head>
   <meta charset="utf-8">
-  <title>Dora - Iteration 1</title>
+  <title>Dora - Iteration 2.5</title>
   <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
   <link rel="stylesheet" type="text/css" href="/static/ol2/style.css">
@@ -63,7 +63,7 @@
       <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
         <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" style="left:5px;"></span>
        <!--  <span ng-show="!hover" id="placeholder"> </span> -->
-        <button type="button" class="btn btn-success btn-circle btn-color-{{$index}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);" ng-mouseenter="hover=true">{{$index}}</button>
+        <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSMarkers($index);" ng-mouseenter="hover=true">{{$index}}</button>
       </div>
       <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
     </div>
