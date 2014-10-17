@@ -152,7 +152,7 @@ doraServices.service('MapServ', [
 	    ],
 	    layers: [
 	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {buffer: 2}),
-	      new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: false})
+	      new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true})
 	    ]
 		});
 		var center = [0,0];
