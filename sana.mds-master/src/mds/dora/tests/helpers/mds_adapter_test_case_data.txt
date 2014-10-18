@@ -1,0 +1,84 @@
+{
+	"message": [
+	    {
+	        "concept": {
+	            "name": "DIAGNOSIS"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "first"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "LOCATION GPS"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "first"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "DIAGNOSIS"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "second"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "LOCATION GPS"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "second"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "DIAGNOSIS"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "third"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "LOCATION GPS"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "third"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "ABNN"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "fourth"
+	            }
+	        }
+	    },
+	    {
+	        "concept": {
+	            "name": "ANBN"
+	        }, 
+	        "encounter": {
+	            "subject": {
+	                "given_name": "fourth"
+	            }
+	        }
+	    }
+	]
+}

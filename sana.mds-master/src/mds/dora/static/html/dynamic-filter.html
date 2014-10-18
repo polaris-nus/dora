@@ -1,0 +1,34 @@
+<div class="filter above" outside-click="collapseIfFilterTypeIsNotEmpty(filter)">
+
+<div class="btn btn-default above" ng-show="filter.selected"
+		ng-click="filterVisibilityChanged(filter)">{{filterText(filter)}}&nbsp;&nbsp;&nbsp;
+		<span ng-click="destroyElement(filters, $index)" class="glyphicon glyphicon-remove"></span>
+</div>
+
+<div class="above" ng-show="filter.visibility">
+	<select class="filter form-control" ng-model="filter.type" ng-hide="filter.selected"
+		style="width: 100px;" ng-change="filterTypeChanged(filter)">
+		<option ng-show="available.age_range" value="age_range">Age Range</option>
+		<option ng-show="available.gender" value="gender">Gender</option>
+		<option ng-show="available.location" value="location">Location</option>
+	</select>
+	
+
+	<div class="below" ng-show="filter.type == 'age_range'"">
+		<input ng-model="filter.value" type="text">
+	</div>
+
+	<div class="below" ng-show="filter.type == 'gender'">
+		<input ng-model="filter.value" type="radio" name="gender"
+			value="M">Male&nbsp;&nbsp;<input ng-model="filter.value" type="radio"
+			name="gender" value="F">Female
+	</div>
+	
+	<div class="below" ng-show="filter.type == 'location'">
+		<button type="button" class="btn btn-success" ng-click="doneDrawing(filter)">Apply Polygon</button><br>
+		<input ng-model="mapServMode" type="radio" ng-change="changeMode(mapServMode)" name="mapServMode" value="drawing" checked>Drawing&nbsp;&nbsp;
+		<input ng-model="mapServMode" type="radio" ng-change="changeMode(mapServMode)" name="mapServMode" value="modifying">Modifying
+	</div>
+</div>
+
+</div>
