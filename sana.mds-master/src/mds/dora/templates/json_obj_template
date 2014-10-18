@@ -1,15 +1,16 @@
 {
     "uuid": "{{ encounter_uuid }}",
-    "disease": "{{ disease_name }}",
-    "patient": {
-        "family_name": "{{ patient_family_name }}",
-        "uuid": "{{ patient_uuid }}",
-        "given_name": "{{ patient_given_name }}",
-        "dob": "{{ patient_dob }}",
-        "gender": "{{ patient_gender }}"
+    "subject": {
+        "family_name": "{{ subject_family_name }}",
+        "uuid": "{{ subject_uuid }}",
+        "given_name": "{{ subject_given_name }}",
+        "dob": "{{ subject_dob }}",
+        "gender": "{{ subject_gender }}"
     },
     "created_date": "{{ created_date }}",
     "modified_date": "{{ modified_date }}",
+    "procedure": "{{ procedure }}",
+    "observer": "{{ observer }}",
     "location": {
         "coords": "{{ coordinates }}",
         "alt": "{{ altitude }}"
