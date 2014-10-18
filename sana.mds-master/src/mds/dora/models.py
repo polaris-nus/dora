@@ -10,3 +10,5 @@ class EncounterLocation(models.Model):
 	"""Using WGS84 coordinate system"""
 	
 	observation = models.ForeignKey(Observation, to_field='uuid', on_delete=models.CASCADE)
+	
+import mds.dora.signals
