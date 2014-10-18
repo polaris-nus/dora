@@ -8,5 +8,6 @@ class EncounterLocation(models.Model):
 	
 	coordinates = models.PointField(srid=4326)
 	"""Using WGS84 coordinate system"""
+	objects = models.GeoManager()
 	
 	observation = models.ForeignKey(Observation, to_field='uuid', on_delete=models.CASCADE)
