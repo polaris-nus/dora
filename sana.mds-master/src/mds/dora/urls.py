@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from dora.views import *
+from mds.dora.views import *
 
 urlpatterns = patterns('',
     # Examples:

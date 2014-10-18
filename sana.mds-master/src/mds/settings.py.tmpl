@@ -28,8 +28,8 @@ MANAGERS = ADMINS
 ### Database settings
 DATABASES = {
     'default': {
-        'NAME': '/tmp/sana/sqlite.db',
-        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -125,13 +125,14 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages,'
+    'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.staticfiles',
     'mds.mrs',
     'mds.core',
     'mds.tasks',
+    'mds.dora',
 )
 """Don't touch this unless you know what you are doing."""
 

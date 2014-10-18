@@ -1,8 +1,0 @@
-{
-  "pk": $location_number,
-  "model": "core.location",
-  "fields": {
-    "uuid": "$location_uuid",
-    "name": "$location_name"
-  }
-}

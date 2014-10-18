@@ -1,5 +1,5 @@
 import sys, urllib2, json, re
-from dora.models import *
+from mds.dora.models import *
 from datetime import datetime, timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction

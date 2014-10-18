@@ -1,8 +1,8 @@
 import json, operator
 from django.shortcuts import render
-from dora.models import *
+from mds.dora.models import *
 from django.db.models import Q
-from dora.forms import QueryForm
+from mds.dora.forms import QueryForm
 from datetime import *
 from django.template import Context, loader
 

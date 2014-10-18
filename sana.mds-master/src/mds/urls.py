@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url(r'^$', 'mds.core.views.home', name="home"),
     url(r'^core/', include('mds.core.urls', namespace='core')),
     url(r'^tasks/', include('mds.tasks.urls', namespace='tasks')),
+    url(r'^dora/', include('mds.dora.urls', namespace='dora')),
     # ADMIN
     (r'^admin/', include(admin.site.urls)),
 )
