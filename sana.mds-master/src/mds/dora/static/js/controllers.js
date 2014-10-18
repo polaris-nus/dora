@@ -98,15 +98,21 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 				params = {};
 				params.disease = $scope.disease;
+				var data = "?";
 				
 				for (filterIndex in $scope.filters){
 					params[$scope.filters[filterIndex].type] = $scope.filters[filterIndex].value;
 				}
-				
+
+				//Convert params into query string
+				for (var key in params) {
+					data += ("" + key + "=" + params[key] + "&");
+				}
+
 				$http({
-					url: "/query",
-					method: "GET",
-					params: params
+					url: "/dora/query/",
+					method: "POST",
+					data: data
 				}).success(function(QRS) {
 					QRS.locationFeature = location;
 					QRSServ.addToQRSHistory(QRS);
