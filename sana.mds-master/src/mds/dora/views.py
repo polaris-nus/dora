@@ -3,15 +3,15 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def index(request):	
-    return render(request, 'main.html', {})
+	return render(request, 'main.html', {})
 
 
 def query(request):
 	#Parse the request
-	query = parse_request(request)
+	query, concepts_list, locations_list = parse_request(request)
 
 	#Make the query
-	query_result_set = get_query_result_set(query)
+	query_result_set = get_query_result_set(query, concepts_list, locations_list)
 
 	#Create a list of json objects
 	json_obj_list = create_json_obj_list(query_result_set)
