@@ -2,7 +2,7 @@ import django.contrib.gis.forms as forms
 from django.core.validators import RegexValidator
 
 class QueryForm(forms.Form):
-    disease = forms.CharField(max_length=128)
+    disease = forms.CharField(required=False, max_length=128)
     gender = forms.CharField(required=False, max_length=2,
             validators=[RegexValidator(regex=r"^[MFmf]$")])
     age_range = forms.CharField(required=False, max_length=128, 
