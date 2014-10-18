@@ -10,12 +10,13 @@ from django.template import Context, loader
 #Returns the query result set from a given request
 #Pre: must have disease request
 def parse_request(request):
-	query_form = QueryForm(request.POST)
+	query_form = QueryForm(request.GET)
 	
 	if query_form.is_valid():
 		cleaned_data = dict(query_form.cleaned_data)
 		print cleaned_data
 		disease_name = cleaned_data['disease']
+		print("disease " + disease_name)
 		subject_gender_filter = cleaned_data['gender']
 		location_filter = cleaned_data['location']
 		age_range_filter = cleaned_data['age_range']
@@ -50,17 +51,17 @@ def parse_request(request):
 		if (location_filter):
 			q_object_geometry = Q()
 			for geometry in location_filter:
-				q_object_geometry |= Q(subject__coordinates__within=geometry)
-			q_object &= q_object_geometry
+				q_object_geometry |= Q(coordinates__within=geometry)
+			locations_list.append(q_object_geometry)
 
 
 		return q_object, concepts_list, locations_list
 
 	else:
-		return None, None
+		return None, None, None
 
 def get_query_result_set(query, concepts_list, locations_list):
-	if (query == None and concept == None):
+	if (query == None and concepts_list == None):
 		return None
 	#return Observation.objects.all().values_list('encounter__created', flat=True)
 	encounter_QRS = Encounter.objects.filter(query).order_by('created')
@@ -81,7 +82,7 @@ def create_json_obj_list(query_result_set):
 	json_obj_list = []
 	json_obj_list.append([])
 	json_obj_list.append([])
-	locations = {} #Need to query the REAL Location Model
+	locations = EncounterLocation.objects.all() #Need to query the REAL Location Model
 	if (query_result_set):
 		json_template = loader.get_template('json_obj_template')
 		for query_result in query_result_set:
@@ -99,13 +100,15 @@ def create_json_obj_list(query_result_set):
 			context_args['coordinates'] = "None"
 			context_args['altitude'] = "alt!"
 
-			if (query_result.uuid in locations.keys()):
-				context_args['coordinates'] = locations[str(query_result.uuid)]
-				json_obj = json_template.render(Context(context_args))
-				json_obj_list[1].append(json_obj)
-			else:
+			if locations.filter(encounter__uuid=query_result.uuid).exists():
+				encounter_with_coords = locations.filter(encounter__uuid=query_result.uuid)
+				for encounter in encounter_with_coords:
+					context_args['coordinates'] = encounter.coordinates
 				json_obj = json_template.render(Context(context_args))
 				json_obj_list[0].append(json_obj)
+			else:
+				json_obj = json_template.render(Context(context_args))
+				json_obj_list[1].append(json_obj)
 
 	return json_obj_list;
 
