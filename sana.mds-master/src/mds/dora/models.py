@@ -11,3 +11,5 @@ class EncounterLocation(models.Model):
 	objects = models.GeoManager()
 	
 	observation = models.ForeignKey(Observation, to_field='uuid', on_delete=models.CASCADE)
+	
+import mds.dora.signals
