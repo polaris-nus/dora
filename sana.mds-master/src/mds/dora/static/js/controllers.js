@@ -5,74 +5,34 @@ var doraControllers = angular.module('doraControllers', []);
 doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
 	function($scope, QRSServ, $http, MapServ){
 
-		$scope.disease = "";
-		$scope.filters = [];
-		var location = "";
 		$scope.mapServMode = "drawing";
 		
-		$scope.available = {
-			location: true,
-			gender: true,
-			age_range: true
-		};
-
-		$scope.addFilter = function() {
-			//if array of filters is empty or last filter type is not set
-			if ($scope.filters.length==0 || $scope.filters[$scope.filters.length-1].type != '') {
-				$scope.filters.push({
-					type: "",
-					value: "",
-					visibility: true
-				});
-			}
-		};
+		$scope.data = [
+			"Patient's first name",
+			"Patient's last name",
+			'Gender',
+			'Age range',
+			"Observer's first name",
+			"Observer's last name",
+			"Observer's username",
+			'Drainage at surgery site',
+			'Surgical site drainage odor',
+			'Color of surgical site drainage',
+			'Surgical site drainage viscosity',
+			"Location at patient's house",
+			'Fever post surgical procedure',
+			'Surgical site pain',
+			'Redness at surgical site',
+			'Swelling at surgical site',
+			'Firmness at surgical site',
+			'Spontaneous opening at surgical site',
+			'Infection suspected at surgical site',
+			'Diagnosis',
+			'Operation date',
+			'Discharge date',
+			'Follow up date'];
 		
-		$scope.collapseIfFilterTypeIsNotEmpty = function(filter){
-			filter.visibility = filter.type==='';
-			
-			if (filter.type === "location") {
-				$scope.doneDrawing(filter);
-			}
-		};
-		
-		$scope.destroyElement = function(filters, $index) {
-			$scope.available[filters[$index].type] = true;
-
-			if (filters[$index].type === 'location') {
-				MapServ.deactivatePolygonLayer();
-				MapServ.clearPolygonLayer();
-			}
-			filters.splice($index, 1);
-		};
-		
-		$scope.filterText = function(filter){
-			if (filter.type === "gender") return "Gender: " + filter.value;
-			else if (filter.type === "age_range") return "Age Range: " + filter.value;
-			else if (filter.type === "location") return "Location";
-			else return "Unknown Filter Type: ";
-		};
-		
-		$scope.filterTypeChanged = function(filter){
-			filter.value = "";
-			
-			$scope.available[filter.type] = false;
-			
-			console.log($scope.available);
-			
-			filter.selected = true;
-			
-			if (filter.type === "location") {
-				MapServ.activatePolygonLayer();
-			}
-		};
-		
-		$scope.filterVisibilityChanged = function(filter) {
-			filter.visibility = true;
-			
-			if (filter.type === "location") {
-				MapServ.activatePolygonLayer();
-			}
-		};
+		$scope.query = "";
 		
 		$scope.doneDrawing = function(filter){
 			MapServ.deactivatePolygonLayer();
@@ -104,9 +64,16 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				}
 				
 				$http({
-					url: "/dora/query",
-					method: "GET",
-					params: params
+				    method: 'POST',
+				    url: '/dora/query',
+				    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				    transformRequest: function(obj) {
+				        var str = [];
+				        for(var p in obj)
+				        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+				        return str.join("&");
+				    },
+				    data: params
 				}).success(function(QRS) {
 					QRS.locationFeature = location;
 					QRSServ.addToQRSHistory(QRS);
@@ -115,14 +82,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					location = "";
 				});
 				
-				$scope.disease = "";
-				$scope.filters = [];
-
-				$scope.available = {
-					location: true,
-					gender: true,
-					age_range: true
-				};
 			}
 		};
 	}
