@@ -52,37 +52,44 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 
 		$scope.submitQuery = function(){
-			// Basic check before pulling data from backend
-			if ($scope.disease && $scope.disease != '') {
-				QRSServ.initializeLoading();
+		
+			console.log("inside submitQuery()");
 
-				params = {};
-				params.disease = $scope.disease;
-				
-				for (filterIndex in $scope.filters){
-					params[$scope.filters[filterIndex].type] = $scope.filters[filterIndex].value;
-				}
-				
-				$http({
-				    method: 'POST',
-				    url: '/dora/query',
-				    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-				    transformRequest: function(obj) {
-				        var str = [];
-				        for(var p in obj)
-				        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-				        return str.join("&");
-				    },
-				    data: params
-				}).success(function(QRS) {
-					QRS.locationFeature = location;
-					QRSServ.addToQRSHistory(QRS);
-					MapServ.clearPolygonLayer();
+			QRSServ.initializeLoading();
 
-					location = "";
-				});
-				
+			var data = {};
+			
+			var tokens = $scope.query.split(';');
+			
+			for (var i = 0; i < tokens.length; i++){
+				var token = tokens[i];
+				var colonPos = token.indexOf(':');
+				data[token.substring(0,colonPos)] = token.substring(colonPos + 1).trim();
 			}
+			
+			console.log(data);
+			
+			$http({
+			    method: 'POST',
+			    url: '/dora/query',
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			    transformRequest: function(obj) {
+			        var str = [];
+			        for(var p in obj)
+			        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+			        return str.join("&");
+			    },
+			    data: data
+			}).success(function(QRS) {
+				QRS.locationFeature = location;
+				QRSServ.addToQRSHistory(QRS);
+				MapServ.clearPolygonLayer();
+
+				location = "";
+				
+				$scope.query = '';
+			});
+				
 		};
 	}
 	]);

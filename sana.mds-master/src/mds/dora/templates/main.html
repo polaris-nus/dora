@@ -40,12 +40,14 @@
 
   <div class="queryForm" ng-controller="QueryFormController">
      <div class="above input-group" id="searchbox">
-        <autocomplete ng-model="query" attr-input-class="form-control autocom-input" data="data" attr-placeholder="Search encounters by their details here"></autocomplete>
-        <span class="input-group-btn">
-           <button type="submit" class="btn btn-info">
-             <span class="glyphicon glyphicon-search"></span>
-           </button>
-     	</span>
+	     <form ng-submit="submitQuery()">
+	        <autocomplete ng-model="query" attr-input-class="form-control autocom-input" data="data" attr-placeholder="Search encounters by their details here"></autocomplete>
+	        <span class="input-group-btn">
+	           <button type="submit" class="btn btn-info">
+	             <span class="glyphicon glyphicon-search"></span>
+	           </button>
+	     	</span>
+	     </form>
      </div>
   </div>
 
