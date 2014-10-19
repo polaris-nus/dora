@@ -38,22 +38,15 @@
     </div>
   </div>
 
-  <div ng-controller="QueryFormController">
-    <form ng-submit="submitQuery()">
-      <div class="above" id="searchbox">
-        <div class="input-group">
-          <input ng-model="disease" type="search" placeholder="Enter medical condition here" class="form-control" />
-          <div class="input-group-btn">
-            <button type="submit" class="btn btn-info">
-              <span class="glyphicon glyphicon-search"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <dynamic-filter class="top-align" ng-repeat="filter in filters"></dynamic-filter>
-      <button type="button" class="btn btn-info above top-align filter"
-      ng-click="addFilter()">+ Filter</button>
-    </form>
+  <div class="queryForm" ng-controller="QueryFormController">
+     <div class="above input-group" id="searchbox">
+        <autocomplete ng-model="query" attr-input-class="form-control autocom-input" data="data" attr-placeholder="Search encounters by their details here"></autocomplete>
+        <span class="input-group-btn">
+           <button type="submit" class="btn btn-info">
+             <span class="glyphicon glyphicon-search"></span>
+           </button>
+     	</span>
+     </div>
   </div>
 
 
