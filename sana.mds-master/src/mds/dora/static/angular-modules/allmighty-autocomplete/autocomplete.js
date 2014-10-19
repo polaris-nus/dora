@@ -1,5 +1,11 @@
 /* --- Made by justgoscha and licensed under MIT license --- */
 
+/* Modifications by Polaris from NUS:
+-add a way to use autocomplete on a string token, instead of the whole input text field
+-will now set caret at the end of the input after selection
+-tokens delimited by ';'
+*/
+
 var app = angular.module('autocomplete', []);
 
 app.directive('autocomplete', function() {
@@ -14,6 +20,60 @@ app.directive('autocomplete', function() {
       onSelect: '=onSelect'
     },
     controller: ['$scope', function($scope){
+    
+      $scope.startIndex = 0;
+      $scope.endIndex = 0;
+      
+      var getCaretPosition = function(inputElem){
+      	var caretPos = 0;
+      	//IE
+      	if (document.selection) {
+      		inputElem.focus();
+      		var sel = document.selection.createRange();
+      		sel.moveStart('character', -inputElem.value.length);
+      		caretPos = sel.text.length;
+      	}
+      	
+      	//Firefox, chrome
+      	else if(inputElem.selectionStart || inputElem.selectionStart == '0'){
+      		caretPos = inputElem.selectionStart;
+      	}
+      	return caretPos;
+      };
+      
+      $scope.setCaretPositionToEnd = function(inputElem){
+      	if (inputElem.setSelectionRange) {
+      		inputElem.focus();
+      		var length = inputElem.value.length;
+      		inputElem.setSelectionRange(length, length);
+      	}
+      	else if (inputElem.createTextRange) {
+      		var range = inputElem.createTextRange();
+      		range.collapse(true);
+      		range.moveEnd('character', length);
+      		range.moveStart('character', length);
+      		range.select();
+      	}
+      };
+      
+      $scope.updateStartAndEndIndex = function(inputElem, queryString){
+      	var caretPos = getCaretPosition(inputElem);
+      	var tokens = queryString.split(';');
+      	var sum = 0, counter = 0;
+      	while (caretPos > sum
+      			&& counter < tokens.length 
+      			&& caretPos > sum + tokens[counter].length) {
+      		sum += tokens[counter].length + 1;
+      		counter++;
+      	}
+      	$scope.startIndex = sum;
+      	$scope.endIndex = sum + tokens[counter].length;
+      };
+      
+      function spliceSlice(str, startIndex, endIndex, add) {
+        return str.slice(0, startIndex) + add + str.slice(endIndex);
+	  }
+    
       // the index of the suggestions that's currently selected
       $scope.selectedIndex = -1;
 
@@ -39,14 +99,17 @@ app.directive('autocomplete', function() {
 
       // starts autocompleting on typing in something
       $scope.$watch('searchParam', function(newValue, oldValue){
-
         if (oldValue === newValue || !oldValue) {
           return;
         }
 
         if(watching && typeof $scope.searchParam !== 'undefined' && $scope.searchParam !== null) {
           $scope.completing = true;
-          $scope.searchFilter = $scope.searchParam;
+      	  $scope.updateStartAndEndIndex($scope.inputElem, newValue);
+      	  console.log($scope.startIndex + " and " + $scope.endIndex);
+      	  console.log(newValue);
+          $scope.searchFilter = newValue.substring( $scope.startIndex,  $scope.endIndex);
+          console.log($scope.searchFilter);
           $scope.selectedIndex = -1;
         }
 
@@ -54,6 +117,26 @@ app.directive('autocomplete', function() {
         if($scope.onType)
           $scope.onType($scope.searchParam);
       });
+      
+      /*$scope.$watch(
+      	function() {
+      		return getCaretPosition($scope.inputElem);
+      	},
+      	function(oldValue, newValue){
+	      	if (oldValue === newValue || !oldValue) {
+	          return;
+	        }
+	        
+	        $scope.updateStartAndEndIndex($scope.inputElem, $scope.searchParam);
+	        $scope.startIndex = $scope.startIndex;
+	        $scope.endIndex = $scope.endIndex;
+	
+	        if(watching && typeof $scope.searchParam !== 'undefined' && $scope.searchParam !== null) {
+	          $scope.completing = true;
+	          $scope.searchFilter = $scope.searchParam.substring( $scope.startIndex,  $scope.endIndex);
+	          $scope.selectedIndex = -1;
+	        }
+      	});*/
 
       // for hovering over suggestions
       this.preSelect = function(suggestion){
@@ -80,11 +163,13 @@ app.directive('autocomplete', function() {
       // selecting a suggestion with RIGHT ARROW or ENTER
       $scope.select = function(suggestion){
         if(suggestion){
-          $scope.searchParam = suggestion;
-          $scope.searchFilter = suggestion;
+          $scope.searchParam = spliceSlice($scope.searchParam, $scope.startIndex, $scope.endIndex, suggestion + ": ");
+          $scope.searchFilter = '';
           if($scope.onSelect)
             $scope.onSelect(suggestion);
         }
+   
+   		$scope.setCaretPositionToEnd($scope.inputElem);
         watching = false;
         $scope.completing = false;
         setTimeout(function(){watching = true;},1000);
@@ -94,6 +179,8 @@ app.directive('autocomplete', function() {
 
     }],
     link: function(scope, element, attrs){
+    
+      scope.inputElem = element.find('input')[0];
 
       var attr = '';
 
@@ -243,7 +330,7 @@ app.directive('autocomplete', function() {
               val="{{ suggestion }}"\
               ng-class="{ active: ($index === selectedIndex) }"\
               ng-click="select(suggestion)"\
-              ng-bind-html="suggestion | highlight:searchParam"></li>\
+              ng-bind-html="suggestion | highlight:searchFilter"></li>\
           </ul>\
         </div>'
   };
