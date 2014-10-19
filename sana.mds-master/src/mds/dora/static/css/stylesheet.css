@@ -1,5 +1,7 @@
 body { overflow: hidden; }
 
+ul{ padding-left:0; }
+
 #map { position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; }
 /*#map .ol-zoom { font-size: 1.2em; margin-left: 300px;}*/
 
@@ -19,9 +21,18 @@ body { overflow: hidden; }
   display: inline-block;
 }
 
+.queryForm{
+	position: relative;
+	z-index: 500;
+}
+
 .filter {
   display: inline-block;
   margin-left: 10px;
+}
+
+.autocom-input {
+	width: 360px !important;
 }
 
 .below {
