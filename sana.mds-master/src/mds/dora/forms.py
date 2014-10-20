@@ -31,7 +31,7 @@ class QueryForm(forms.Form):
     swelling_at_surgical_site = forms.CharField(required=False, max_length=10)
     firmness_at_surgical_site = forms.CharField(required=False, max_length=10)
     spontaneous_opening_at_surgical_site = forms.CharField(required=False, max_length=10)
-    infecion_suspected_at_surgical_site = forms.CharField(required=False, max_length=10)
+    infection_suspected_at_surgical_site = forms.CharField(required=False, max_length=10)
 
     #Date Fields
     operation_date = forms.DateTimeField(required=False)
