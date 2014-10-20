@@ -373,9 +373,28 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		$scope.sliderModifier({range:{min: {days: 7}}});
 		$scope.sliderModifier({symmetricPositionning: true});
 
+
+		var scroll_speed = 0.5; //in seconds
+		var scroller;
+
+		$scope.startAutoscroll = function() {
+			$('#slider').dateRangeSlider('scrollRight', 1);
+			var bounds = $("#slider").dateRangeSlider("option", "bounds");
+			var values = $scope.sliderModifier("values");
+			if (Date.parse(values.max) >= Date.parse(values.min)) {
+				$scope.stopAutoscroll();
+			}
+		}
+
+		$scope.stopAutoscroll = function() {
+		    clearInterval(scroller);
+		}
+
 		$("#slider").bind("valuesChanging", function(e, data){
 			MapServ.setSliderMinMax(data.values.min, data.values.max);
 			MapServ.temporalSliderFeaturesToggle();
+			//scroller = setInterval(function(){$scope.startAutoscroll()}, scroll_speed*1000);
 		});
+
 	}
 	]);
