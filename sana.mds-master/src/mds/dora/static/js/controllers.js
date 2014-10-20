@@ -4,7 +4,8 @@ var doraControllers = angular.module('doraControllers', []);
 
 doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
 	function($scope, QRSServ, $http, MapServ){
-
+		
+		var location = '';
 		$scope.mapServMode = "drawing";
 		
 		$scope.data = [
@@ -12,8 +13,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			"Patient's last name",
 			'Gender',
 			'Age range',
-			"Observer's first name",
-			"Observer's last name",
+			//"Observer's first name",
+			//"Observer's last name",
 			"Observer's username",
 			'Drainage at surgery site',
 			'Surgical site drainage odor',
@@ -64,7 +65,12 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			for (var i = 0; i < tokens.length; i++){
 				var token = tokens[i];
 				var colonPos = token.indexOf(':');
-				data[token.substring(0,colonPos)] = token.substring(colonPos + 1).trim();
+				var key = token.substring(0,colonPos)
+								.trim()
+								.replace(" ", "_")
+								.replace("'", "")
+								.toLowerCase();
+				data[key] = token.substring(colonPos + 1).trim();
 			}
 			
 			console.log(data);
