@@ -1,11 +1,12 @@
 from mds.dora.utils import *
 from django.shortcuts import render
 from django.http import HttpResponse
+#from django.views.decorators.csrf import csrf_exempt
 
 def index(request):	
 	return render(request, 'main.html', {})
 
-
+#@csrf_exempt
 def query(request):
 	#Parse the request
 	query, concepts_list, locations_list = parse_request(request)

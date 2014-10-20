@@ -10,16 +10,39 @@ from django.template import Context, loader
 #Returns the query result set from a given request
 #Pre: must have disease request
 def parse_request(request):
-	query_form = QueryForm(request.GET)
+	query_form = QueryForm(request.POST)
 	
 	if query_form.is_valid():
 		cleaned_data = dict(query_form.cleaned_data)
-		print cleaned_data
-		disease_name = cleaned_data['disease']
-		print("disease " + disease_name)
-		subject_gender_filter = cleaned_data['gender']
-		location_filter = cleaned_data['location']
+
+		#Non-observation filters
+		gender_filter = cleaned_data['gender']
 		age_range_filter = cleaned_data['age_range']
+		procedure_filter = cleaned_data['procedure']
+		patients_family_name_filter = cleaned_data['patients_family_name']
+		patients_given_name_filter = cleaned_data['patients_given_name']
+		observers_username_filter = cleaned_data['observers_username']
+
+		#Observation Filters
+		diagnosis_filter = cleaned_data['diagnosis']
+		surgical_site_drainage_odor_filter = cleaned_data['surgical_site_drainage_odor']
+		color_of_surgical_site_drainage_filter = cleaned_data['color_of_surgical_site_drainage']
+		surgical_site_drainage_viscosity_filter = cleaned_data['surgical_site_drainage_viscosity']
+		fever_post_surgical_procedure_filter = cleaned_data['fever_post_surgical_procedure']
+		location_at_patients_house_filter = cleaned_data['location_at_patients_house']
+		drainage_at_surgery_site_filter = cleaned_data['drainage_at_surgery_site']
+		surgical_site_pain_filter = cleaned_data['surgical_site_pain']
+		redness_at_surgical_site_filter = cleaned_data['redness_at_surgical_site']
+		swelling_at_surgical_site_filter = cleaned_data['swelling_at_surgical_site']
+		firmness_at_surgical_site_filter = cleaned_data['firmness_at_surgical_site']
+		spontaneous_opening_at_surgical_site_filter = cleaned_data['spontaneous_opening_at_surgical_site']
+		infecion_suspected_at_surgical_site_filter = cleaned_data['infecion_suspected_at_surgical_site']
+		operation_date_filter = cleaned_data['operation_date']
+		discharge_date_filter = cleaned_data['discharge_date']
+		follow_up_date_filter = cleaned_data['follow_up_date']
+
+		#Location Filter
+		location_filter = cleaned_data['location']
 
 		#Construct filter arguments
 		q_object = Q()
@@ -27,8 +50,20 @@ def parse_request(request):
 		locations_list = []
 
 		#Non-observation Queries
-		if (subject_gender_filter):
-			q_object &= Q(subject__gender=subject_gender_filter)
+		if (gender_filter):
+			q_object &= Q(subject__gender=gender_filter)
+
+		if (procedure_filter):
+			q_object &= Q(procedure=procedure_filter)
+
+		if (patients_family_name_filter):
+			q_object &= Q(subject__family_name=patients_family_name_filter)
+
+		if (patients_given_name_filter):
+			q_object &= Q(subject__given_name=patients_given_name_filter)
+
+		if (observers_username_filter):
+			q_object &= Q(observer__user__username=observers_username_filter)
 
 		if (age_range_filter):
 			q_object_age_range = Q()
@@ -44,8 +79,8 @@ def parse_request(request):
 			q_object &= q_object_age_range
 
 		#Observation (Concept) Queries
-		if (disease_name):
-			concepts_list.append(Q(concept__name__iexact='DIAGNOSIS') & Q(value_text__iexact=disease_name))
+		if (diagnosis_filter):
+			concepts_list.append(Q(concept__name__iexact='DIAGNOSIS') & Q(value_text__iexact=diagnosis_filter))
 
 		#Location Queries
 		if (location_filter):
