@@ -24,22 +24,23 @@ def parse_request(request):
 		observers_username_filter = cleaned_data['observers_username']
 
 		#Observation Filters
-		diagnosis_filter = cleaned_data['diagnosis']
-		surgical_site_drainage_odor_filter = cleaned_data['surgical_site_drainage_odor']
-		color_of_surgical_site_drainage_filter = cleaned_data['color_of_surgical_site_drainage']
-		surgical_site_drainage_viscosity_filter = cleaned_data['surgical_site_drainage_viscosity']
-		fever_post_surgical_procedure_filter = cleaned_data['fever_post_surgical_procedure']
-		location_at_patients_house_filter = cleaned_data['location_at_patients_house']
-		drainage_at_surgery_site_filter = cleaned_data['drainage_at_surgery_site']
-		surgical_site_pain_filter = cleaned_data['surgical_site_pain']
-		redness_at_surgical_site_filter = cleaned_data['redness_at_surgical_site']
-		swelling_at_surgical_site_filter = cleaned_data['swelling_at_surgical_site']
-		firmness_at_surgical_site_filter = cleaned_data['firmness_at_surgical_site']
-		spontaneous_opening_at_surgical_site_filter = cleaned_data['spontaneous_opening_at_surgical_site']
-		infection_suspected_at_surgical_site_filter = cleaned_data['infection_suspected_at_surgical_site']
-		operation_date_filter = cleaned_data['operation_date']
-		discharge_date_filter = cleaned_data['discharge_date']
-		follow_up_date_filter = cleaned_data['follow_up_date']
+		concept_name = {}
+		concept_name['diagnosis'] = 'diagnosis'
+		concept_name['surgical_site_drainage_odor'] = 'sx site drainage odor'
+		concept_name['color_of_surgical_site_drainage'] = 'sx site drainage color'
+		concept_name['surgical_site_drainage_viscosity'] = 'sx site drainage viscosity'
+		concept_name['fever_post_surgical_procedure'] = 'fever post sx'
+		concept_name['location_at_patients_house'] = 'location patient house'
+		concept_name['drainage_at_surgery_site'] = 'sx site drainage'
+		concept_name['surgical_site_pain'] = 'sx site pain'
+		concept_name['redness_at_surgical_site'] = 'sx site redness'
+		concept_name['swelling_at_surgical_site'] = 'sx site swelling'
+		concept_name['firmness_at_surgical_site'] = 'firmness sx site'
+		concept_name['spontaneous_opening_at_surgical_site'] = 'sx site open spontaneous'
+		concept_name['infection_suspected_at_surgical_site'] = 'sx site infection suspected'
+		concept_name['operation_date'] = 'operation date'
+		concept_name['discharge_date'] = 'discharge date'
+		concept_name['follow_up_date'] = 'follow up date'
 
 		#Location Filter
 		location_filter = cleaned_data['location']
@@ -79,54 +80,9 @@ def parse_request(request):
 			q_object &= q_object_age_range
 
 		#Observation (Concept) Queries
-		if (diagnosis_filter):
-			concepts_list.append(Q(concept__name__iexact='diagnosis') & Q(value_text__iexact=diagnosis_filter))
-
-		if (surgical_site_drainage_odor_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site drainage odor') & Q(value_text__iexact=surgical_site_drainage_odor_filter))
-
-		if (color_of_surgical_site_drainage_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site drainage color') & Q(value_text__iexact=color_of_surgical_site_drainage_filter))
-
-		if (surgical_site_drainage_viscosity_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site drainage viscosity') & Q(value_text__iexact=surgical_site_drainage_viscosity_filter))
-
-		if (fever_post_surgical_procedure_filter):
-			concepts_list.append(Q(concept__name__iexact='fever post sx') & Q(value_text__iexact=fever_post_surgical_procedure_filter))
-
-		if (location_at_patients_house_filter):
-			concepts_list.append(Q(concept__name__iexact='location patient house') & Q(value_text__iexact=location_at_patients_house_filter))
-
-		if (drainage_at_surgery_site_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site drainage') & Q(value_text__iexact=drainage_at_surgery_site_filter))
-
-		if (surgical_site_pain_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site pain') & Q(value_text__iexact=surgical_site_pain_filter))
-
-		if (redness_at_surgical_site_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site redness') & Q(value_text__iexact=redness_at_surgical_site_filter))
-
-		if (swelling_at_surgical_site_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site swelling') & Q(value_text__iexact=swelling_at_surgical_site_filter))
-
-		if (firmness_at_surgical_site_filter):
-			concepts_list.append(Q(concept__name__iexact='firmness sx site') & Q(value_text__iexact=firmness_at_surgical_site_filter))
-
-		if (spontaneous_opening_at_surgical_site_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site open spontaneous') & Q(value_text__iexact=spontaneous_opening_at_surgical_site_filter))
-
-		if (infection_suspected_at_surgical_site_filter):
-			concepts_list.append(Q(concept__name__iexact='sx site infection suspected') & Q(value_text__iexact=infection_suspected_at_surgical_site_filter))
-
-		if (operation_date_filter):
-			concepts_list.append(Q(concept__name__iexact='operation date') & Q(value_text__iexact=operation_date_filter))
-
-		if (discharge_date_filter):
-			concepts_list.append(Q(concept__name__iexact='discharge date') & Q(value_text__iexact=discharge_date_filter))
-
-		if (follow_up_date_filter):
-			concepts_list.append(Q(concept__name__iexact='follow up date') & Q(value_text__iexact=follow_up_date_filter))
-
+		for key in concept_name:
+			if (cleaned_data[key]):
+				concepts_list.append(Q(concept__name__iexact=concept_name[key]) & Q(value_text__iexact=cleaned_data[key]))
 
 
 		#Location Queries
