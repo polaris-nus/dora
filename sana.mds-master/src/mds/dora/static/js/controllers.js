@@ -126,6 +126,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.newQRS = {};
 		$scope.displayedQRS = {};
 		$scope.panelVisible = true;
+		$scope.encounterVisible = false;
 		// $scope.selectedQRSIndex = -1;
 
 		$scope.setDisplayedQRS = function(index) {
