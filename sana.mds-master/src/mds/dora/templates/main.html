@@ -49,6 +49,9 @@
 	     	</span>
 	     </form>
      </div>
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Irregular&nbsp;&nbsp;
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Regular&nbsp;&nbsp;
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modifying" ng-change="changeMode(mapServMode)">Modify&nbsp;&nbsp;
   </div>
 
 
@@ -64,7 +67,7 @@
     </div>
 
     <div class="above" id="qrspanel">  
-      <!-- ng-show="{{QRSHistory}}"    -->
+      <!-- ng-show="{{QRSHistory}}"-->
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
