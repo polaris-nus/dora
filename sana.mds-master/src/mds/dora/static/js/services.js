@@ -248,9 +248,10 @@ doraServices.service('MapServ', [
 		selectFeatureControls.activate();
 		
 		var visibleLayers = [];
-		var clusterLayerFeatures = {};
 		var slider = {};
-		
+		var clusterLayerFeatures = {};
+		var clusterStrategyReferences = {};
+
 		return {
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
@@ -289,13 +290,13 @@ doraServices.service('MapServ', [
 					return 0;
 				});
 
-
 				var clusterStrategy = new OpenLayers.Strategy.Cluster();
 				clusterStrategy.distance = 30;
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
 					styleMap: clusterMarkerStyle,
 					strategies: [clusterStrategy]
 			  });
+			  clusterStrategyReferences[clusterLayer.id] = clusterStrategy;
 
 			  // Create clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
@@ -317,6 +318,15 @@ doraServices.service('MapServ', [
 
 			  return returnedLayers; // for testability
 
+			},
+			setClusterStrategyStatus: function(QRS, activate) {
+				if(QRS.clusterLayerId) {
+					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
+					activate ? console.log(clusterStrategy.activate()) : clusterStrategy.deactivate();
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					clusterLayer.removeAllFeatures();
+			  	clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
+				}
 			},
 			setVectorLayerVisibility: function(QRS, visibility) {
 				if (QRS.clusterLayerId) {
@@ -439,7 +449,7 @@ doraServices.service('MapServ', [
 
 				function redrawFeatures(clusterLayer, features) {
 					clusterLayer.removeAllFeatures();
-			  		clusterLayer.addFeatures(features);
+			  	clusterLayer.addFeatures(features);
 				}
 
 				function peek(array) {

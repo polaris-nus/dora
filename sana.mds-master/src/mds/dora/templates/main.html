@@ -71,6 +71,8 @@
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
+          <button ng-click="setQRSClustering(true)">Cluster On</button>
+          <button ng-click="setQRSClustering(false)">Cluster Off</button>
           <button type="submit" ng-click="exportQRS()" id="export-btn">
             <img src="/static/images/export.png" width="20" height="20" alt="submit"/>
           </button>
