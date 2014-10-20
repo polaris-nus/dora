@@ -43,12 +43,16 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.changeMode = function(newValue) {
+			// NING NING'R! NOTE CHANGES MADE HERE!
 			console.log(newValue);
 			if (newValue == 'drawing') {
-				MapServ.deactivatePolygonModify();
+				MapServ.activatePolygonLayer();
 			}
 			else if (newValue == 'modifying') {
 				MapServ.activatePolygonModify();
+			}
+			else if (newValue == 'regular') {
+				MapServ.activateDrawRegularPolygon();
 			}
 		};
 

@@ -212,6 +212,10 @@ doraServices.service('MapServ', [
 		// Adding Map Controls
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
+
+		var polyOptions = {sides: 40};
+		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.RegularPolygon, {handlerOptions: polyOptions});
+		map.addControl(drawRegularPolygonControls);
 		
 		var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
 		modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
@@ -358,6 +362,8 @@ doraServices.service('MapServ', [
 				}
 			},
 			activatePolygonLayer: function() {
+				drawRegularPolygonControls.deactivate();
+				modifyPolygonControls.deactivate();
 				drawPolygonControls.activate();
 				polygonLayer.setVisibility(true);
 
@@ -389,19 +395,22 @@ doraServices.service('MapServ', [
 			},
 			deactivatePolygonLayer: function() {
 				drawPolygonControls.deactivate();
-				polygonLayer.setVisibility(false);
+				drawRegularPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				polygonLayer.setVisibility(false);
 			},
 			clearPolygonLayer: function() {		
 				polygonLayer.removeAllFeatures();
 			},
 			activatePolygonModify: function() {
 				drawPolygonControls.deactivate();
+				drawRegularPolygonControls.deactivate();
 				modifyPolygonControls.activate();
 			},
-			deactivatePolygonModify: function() {
-				this.activatePolygonLayer();
+			activateDrawRegularPolygon: function() {
+				drawPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				drawRegularPolygonControls.activate();
 			},
 			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);
