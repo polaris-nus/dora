@@ -9,8 +9,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.mapServMode = "drawing";
 		
 		$scope.data = [
-			"Patient's first name",
-			"Patient's last name",
+			"Patient's family name",
+			"Patient's given name",
 			'Gender',
 			'Age range',
 			//"Observer's first name",
@@ -66,13 +66,21 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			
 			var tokens = $scope.query.split(';');
 			
+			function escapeRegExp(string) {
+    			return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+			}
+			
+			function replaceAll(string, find, replace) {
+  				return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+			}
+			
 			for (var i = 0; i < tokens.length; i++){
 				var token = tokens[i];
 				var colonPos = token.indexOf(':');
 				var key = token.substring(0,colonPos)
 								.trim()
-								.replace(" ", "_")
-								.replace("'", "")
+								.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
+								.replace(new RegExp(escapeRegExp("'"), 'g'), "")
 								.toLowerCase();
 				data[key] = token.substring(colonPos + 1).trim();
 			}
@@ -81,7 +89,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			
 			$http({
 			    method: 'POST',
-			    url: '/dora/query',
+			    url: '/dora/query/',
 			    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			    transformRequest: function(obj) {
 			        var str = [];
@@ -98,6 +106,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				location = "";
 				
 				$scope.query = '';
+			}).error(function(data){
+				document.open();
+				document.write(data);
+				document.close();
 			});
 				
 		};
