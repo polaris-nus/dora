@@ -131,9 +131,9 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
-			updateChartOneDS();
-			updateChartTwoDS();
-			drawChart();
+			// updateChartOneDS();
+			// updateChartTwoDS();
+			// drawChart();
 		};
 
 		$scope.toggleQRSVisibility = function(index) {
@@ -141,6 +141,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			var toggledVisibility = !$scope.doubleClickedQRS.isVisible;
 			$scope.doubleClickedQRS.isVisible = toggledVisibility
 			MapServ.setVectorLayerVisibility($scope.doubleClickedQRS, toggledVisibility);
+		}
+
+		$scope.setQRSClustering = function(status) {
+			console.log("clicked");
+			MapServ.setClusterStrategyStatus($scope.displayedQRS, status);
 		}
 
 		$scope.visibility = function(index){
