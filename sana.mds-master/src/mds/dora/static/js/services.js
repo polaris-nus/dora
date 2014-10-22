@@ -152,7 +152,7 @@ doraServices.service('MapServ', [
 	    ],
 	    layers: [
 	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {buffer: 2}),
-	      new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true})
+	      new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true}),
 	    ]
 		});
 		var center = [0,0];
@@ -195,6 +195,8 @@ doraServices.service('MapServ', [
 					color: function(feature) {
 						if(feature.cluster) {
               return feature.cluster[0].attributes.featureColor;
+            } else {
+            	return feature.attributes.featureColor;
             }
             return 'black'; // should never be used!
 					}
@@ -205,6 +207,19 @@ doraServices.service('MapServ', [
         strokeColor: "#32a8a9"
       }
 		});
+
+		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
+      strategies: [new OpenLayers.Strategy.Fixed()],
+      protocol: new OpenLayers.Protocol.HTTP({
+        url: "/static/kml/countriesM.kml",
+        format: new OpenLayers.Format.KML({
+          extractStyles: false, 
+          extractAttributes: true,
+          maxDepth: 2
+        })
+      })
+    })
+    map.addLayer(countriesLayer);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 		map.addLayer(polygonLayer);
@@ -223,29 +238,35 @@ doraServices.service('MapServ', [
 		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
 		map.addControl(modifyPolygonControls);
 
-		var selectFeatureControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector('stub'), {
+		var selectClusterControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
 			multiple: true,
 			toggle: true,
 			onSelect: function(feature) {
-				selectedFeature = feature;
-        popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
-                     feature.geometry.getBounds().getCenterLonLat(),
-                     null,
-                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
-                     null, true, function(){
-                     	selectFeatureControls.unselect(selectedFeature);
-                     });
-        feature.popup = popup;
-        map.addPopup(popup);
+				if (feature.cluster) {
+					selectedFeature = feature;
+	        popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
+	                     feature.geometry.getBounds().getCenterLonLat(),
+	                     null,
+	                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
+	                     null, true, function(){
+	                     	selectClusterControls.unselect(selectedFeature);
+	                     });
+	        feature.popup = popup;
+	        map.addPopup(popup);
+				} else {
+					console.log(feature.attributes.name);
+				}
 			},
 			onUnselect: function(feature) {
-				map.removePopup(feature.popup);
-        feature.popup.destroy();
-        feature.popup = null;
+				if (feature.cluster) {
+					map.removePopup(feature.popup);
+	        feature.popup.destroy();
+	        feature.popup = null;
+				}
 			}
 		});
-		map.addControl(selectFeatureControls);
-		selectFeatureControls.activate();
+		map.addControl(selectClusterControls);
+		selectClusterControls.activate();
 		
 		var visibleLayers = [];
 		var slider = {};
@@ -303,6 +324,7 @@ doraServices.service('MapServ', [
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
+
 			  visibleLayers.push(clusterLayer.id);
 			  clusterLayerFeatures[clusterLayer.id] = {};
 			  clusterLayerFeatures[clusterLayer.id]['features'] = features;
@@ -312,9 +334,9 @@ doraServices.service('MapServ', [
 			  this.temporalSliderFeaturesToggle();
 
 			  // Adding layer to selectControls
-			  var selectControlsLayers = selectFeatureControls.layers || [selectFeatureControls.layer];
+			  var selectControlsLayers = selectClusterControls.layers || [selectClusterControls.layer];
 			  selectControlsLayers.push(clusterLayer);
-			  selectFeatureControls.setLayer(selectControlsLayers);
+			  selectClusterControls.setLayer(selectControlsLayers);
 
 			  return returnedLayers; // for testability
 
@@ -345,14 +367,14 @@ doraServices.service('MapServ', [
 			},
 			removeVectorLayer: function(QRS) {
 				if (QRS.clusterLayerId) {
-					// Manual cleanup on selectFeatureControls.layers
-					var selectControlsLayers = selectFeatureControls.layers || [selectFeatureControls.layer];
+					// Manual cleanup on selectClusterControls.layers
+					var selectControlsLayers = selectClusterControls.layers || [selectClusterControls.layer];
 					selectControlsLayers = selectControlsLayers.filter(
 						function(element) {
 							return element.id.localeCompare(QRS.clusterLayerId) !== 0
 						}
 					)
-					selectFeatureControls.setLayer(selectControlsLayers);
+					selectClusterControls.setLayer(selectControlsLayers);
 
 					//Manual cleanup on visibleLayers and clusterLayerFeatures
 					visibleLayers = visibleLayers.filter(
