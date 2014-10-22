@@ -220,6 +220,7 @@ doraServices.service('MapServ', [
       })
     })
     map.addLayer(countriesLayer);
+    countriesLayer.setVisibility(false);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 		map.addLayer(polygonLayer);
@@ -238,35 +239,36 @@ doraServices.service('MapServ', [
 		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
 		map.addControl(modifyPolygonControls);
 
-		var selectClusterControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+		var selectClusterControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector("stub"), {
 			multiple: true,
 			toggle: true,
 			onSelect: function(feature) {
-				if (feature.cluster) {
-					selectedFeature = feature;
-	        popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
-	                     feature.geometry.getBounds().getCenterLonLat(),
-	                     null,
-	                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
-	                     null, true, function(){
-	                     	selectClusterControls.unselect(selectedFeature);
-	                     });
-	        feature.popup = popup;
-	        map.addPopup(popup);
-				} else {
-					console.log(feature.attributes.name);
-				}
+				selectedFeature = feature;
+        popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
+                     feature.geometry.getBounds().getCenterLonLat(),
+                     null,
+                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
+                     null, true, function(){
+                     	selectClusterControls.unselect(selectedFeature);
+                     });
+        feature.popup = popup;
+        map.addPopup(popup);
 			},
 			onUnselect: function(feature) {
-				if (feature.cluster) {
-					map.removePopup(feature.popup);
-	        feature.popup.destroy();
-	        feature.popup = null;
-				}
+				map.removePopup(feature.popup);
+        feature.popup.destroy();
+        feature.popup = null;
 			}
 		});
 		map.addControl(selectClusterControls);
 		selectClusterControls.activate();
+
+		var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+			multiple: true,
+			toggle: true,
+		});
+		map.addControl(selectCountryControls);
+		selectCountryControls.activate();
 		
 		var visibleLayers = [];
 		var slider = {};
@@ -344,7 +346,7 @@ doraServices.service('MapServ', [
 			setClusterStrategyStatus: function(QRS, activate) {
 				if(QRS.clusterLayerId) {
 					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
-					activate ? console.log(clusterStrategy.activate()) : clusterStrategy.deactivate();
+					activate ? clusterStrategy.activate() : clusterStrategy.deactivate();
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.removeAllFeatures();
 			  	clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
@@ -446,6 +448,15 @@ doraServices.service('MapServ', [
 			},
 			getPolygons: function() { 
 				return wktParser.write(polygonLayer.features);
+			},
+			activateCountriesLayer: function(){
+				countriesLayer.setVisibility(true);
+			},
+			deactivateCountriesLayer: function() {
+				countriesLayer.setVisibility(false);
+			},
+			getSelectedCountries: function() {
+				return wktParser.write(countriesLayer.selectedFeatures);
 			},
 			plotCentriod: function(QRS) {
 				if (QRS.clusterLayerId) {
