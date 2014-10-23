@@ -6,7 +6,23 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http, MapServ){
 		
 		var location = '';
-		$scope.mapServMode = "drawing";
+		$scope.mapServMode = 'unselected';
+		$scope.locationSearchOn = false;
+		
+		function changeMode(newValue) {
+			console.log("changeMode triggered");
+			// NING NING'R! NOTE CHANGES MADE HERE!
+			console.log(newValue);
+			if (newValue == 'drawing') {
+				MapServ.activatePolygonLayer();
+			}
+			else if (newValue == 'modifying') {
+				MapServ.activatePolygonModify();
+			}
+			else if (newValue == 'regular') {
+				MapServ.activateDrawRegularPolygon();
+			}
+		};
 		
 		$scope.data = [
 			"Patient's family name",
@@ -35,26 +51,37 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.query = "";
 		
-		$scope.doneDrawing = function(filter){
-			MapServ.deactivatePolygonLayer();
-			filter.value = MapServ.getPolygons();
-			filter.visibility = false;
-			location = filter.value;
+		$scope.toggleButton = function(){
+			//mapServMode reset so that ngChange may be triggered
+			if ($scope.locationSearchOn) {
+				$scope.mapServMode = 'unselected';
+				$scope.doneDrawing();	
+			}
+			
+			//polygon drawing mode by default
+			else {
+				$scope.mapServMode = 'drawing';
+			}
+			console.log($scope.mapServMode);
+			$scope.locationSearchOn = !$scope.locationSearchOn;
 		};
 		
-		$scope.changeMode = function(newValue) {
-			// NING NING'R! NOTE CHANGES MADE HERE!
-			console.log(newValue);
-			if (newValue == 'drawing') {
-				MapServ.activatePolygonLayer();
-			}
-			else if (newValue == 'modifying') {
-				MapServ.activatePolygonModify();
-			}
-			else if (newValue == 'regular') {
-				MapServ.activateDrawRegularPolygon();
-			}
+		$scope.$watch('mapServMode', changeMode);
+		
+		$scope.buttonName = function(){
+			console.log("location now is " + location);
+			if ($scope.locationSearchOn) return "Apply search location";
+			else if (location && location != "GEOMETRYCOLLECTION()") return "Edit search location";
+			else return "Add search location";
+			
 		};
+		
+		$scope.doneDrawing = function(filter){
+			MapServ.deactivatePolygonLayer();
+			location = MapServ.getPolygons();
+		};
+		
+		$scope.changeMode = changeMode;
 
 		$scope.submitQuery = function(){
 		
@@ -84,6 +111,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 								.toLowerCase();
 				data[key] = token.substring(colonPos + 1).trim();
 			}
+			
+			data.location = location;
 			
 			console.log(data);
 			
