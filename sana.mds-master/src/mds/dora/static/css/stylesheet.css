@@ -26,25 +26,19 @@ ul{ padding-left:0; }
 	z-index: 500;
 }
 
-.filter {
-  display: inline-block;
-  margin-left: 10px;
-}
-
 .autocom-input {
 	width: 360px !important;
 }
 
-.below {
-	position: absolute;
-	display:block;
-	margin-top: 5px;
+.location-options {
+	vertical-align:top;
+	margin-top:20px;
+	display:inline-block;
+	position:relative;
 }
 
-.top-align {
-  margin-top: 20px;
-  vertical-align: top;
-  white-space: nowrap;
+.location-radio {
+	position:absolute;
 }
 
 #qrsbuttons{
