@@ -10,9 +10,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.locationSearchOn = false;
 		
 		function changeMode(newValue) {
-			console.log("changeMode triggered");
+			//console.log("changeMode triggered");
 			// NING NING'R! NOTE CHANGES MADE HERE!
-			console.log(newValue);
+			//console.log(newValue);
 			if (newValue == 'drawing') {
 				MapServ.activatePolygonLayer();
 			}
@@ -62,14 +62,20 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			else {
 				$scope.mapServMode = 'drawing';
 			}
-			console.log($scope.mapServMode);
+			//console.log($scope.mapServMode);
 			$scope.locationSearchOn = !$scope.locationSearchOn;
+		};
+		
+		$scope.clearShapes = function() {
+			console.log("clearShapes called");
+			MapServ.clearPolygonLayer();
+			location = "";
 		};
 		
 		$scope.$watch('mapServMode', changeMode);
 		
 		$scope.buttonName = function(){
-			console.log("location now is " + location);
+			//console.log("location now is " + location);
 			if ($scope.locationSearchOn) return "Apply search location";
 			else if (location && location != "GEOMETRYCOLLECTION()") return "Edit search location";
 			else return "Add search location";

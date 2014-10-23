@@ -52,6 +52,7 @@
    	
    <div class="location-options">
    	<button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+   	<button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
    	<div class="location-radio" ng-show="locationSearchOn">
      <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
      <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Add Circle<br>
