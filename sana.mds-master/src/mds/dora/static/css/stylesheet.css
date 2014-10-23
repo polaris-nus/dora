@@ -50,7 +50,7 @@ ul{ padding-left:0; }
 #qrsbuttons{
   position: absolute;
   top:70px;
-  width: 40px;
+  width: 55px;
   margin-left: 0px;
   display: inline-block;
 }
@@ -176,7 +176,7 @@ html, body{
 /* QRS BUTTON STYLES*/
 .btn-circle {
   position: relative;
-  left: 20px;
+  float: right;
   width: 30px;
   height: 30px;
   text-align: center;
@@ -184,6 +184,11 @@ html, body{
   border-radius: 100%;
   margin-bottom:8px;
   border-width:3px;
+}
+
+#cross{
+  margin-top:10px;
+  left:5px;
 }
 
 .btn-invisible {
