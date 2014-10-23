@@ -127,10 +127,12 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.displayedQRS = {};
 		$scope.panelVisible = true;
 		$scope.encounterVisible = false;
+		$scope.encounters = [];
 		// $scope.selectedQRSIndex = -1;
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
+			updateEncounters();
 			// updateChartOneDS();
 			// updateChartTwoDS();
 			// drawChart();
@@ -153,6 +155,19 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				return "";
 			} else {
 				return "btn-invisible";
+			}
+		}
+
+		function updateEncounters(){
+			for (index in $scope.displayedQRS.assigned){
+			var encounter = {
+					patient: $scope.displayedQRS.assigned[index].subject.given_name +" "+ $scope.displayedQRS.assigned[index].subject.family_name ,
+
+					procedure: $scope.displayedQRS.assigned[index].procedure,
+					observer:  $scope.displayedQRS.assigned[index].observer,
+				}		
+// encounter.patient = $scope.displayedQRS.assigned[index].created_date;
+				$scope.encounters.push(encounter);
 			}
 		}
 
