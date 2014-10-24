@@ -194,15 +194,25 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
+	function cap(string)
+	{
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	function low(string)
+	{
+		return string.toLowerCase();
+		// return string.charAt(0) + string.slice(1).toLowerCase();
+	}
+
 		function updateEncounters(){
 			for (index in $scope.displayedQRS.assigned){
 			var encounter = {
-					patient: $scope.displayedQRS.assigned[index].subject.given_name +" "+ $scope.displayedQRS.assigned[index].subject.family_name ,
-
-					procedure: $scope.displayedQRS.assigned[index].procedure,
-					observer:  $scope.displayedQRS.assigned[index].observer,
+					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
+					procedure: low($scope.displayedQRS.assigned[index].procedure),
+					observer:  cap($scope.displayedQRS.assigned[index].observer),
+					date: $scope.displayedQRS.assigned[index].created_date.split(" ")[0],
 				}		
-// encounter.patient = $scope.displayedQRS.assigned[index].created_date;
 				$scope.encounters.push(encounter);
 			}
 		}
