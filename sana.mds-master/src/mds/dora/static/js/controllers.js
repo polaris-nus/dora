@@ -195,17 +195,16 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
-		function cap(string)
-		{
+		function cap(string){
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
 
-		function low(string)
-		{
+		function low(string){
 			return string.toLowerCase();
 		}
 
 		function updateEncounters(){
+			$scope.encounters = [];
 			for (index in $scope.displayedQRS.assigned){
 				var encounter = {
 					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
@@ -216,10 +215,15 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 					dob: $scope.displayedQRS.assigned[index].subject.dob,
 					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
 				}		
-
 				$scope.encounters.push(encounter);
 			}
 		}
+
+
+
+
+
+
 
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
@@ -309,7 +313,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		//--End Chart Methods part1--//
 
 		//--Start Export Methods--//
-
 		$scope.exportQRS = function(){
 			var exportData = [['patient_name','gender','age','procedure','observer']];
 
@@ -331,18 +334,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			a.download    = 'qrs.csv';
 			document.body.appendChild(a);
 			a.click();
-
-	// 		var csvContent = "data:text/csv;charset=utf-8,";
-	// 		data.forEach(function(infoArray, index){
-	// 			dataString = infoArray.join(",");
-	// 			csvContent += index < infoArray.length ? dataString+ "\n" : dataString;
-	// 		}); 
-	// 		var encodedUri = encodeURI(csvContent);
-	// 		var link = document.createElement("a");
-	// 		link.setAttribute("href", encodedUri);
-	// 		link.setAttribute("download", "my_data.csv");
-	// 		link.click();
-	// 		// window.open(encodedUri);
 }
 
 		//--End Export Methods--//

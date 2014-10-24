@@ -45,61 +45,68 @@
      <span class="input-group-btn">
       <button type="submit" class="btn btn-info">
        <span class="glyphicon glyphicon-search"></span>
-      </button>
-     </span>
-  	</form>
-   </div>
-   	
-   <div class="location-options">
-   	<button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
-   	<button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
-   	<div class="location-radio" ng-show="locationSearchOn">
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Add Circle<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modifying" ng-change="changeMode(mapServMode)">Modify Shapes
-  	</div>
-   </div>
+     </button>
+   </span>
+ </form>
+</div>
+
+<div class="location-options">
+  <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+  <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
+  <div class="location-radio" ng-show="locationSearchOn">
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Add Circle<br>
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modifying" ng-change="changeMode(mapServMode)">Modify Shapes
+ </div>
+</div>
+</div>
+
+
+<div ng-controller="QueryResultController">
+
+  <div class="above" id="qrsbuttons">
+    <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
+      <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" id="cross"></span>
+      <!--  <span ng-show="!hover" id="placeholder"> </span> -->
+      <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
+    </div>
+    <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
   </div>
 
-
-   <div ng-controller="QueryResultController">
-
-    <div class="above" id="qrsbuttons">
-      <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
-        <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" id="cross"></span>
-        <!--  <span ng-show="!hover" id="placeholder"> </span> -->
-        <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
+  <div class="above" id="qrspanel">  
+    <!-- ng-show="{{QRSHistory}}"-->
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
+        <button ng-click="setQRSClustering(true)">Cluster On</button>
+        <button ng-click="setQRSClustering(false)">Cluster Off</button>
+        <button type="submit" ng-click="exportQRS()" id="export-btn">
+          <img src="/static/images/export.png" width="20" height="20" alt="submit"/>
+        </button>
       </div>
-      <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
-    </div>
 
-    <div class="above" id="qrspanel">  
-      <!-- ng-show="{{QRSHistory}}"-->
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
-          <button ng-click="setQRSClustering(true)">Cluster On</button>
-          <button ng-click="setQRSClustering(false)">Cluster Off</button>
-          <button type="submit" ng-click="exportQRS()" id="export-btn">
-            <img src="/static/images/export.png" width="20" height="20" alt="submit"/>
-          </button>
+      <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
+        <!-- {{displayedQRS}} -->
+        <div>
+          <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
+          <div ng-show="chartOneVisible" id="line-chart"></div>
         </div>
 
-        <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
-          <!-- {{displayedQRS}} -->
-          <div>
-            <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
-            <div ng-show="chartOneVisible" id="line-chart"></div>
-          </div>
+        <div>
+          <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
+          <div ng-show="chartTwoVisible" id="chart_div"></div>
+        </div>
 
-          <div>
-            <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
-            <div ng-show="chartTwoVisible" id="chart_div"></div>
-          </div>
-
-          <a ng-click="encounterVisible=!encounterVisible">show all encounters</a> 
+        <a ng-click="encounterVisible=!encounterVisible">Show all encounters</a> 
+        <br/>
+        <div ng-show="encounterVisible">
+          Filter: <input  type="text" class="form-control" ng-model="search.$"> <br>
+        </div>
+<!--           By patient name: <input ng-model="search.patient"><br>
+          By Procedure: <input ng-model="search.procedure"><br>
+          By observer: <input ng-model="search.observer"><br> -->
           <div class="list-group" ng-show="encounterVisible" style="width:100%;">
-            <div id="encounter" ng-repeat="encounter in encounters">
+            <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
               <a href="#" class="list-group-item">{{encounter.patient}}<br/>
                 <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
                 <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
