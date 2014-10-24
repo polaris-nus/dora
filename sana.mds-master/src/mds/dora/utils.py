@@ -49,22 +49,28 @@ def parse_request(request):
 		q_object = Q()
 		concepts_list = []
 		locations_list = []
+		flag = False;
 
 		#Non-observation Queries
 		if (gender_filter):
 			q_object &= Q(subject__gender__iexact=gender_filter)
+			flag = True;
 
 		if (procedure_filter):
 			q_object &= Q(procedure__iexact=procedure_filter)
+			flag = True;
 
 		if (patients_family_name_filter):
 			q_object &= Q(subject__family_name__iexact=patients_family_name_filter)
+			flag = True;
 
 		if (patients_given_name_filter):
 			q_object &= Q(subject__given_name__iexact=patients_given_name_filter)
+			flag = True;
 
 		if (observers_username_filter):
 			q_object &= Q(observer__user__username__iexact=observers_username_filter)
+			flag = True;
 
 		if (age_range_filter):
 			q_object_age_range = Q()
@@ -78,11 +84,13 @@ def parse_request(request):
 				age_end = int(age_range_list[1]) + 1
 				q_object_age_range |= (Q(subject__dob__lte=datetime(year=now.year-age_start, month=now.month, day=now.day)) & Q(subject__dob__gte=datetime(year=now.year-age_end, month=now.month, day=now.day)))
 			q_object &= q_object_age_range
+			flag = True;
 
 		#Observation (Concept) Queries
 		for key in concept_name:
 			if (cleaned_data[key]):
 				concepts_list.append(Q(concept__name__iexact=concept_name[key]) & Q(value_text__iexact=cleaned_data[key]))
+				flag = True;
 
 
 		#Location Queries
@@ -91,7 +99,11 @@ def parse_request(request):
 			for geometry in location_filter:
 				q_object_geometry |= Q(coordinates__within=geometry)
 			locations_list.append(q_object_geometry)
+			flag = True;
 
+
+		if (flag == False):
+			return None, None, None
 
 		return q_object, concepts_list, locations_list
 
@@ -158,7 +170,9 @@ def generate_json_obj_to_return(json_obj_list):
 	if (len(json_obj_list) == 2) :
 		json_complete += '"assigned" : ' + (generate_json_from_list(json_obj_list[0]) + ",\n")
 
-		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + "\n")
+		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + ",\n")
+
+		json_complete += '"status" : "ok"\n' 
 
 	json_complete += "}"
 

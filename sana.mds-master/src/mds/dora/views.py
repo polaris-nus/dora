@@ -10,6 +10,8 @@ def index(request):
 def query(request):
 	#Parse the request
 	query, concepts_list, locations_list = parse_request(request)
+	if (query == None and concepts_list == None and locations_list == None):
+		return HttpResponse("{assigned:[], unassigned:[], status:'error'}", content_type="application/json")		
 
 	#Make the query
 	query_result_set = get_query_result_set(query, concepts_list, locations_list)
