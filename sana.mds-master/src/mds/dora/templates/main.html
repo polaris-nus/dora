@@ -66,9 +66,11 @@
 
   <div class="above" id="qrsbuttons">
     <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
-      <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" id="cross"></span>
-      <!--  <span ng-show="!hover" id="placeholder"> </span> -->
-      <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
+      
+      <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" ng-style="($index === 0 && {'margin-top': '7px'})||($index === 1 && {'margin-top': '41px'})||($index === 2 && {'margin-top': '75px'})||($index === 3 && {'margin-top': '109px'})||($index === 4 && {'margin-top': '143px'})||($index === 5 && {'margin-top': '177px'})||($index === 6 && {'margin-top': '211px'})" id="cross"></span>
+
+      <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline bottom-margin" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
+
     </div>
     <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
   </div>
@@ -99,6 +101,7 @@
 
         <a ng-click="encounterVisible=!encounterVisible">Show all encounters</a> 
         <br/>
+
         <div ng-show="encounterVisible">
           Filter: <input  type="text" class="form-control" ng-model="search.$"> <br>
         </div>
@@ -119,13 +122,16 @@
     <br/>
 
     <div id="union-intersection">
-      <div class="btn-group above">
+      <div class="btn-group above inline">
         <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'union'; selectionFlag = true;">Union</button>
         <button type="button" class="btn btn-default btn-union-intersect" ng-click="selectionFunction = 'intersect'; selectionFlag = true;">Intersect</button>
       </div>
 
-      <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle btn-color-{{QRSHistory[selectedQRSList[$index]].color.buttonStyleIndex}} side-margin above">{{selectedQRSList[$index]}}</button>
-      <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Done</button>
+      <div class="inline">
+        <button ng-repeat="qrs in selectedQRSList" type="button" class="btn btn-success btn-circle btn-color-{{QRSHistory[selectedQRSList[$index]].color.buttonStyleIndex}} side-margin above">{{selectedQRSList[$index]}}</button>
+      </div> 
+
+      <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Apply</button>
       <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
     </div>
 
@@ -133,9 +139,9 @@
 
 
   <div ng-controller="TemporalSliderController" class="above" id="slider-div"> 
-    <div ng-show="sliderVisible" id="slider"></div>
-    <button type="submit" ng-click="sliderVisible=!sliderVisible" class="above" id="slider_btn">
-      <img src="/static/images/temporal-slider.png" width="26" height="24" alt="submit" />
+    <div id="slider"></div>
+    <button type="submit" class="above" id="slider_btn">
+      <img src="/static/images/play.png" width="30" height="24" alt="submit" />
     </button>
   </div>
 

@@ -176,13 +176,18 @@ html, body{
   text-align: center;
   padding: 0px;
   border-radius: 100%;
-  margin-bottom:8px;
   border-width:3px;
+  display: inline-block;
+}
+
+.bottom-margin{
+  margin-bottom:8px;
 }
 
 #cross{
-  margin-top:10px;
-  left:5px;
+  left: 5px;
+  background-color: red;
+  display: inline-block;
 }
 
 .btn-invisible {
