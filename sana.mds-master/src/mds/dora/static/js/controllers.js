@@ -169,7 +169,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateEncounters();
 			updateChartOneDS();
-			// updateChartTwoDS();
+			updateChartTwoDS();
 			drawChart();
 		};
 
@@ -264,38 +264,38 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 
-		// updateChartTwoDS = function(){
-		// 	var femaleCount=[];
-		// 	var maleCount=[];
-		// 	var length = 10;
+		updateChartTwoDS = function(){
+			var femaleCount=[];
+			var maleCount=[];
+			var length = 10;
 
-		// 	for (var i=0;i<length;i++){
-		// 		femaleCount.push(0);
-		// 		maleCount.push(0);
-		// 	}
+			for (var i=0;i<length;i++){
+				femaleCount.push(0);
+				maleCount.push(0);
+			}
 
-		// 	for (index in $scope.displayedQRS.assigned){
-		// 		var sexString = $scope.displayedQRS.assigned[index].subject.gender;
-		// 		var dobString = $scope.displayedQRS.assigned[index].subject.dob;
-		// 		var year = dobString.split("-")[0];
-		// 		var ageGroup = Math.floor((2014-year)/10);
+			for (index in $scope.displayedQRS.assigned){
+				var sexString = $scope.displayedQRS.assigned[index].subject.gender;
+				var dobString = $scope.displayedQRS.assigned[index].subject.dob;
+				var year = dobString.split("-")[0];
+				var ageGroup = Math.floor((2014-year)/10);
 
-		// 		if (sexString == "F"){
-		// 			femaleCount[ageGroup]+=1;
-		// 		}else if(sexString =="M"){
-		// 			maleCount[ageGroup]+=1;
-		// 		}else{
-		// 			console.log("invalide sex");
-		// 		}
-		// 	}
+				if (sexString == "F"){
+					femaleCount[ageGroup]+=1;
+				}else if(sexString =="M"){
+					maleCount[ageGroup]+=1;
+				}else{
+					console.log("invalide sex");
+				}
+			}
 
-		// 	dataChartTwo = [];
-		// 	dataChartTwo.push(['Age', 'Male', 'Female']);
+			dataChartTwo = [];
+			dataChartTwo.push(['Age Group', 'Male', 'Female']);
 
-		// 	for (var i=0;i<length;i++){
-		// 		dataChartTwo.push([i*10+"-"+(i*10+9),maleCount[i],femaleCount[i]]);
-		// 	}
-		// }
+			for (var i=0;i<length;i++){
+				dataChartTwo.push([i*10+"-"+(i*10+9),maleCount[i],femaleCount[i]]);
+			}
+		}
 		//--End Chart Methods part1--//
 
 		//--Start Export Methods--//
@@ -374,7 +374,7 @@ function drawChart() {
 		title: 'Patient Distribution',
 		chartArea:{width:'90%'},
 		legend: { position: 'none'},
-		hAxis: {title: 'Age', titleTextStyle: {color: 'red'}}
+		hAxis: {title: 'Age Group', titleTextStyle: {color: 'black'}}
 	};
 
 	var chartTwo = new google.visualization.ColumnChart(document.getElementById('chart_div'));

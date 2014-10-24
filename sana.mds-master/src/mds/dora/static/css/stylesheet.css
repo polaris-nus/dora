@@ -80,7 +80,7 @@ ul{ padding-left:0; }
 
 
 #qrs-panel-body{
-  max-height: 400px;
+  max-height: 80%;
   overflow-y: scroll; 
 }
 
