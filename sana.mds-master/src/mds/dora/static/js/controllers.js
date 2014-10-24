@@ -25,11 +25,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.data = [
-			"Patient's family name",
-			"Patient's given name",
-			'Gender',
-			'Procedure',
-			'Age range',
+		"Patient's family name",
+		"Patient's given name",
+		'Gender',
+		'Procedure',
+		'Age range',
 			//"Observer's first name",
 			//"Observer's last name",
 			"Observer's username",
@@ -49,10 +49,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			'Operation date',
 			'Discharge date',
 			'Follow up date'];
-		
-		$scope.query = "";
-		
-		$scope.toggleButton = function(){
+
+			$scope.query = "";
+
+			$scope.toggleButton = function(){
 			//mapServMode reset so that ngChange may be triggered
 			if ($scope.locationSearchOn) {
 				$scope.mapServMode = 'unselected';
@@ -91,7 +91,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.changeMode = changeMode;
 
 		$scope.submitQuery = function(){
-		
+
 			console.log("inside submitQuery()");
 
 			QRSServ.initializeLoading();
@@ -101,21 +101,21 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			var tokens = $scope.query.split(';');
 			
 			function escapeRegExp(string) {
-    			return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+				return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 			}
 			
 			function replaceAll(string, find, replace) {
-  				return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+				return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 			}
 			
 			for (var i = 0; i < tokens.length; i++){
 				var token = tokens[i];
 				var colonPos = token.indexOf(':');
 				var key = token.substring(0,colonPos)
-								.trim()
-								.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
-								.replace(new RegExp(escapeRegExp("'"), 'g'), "")
-								.toLowerCase();
+				.trim()
+				.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
+				.replace(new RegExp(escapeRegExp("'"), 'g'), "")
+				.toLowerCase();
 				data[key] = token.substring(colonPos + 1).trim();
 			}
 			
@@ -124,16 +124,16 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			console.log(data);
 			
 			$http({
-			    method: 'POST',
-			    url: '/dora/query/',
-			    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			    transformRequest: function(obj) {
-			        var str = [];
-			        for(var p in obj)
-			        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-			        return str.join("&");
-			    },
-			    data: data
+				method: 'POST',
+				url: '/dora/query/',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				transformRequest: function(obj) {
+					var str = [];
+					for(var p in obj)
+						str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+					return str.join("&");
+				},
+				data: data
 			}).success(function(QRS) {
 				QRS.locationFeature = location;
 				QRSServ.addToQRSHistory(QRS);
@@ -147,7 +147,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				document.write(data);
 				document.close();
 			});
-				
+
 		};
 	}
 	]);
@@ -164,14 +164,13 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.panelVisible = true;
 		$scope.encounterVisible = false;
 		$scope.encounters = [];
-		// $scope.selectedQRSIndex = -1;
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateEncounters();
-			// updateChartOneDS();
+			updateChartOneDS();
 			// updateChartTwoDS();
-			// drawChart();
+			drawChart();
 		};
 
 		$scope.toggleQRSVisibility = function(index) {
@@ -194,20 +193,19 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
-	function cap(string)
-	{
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
+		function cap(string)
+		{
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
 
-	function low(string)
-	{
-		return string.toLowerCase();
-		// return string.charAt(0) + string.slice(1).toLowerCase();
-	}
+		function low(string)
+		{
+			return string.toLowerCase();
+		}
 
 		function updateEncounters(){
 			for (index in $scope.displayedQRS.assigned){
-			var encounter = {
+				var encounter = {
 					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
 					procedure: low($scope.displayedQRS.assigned[index].procedure),
 					observer:  cap($scope.displayedQRS.assigned[index].observer),
@@ -266,61 +264,38 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 
-		updateChartTwoDS = function(){
-			var femaleCount=[];
-			var maleCount=[];
-			var length = 10;
-
-			for (var i=0;i<length;i++){
-				femaleCount.push(0);
-				maleCount.push(0);
-			}
-
-			for (index in $scope.displayedQRS.assigned){
-				var sexString = $scope.displayedQRS.assigned[index].patient.gender;
-				var dobString = $scope.displayedQRS.assigned[index].patient.dob;
-				var year = dobString.split("-")[0];
-				var ageGroup = Math.floor((2014-year)/10);
-
-				if (sexString == "F"){
-					femaleCount[ageGroup]+=1;
-				}else if(sexString =="M"){
-					maleCount[ageGroup]+=1;
-				}else{
-					console.log("invalide sex");
-				}
-			}
-
-			dataChartTwo = [];
-			dataChartTwo.push(['Age', 'Male', 'Female']);
-
-			for (var i=0;i<length;i++){
-				dataChartTwo.push([i*10+"-"+(i*10+9),maleCount[i],femaleCount[i]]);
-			}
-		}
-
 		// updateChartTwoDS = function(){
-		// 	var femaleCount=0;
-		// 	var maleCount=0;
+		// 	var femaleCount=[];
+		// 	var maleCount=[];
+		// 	var length = 10;
+
+		// 	for (var i=0;i<length;i++){
+		// 		femaleCount.push(0);
+		// 		maleCount.push(0);
+		// 	}
 
 		// 	for (index in $scope.displayedQRS.assigned){
-		// 		var sexString = $scope.displayedQRS.assigned[index].patient.gender;
+		// 		var sexString = $scope.displayedQRS.assigned[index].subject.gender;
+		// 		var dobString = $scope.displayedQRS.assigned[index].subject.dob;
+		// 		var year = dobString.split("-")[0];
+		// 		var ageGroup = Math.floor((2014-year)/10);
 
 		// 		if (sexString == "F"){
-		// 			femaleCount+=1;
+		// 			femaleCount[ageGroup]+=1;
 		// 		}else if(sexString =="M"){
-		// 			maleCount+=1;
+		// 			maleCount[ageGroup]+=1;
 		// 		}else{
 		// 			console.log("invalide sex");
 		// 		}
 		// 	}
-		// 	// console.log(femaleCount + ", "+maleCount);
+
 		// 	dataChartTwo = [];
 		// 	dataChartTwo.push(['Age', 'Male', 'Female']);
-		// 	dataChartTwo.push(['0-9',  1000,      400]);
-		// 	dataChartTwo.push(['10-19',  1170,      460]);
-		// }
 
+		// 	for (var i=0;i<length;i++){
+		// 		dataChartTwo.push([i*10+"-"+(i*10+9),maleCount[i],femaleCount[i]]);
+		// 	}
+		// }
 		//--End Chart Methods part1--//
 
 		//--Start Export Methods--//
@@ -453,7 +428,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		}
 
 		$scope.stopAutoscroll = function() {
-		    clearInterval(scroller);
+			clearInterval(scroller);
 		}
 
 		$("#slider").bind("valuesChanging", function(e, data){
