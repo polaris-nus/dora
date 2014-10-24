@@ -267,7 +267,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		updateChartTwoDS = function(){
 			var femaleCount=[];
 			var maleCount=[];
-			var length = 10;
+			var length = 9;
 
 			for (var i=0;i<length;i++){
 				femaleCount.push(0);
@@ -279,6 +279,9 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				var dobString = $scope.displayedQRS.assigned[index].subject.dob;
 				var year = dobString.split("-")[0];
 				var ageGroup = Math.floor((2014-year)/10);
+				if (ageGroup>7){
+					ageGroup = 8;
+				}
 
 				if (sexString == "F"){
 					femaleCount[ageGroup]+=1;
@@ -292,9 +295,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			dataChartTwo = [];
 			dataChartTwo.push(['Age Group', 'Male', 'Female']);
 
-			for (var i=0;i<length;i++){
+			for (var i=0;i<length-1;i++){
 				dataChartTwo.push([i*10+"-"+(i*10+9),maleCount[i],femaleCount[i]]);
 			}
+
+			dataChartTwo.push([">80",maleCount[length-1],femaleCount[length-1]]);
 		}
 		//--End Chart Methods part1--//
 
