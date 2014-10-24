@@ -87,10 +87,16 @@
 
         <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
           <!-- {{displayedQRS}} -->
-          <div id="pie-chart"></div>
-          <div id="line-chart"></div>
-          <div id="chart_div"></div>
-         
+          <div>
+            <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
+            <div ng-show="chartOneVisible" id="line-chart"></div>
+          </div>
+
+          <div>
+            <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
+            <div ng-show="chartTwoVisible" id="chart_div"></div>
+          </div>
+
           <a ng-click="encounterVisible=!encounterVisible">show all encounters</a> 
           <div class="list-group" ng-show="encounterVisible" style="width:100%;">
             <div id="encounter" ng-repeat="encounter in encounters">

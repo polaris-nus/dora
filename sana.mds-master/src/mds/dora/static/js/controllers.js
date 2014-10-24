@@ -164,6 +164,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.panelVisible = true;
 		$scope.encounterVisible = false;
 		$scope.encounters = [];
+		$scope.chartOneVisible = true;
+		$scope.chartTwoVisible = true;
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
@@ -365,7 +367,7 @@ google.setOnLoadCallback(drawChart);
 function drawChart() {
 	var dataOne = google.visualization.arrayToDataTable(dataChartOne);
 	var optionsOne = {
-		title: 'Patient Number',
+		// title: 'Patient Number',
 		curveType: 'function',
 		chartArea:{width:'85%'},
 		// chartArea:{left:30,top:30,width:'80%',height:'50%'},
@@ -376,8 +378,8 @@ function drawChart() {
 
 	var dataTwo = google.visualization.arrayToDataTable(dataChartTwo);
 	var optionsTwo = {
-		title: 'Patient Distribution',
-		chartArea:{width:'90%'},
+		// title: 'Patient Distribution',
+		chartArea:{width:'85%'},
 		legend: { position: 'none'},
 		hAxis: {title: 'Age Group', titleTextStyle: {color: 'black'}}
 	};
