@@ -213,8 +213,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 					observer:  cap($scope.displayedQRS.assigned[index].observer),
 					date: $scope.displayedQRS.assigned[index].created_date.split(" ")[0],
 					gender: $scope.displayedQRS.assigned[index].subject.gender,
-				  dob: $scope.displayedQRS.assigned[index].subject.dob,
+					dob: $scope.displayedQRS.assigned[index].subject.dob,
+					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
 				}		
+
 				$scope.encounters.push(encounter);
 			}
 		}
@@ -223,8 +225,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		updateChartOneDS = function(){
 			var yearCount = {};
 
-			for (index in $scope.displayedQRS.assigned){
-				var dateString = $scope.displayedQRS.assigned[index].created_date;
+			for (index in $scope.encounters){
+				var dateString = $scope.encounters[index].date;
 				//var year = dateString.split(",")[1];
 				var year = dateString.split("-")[0];
 				if(yearCount[year]){
@@ -278,11 +280,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				maleCount.push(0);
 			}
 
-			for (index in $scope.displayedQRS.assigned){
-				var sexString = $scope.displayedQRS.assigned[index].subject.gender;
-				var dobString = $scope.displayedQRS.assigned[index].subject.dob;
-				var year = dobString.split("-")[0];
-				var ageGroup = Math.floor((2014-year)/10);
+			for (index in $scope.encounters){
+				var sexString = $scope.encounters[index].gender;
+				var ageGroup = Math.floor($scope.encounters[index].age/10);
+
 				if (ageGroup>7){
 					ageGroup = 8;
 				}
@@ -314,9 +315,9 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 			for (index in $scope.encounters){
 				var encounter=$scope.encounters[index];
-				exportData.push([encounter.patient,encounter.gender,encounter.dob,encounter.procedure,encounter.observer]);
+				exportData.push([encounter.patient,encounter.gender,encounter.age,encounter.procedure,encounter.observer]);
 			}
-		
+
 			var csvRows = [];
 
 			for(var i=0, l=exportData.length; i<l; ++i){
