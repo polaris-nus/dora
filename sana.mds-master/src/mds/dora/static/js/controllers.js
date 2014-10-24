@@ -212,6 +212,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 					procedure: low($scope.displayedQRS.assigned[index].procedure),
 					observer:  cap($scope.displayedQRS.assigned[index].observer),
 					date: $scope.displayedQRS.assigned[index].created_date.split(" ")[0],
+					gender: $scope.displayedQRS.assigned[index].subject.gender,
+				  dob: $scope.displayedQRS.assigned[index].subject.dob,
 				}		
 				$scope.encounters.push(encounter);
 			}
@@ -308,19 +310,39 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		//--Start Export Methods--//
 
 		$scope.exportQRS = function(){
-			var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
-			var csvContent = "data:text/csv;charset=utf-8,";
-			data.forEach(function(infoArray, index){
-				dataString = infoArray.join(",");
-				csvContent += index < infoArray.length ? dataString+ "\n" : dataString;
-			}); 
-			var encodedUri = encodeURI(csvContent);
-			var link = document.createElement("a");
-			link.setAttribute("href", encodedUri);
-			link.setAttribute("download", "my_data.csv");
-			link.click();
-			// window.open(encodedUri);
-		}
+			var exportData = [['patient_name','gender','age','procedure','observer']];
+
+			for (index in $scope.encounters){
+				var encounter=$scope.encounters[index];
+				exportData.push([encounter.patient,encounter.gender,encounter.dob,encounter.procedure,encounter.observer]);
+			}
+		
+			var csvRows = [];
+
+			for(var i=0, l=exportData.length; i<l; ++i){
+				csvRows.push(exportData[i].join(','));
+			}
+
+			var csvString = csvRows.join("\r\n");
+			var a         = document.createElement('a');
+			a.href     = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvString);
+			a.target      = '_blank';
+			a.download    = 'qrs.csv';
+			document.body.appendChild(a);
+			a.click();
+
+	// 		var csvContent = "data:text/csv;charset=utf-8,";
+	// 		data.forEach(function(infoArray, index){
+	// 			dataString = infoArray.join(",");
+	// 			csvContent += index < infoArray.length ? dataString+ "\n" : dataString;
+	// 		}); 
+	// 		var encodedUri = encodeURI(csvContent);
+	// 		var link = document.createElement("a");
+	// 		link.setAttribute("href", encodedUri);
+	// 		link.setAttribute("download", "my_data.csv");
+	// 		link.click();
+	// 		// window.open(encodedUri);
+}
 
 		//--End Export Methods--//
 
