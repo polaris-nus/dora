@@ -24,12 +24,14 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			}
 		};
 		
+		$scope.filters = [];
+		
 		$scope.data = [
-		"Patient's family name",
-		"Patient's given name",
-		'Gender',
-		'Procedure',
-		'Age range',
+			"Patient's family name",
+			"Patient's given name",
+			'Gender',
+			'Procedure',
+			'Age range',
 			//"Observer's first name",
 			//"Observer's last name",
 			"Observer's username",
@@ -50,9 +52,14 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			'Discharge date',
 			'Follow up date'];
 
-			$scope.query = "";
+		$scope.input = "";
+		
+		$scope.submitFilter = function(){
+			$scope.filters.push($scope.input);
+			$scope.input = '';
+		};
 
-			$scope.toggleButton = function(){
+		$scope.toggleButton = function(){
 			//mapServMode reset so that ngChange may be triggered
 			if ($scope.locationSearchOn) {
 				$scope.mapServMode = 'unselected';
@@ -80,7 +87,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			if ($scope.locationSearchOn) return "Apply search location";
 			else if (location && location != "GEOMETRYCOLLECTION()") return "Edit search location";
 			else return "Add search location";
-			
 		};
 		
 		$scope.doneDrawing = function(filter){

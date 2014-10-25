@@ -15,8 +15,6 @@ ul{ padding-left:0; }
 
 #searchbox{
   position: relative; 
-  margin-top: 20px;
-  margin-left: 20px;
   width: 400px;
   display: inline-block;
 }
@@ -24,6 +22,9 @@ ul{ padding-left:0; }
 .queryForm{
 	position: relative;
 	z-index: 500;
+	margin-top: 20px;
+  	margin-left: 20px;
+  	white-space: nowrap;
 }
 
 .autocom-input {
@@ -32,9 +33,34 @@ ul{ padding-left:0; }
 
 .location-options {
 	vertical-align:top;
-	margin-top:20px;
 	display:inline-block;
 	position:relative;
+}
+
+.filters {
+	cursor: default;
+	white-space: normal;
+}
+
+.filter {
+	margin: 2px;
+	border: 1px solid black;
+	background-color: white;
+	padding: 2px;
+	display: inline-block;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.hover-text-shadow:hover {
+	text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.5);
 }
 
 .location-radio {

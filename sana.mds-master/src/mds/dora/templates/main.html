@@ -40,26 +40,33 @@
 
   <div class="queryForm" ng-controller="QueryFormController">
    <div class="above input-group" id="searchbox">
-    <form ng-submit="submitQuery()">
-     <autocomplete ng-model="query" attr-input-class="form-control autocom-input" data="data" attr-placeholder="Search encounters by their details here"></autocomplete>
+    <form ng-submit="submitFilter()">
+     <autocomplete ng-model="input" attr-input-class="form-control autocom-input" data="data" attr-placeholder="Add a search criteria"></autocomplete>
      <span class="input-group-btn">
       <button type="submit" class="btn btn-info">
-       <span class="glyphicon glyphicon-search"></span>
-     </button>
-   </span>
- </form>
-</div>
+       <span class="glyphicon glyphicon-plus"></span>
+      </button>
+     </span>
+    </form>
+   </div>
 
-<div class="location-options">
-  <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
-  <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
-  <div class="location-radio" ng-show="locationSearchOn">
-   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Add Circle<br>
-   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modifying" ng-change="changeMode(mapServMode)">Modify Shapes
+   <div class="location-options">
+    <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+    <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
+    <div class="location-radio" ng-show="locationSearchOn">
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Add Circle<br>
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modifying" ng-change="changeMode(mapServMode)">Modify Shapes
+    </div>
+   </div>
+  
+  <div class="filters noselect">
+  	<span class="filter" ng-repeat="filter in filters">
+  		<span>&nbsp;{{filter}}&nbsp;&nbsp;</span>
+  		<span class="hover-text-shadow">&#215;&nbsp;</span>
+  	</span>
+  </div>
  </div>
-</div>
-</div>
 
 
 <div ng-controller="QueryResultController">
