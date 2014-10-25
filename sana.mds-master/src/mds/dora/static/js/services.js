@@ -172,7 +172,7 @@ doraServices.service('MapServ', [
 			  strokeColor: "#fff",
 			  strokeWidth: 2,
 			  strokeOpacity: 1,
-			  graphicZIndex: 1,
+			  graphicZIndex: 2,
 			  // Label styling
 			  label : "${count}",
 			                
@@ -208,6 +208,19 @@ doraServices.service('MapServ', [
       }
 		});
 
+		var polygonFilterStyle = new OpenLayers.StyleMap({
+			default: new OpenLayers.Style({
+			  fillColor: "${filterFillColor}",
+			  fillOpacity: 0.4,
+			  strokeColor: "${filterStrokeColor}",
+			  strokeWidth: 2,
+			  strokeOpacity: 1,
+			  strokeDashstyle: "solid",
+			  graphicZIndex: 1,
+			})
+		});
+		
+		// Adding Utility Layers
 		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
       strategies: [new OpenLayers.Strategy.Fixed()],
       protocol: new OpenLayers.Protocol.HTTP({
@@ -282,7 +295,18 @@ doraServices.service('MapServ', [
 			  // Check and create location polygon layer
 			  if (QRS.locationFeature) {
 			  	var locationFeature = wktParser.read(QRS.locationFeature);
-			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer');
+			  	if (locationFeature instanceof Array) {
+			  		for(index in locationFeature) {
+			  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
+			  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
+			  		}
+			  	} else {
+		  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
+		  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
+			  	}
+			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
+			  		styleMap: polygonFilterStyle
+			  	});
 			  	QRS.locationLayerId = locationLayer.id;
 			  	map.addLayer(locationLayer);
 			  	returnedLayers.locationLayer = locationLayer;
@@ -299,7 +323,7 @@ doraServices.service('MapServ', [
 				var features = [];
 			  for (index in coordinates){
 			    var vectorFeature = wktParser.read(coordinates[index].coords);
-			    vectorFeature.attributes = {featureColor: QRS.color.markerColor, date: coordinates[index].created};
+			    vectorFeature.attributes = {featureColor: QRS.color.featureColor, date: coordinates[index].created};
 			    features.push(vectorFeature);
 			  }
 
@@ -581,7 +605,7 @@ doraServices.service('PaletteServ', [
 					if(!palette[index].inUse) {
 						palette[index].inUse = true;
 						var color = {
-							markerColor: palette[index].color,
+							featureColor: palette[index].color,
 							buttonStyleIndex: palette[index].cssIndex
 						};
 						return color;
