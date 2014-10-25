@@ -238,7 +238,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         this.origin = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
         this.popup = new OpenLayers.Popup("radiusPopup",
                         new OpenLayers.LonLat(maploc.lon, maploc.lat),
-                        new OpenLayers.Size(150,30),
+                        new OpenLayers.Size(100,30),
                         "",
                         false);
         this.map.addPopup(this.popup);
@@ -278,8 +278,17 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
             this.radius = Math.max(this.map.getResolution() / 2,
                                    point.distanceTo(this.origin));
         }
-        // console.log(this.radius);
-        this.popup.setContentHTML(this.radius);
+        
+        var pointClone = point.clone().transform("EPSG:900913", "EPSG:4326");
+        var originClone = this.origin.clone().transform("EPSG:900913", "EPSG:4326");
+        var distance = OpenLayers.Util.distVincenty(
+            new OpenLayers.LonLat(pointClone.x, pointClone.y),
+            new OpenLayers.LonLat(originClone.x, originClone.y)
+        );
+
+        this.popup.setContentHTML(
+             Math.round(distance * 100) / 100 + "km"
+        );
         this.modifyGeometry();
         if(this.irregular) {
             var dx = point.x - this.origin.x;
