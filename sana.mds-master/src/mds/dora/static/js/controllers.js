@@ -16,14 +16,15 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			//console.log("changeMode triggered");
 			// NING NING'R! NOTE CHANGES MADE HERE!
 			//console.log(newValue);
+			MapServ.activatePolygonFilters();
 			if (newValue == 'drawing') {
-				MapServ.activatePolygonLayer();
+				MapServ.activateDrawPolygon();
 			}
 			else if (newValue == 'modifying') {
-				MapServ.activatePolygonModify();
+				MapServ.activateModifyPolygon();
 			}
 			else if (newValue == 'regular') {
-				MapServ.activateDrawRegularPolygon();
+				MapServ.activateDrawCircle();
 			}
 		};
 
@@ -97,8 +98,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.doneDrawing = function(filter){
-			MapServ.deactivatePolygonLayer();
-			location = MapServ.getPolygons();
+			MapServ.deactivatePolygonFilters();
+			location = MapServ.getPolygonFilters();
 		};
 		
 		$scope.editFilter = function(index, filterText){

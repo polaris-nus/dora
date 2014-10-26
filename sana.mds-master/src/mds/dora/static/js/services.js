@@ -48,7 +48,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 			},
 			addToQRSHistory: function (QRS){
 				QRSLoadingStatus.isLoading = false;
-				
+
 				//Limiting size of QRSHistory
 				while (QRSHistory.length > (historyLimit-1)){
 					var removedQRS = QRSHistory.shift();
@@ -256,10 +256,32 @@ doraServices.service('MapServ', [
 			  graphicZIndex: 1,
 			})
 		});
+
+		var polygonFilterStyle = new OpenLayers.Style({
+			fillColor: "#808080",
+		  fillOpacity: 0.4,
+		  strokeColor: "#808080",
+		  strokeWidth: 2,
+		  strokeOpacity: 1,
+		  graphicZIndex: 1
+		})
+
+		var countryPolygonStyle = new OpenLayers.StyleMap({
+			default: {
+			  fillOpacity: 0,
+			  strokeOpacity: 0,
+			},
+			select: polygonFilterStyle
+		});
+
+		var drawPolygonStyle = new OpenLayers.StyleMap({
+			default: polygonFilterStyle
+		});
 		
 		// Adding Utility Layers
 		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
       strategies: [new OpenLayers.Strategy.Fixed()],
+      styleMap: countryPolygonStyle,
       protocol: new OpenLayers.Protocol.HTTP({
         url: "/static/kml/countriesM.kml",
         format: new OpenLayers.Format.KML({
@@ -270,9 +292,11 @@ doraServices.service('MapServ', [
       })
     })
     map.addLayer(countriesLayer);
-    countriesLayer.setVisibility(false);
+    // countriesLayer.setVisibility(true);
 
-		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
+			styleMap: drawPolygonStyle
+		});
 		map.addLayer(polygonLayer);
 		
 		// Adding Map Controls
@@ -318,7 +342,7 @@ doraServices.service('MapServ', [
 			toggle: true,
 		});
 		map.addControl(selectCountryControls);
-		selectCountryControls.activate();
+		// selectCountryControls.activate();
 		
 		var visibleLayers = [];
 		var slider = {};
@@ -456,11 +480,26 @@ doraServices.service('MapServ', [
 					locationLayer.destroy();
 				}
 			},
-			activatePolygonLayer: function() {
+			activatePolygonFilters: function() {
+				polygonLayer.setVisibility(true);
+				countriesLayer.setVisibility(true);
+			},
+			deactivatePolygonFilters: function() {
+				drawPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				polygonLayer.setVisibility(false);
+				countriesLayer.setVisibility(false);
+			},
+			clearPolygonLayer: function() {		
+				polygonLayer.removeAllFeatures();
+			},
+			activateDrawPolygon: function() {
+				drawRegularPolygonControls.deactivate();
+				modifyPolygonControls.deactivate();
+				selectCountryControls.deactivate();
+
 				drawPolygonControls.activate();
-				polygonLayer.setVisibility(true);
 
 				// undo/redo event handlers
 				OpenLayers.Event.observe(document, "keydown", function(evt) {
@@ -488,36 +527,32 @@ doraServices.service('MapServ', [
 					}
 				});
 			},
-			deactivatePolygonLayer: function() {
-				drawPolygonControls.deactivate();
-				drawRegularPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
-				polygonLayer.setVisibility(false);
-			},
-			clearPolygonLayer: function() {		
-				polygonLayer.removeAllFeatures();
-			},
-			activatePolygonModify: function() {
-				drawPolygonControls.deactivate();
-				drawRegularPolygonControls.deactivate();
-				modifyPolygonControls.activate();
-			},
-			activateDrawRegularPolygon: function() {
+			activateDrawCircle: function() {
 				drawPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				selectCountryControls.deactivate();
+
 				drawRegularPolygonControls.activate();
 			},
-			getPolygons: function() { 
-				return wktParser.write(polygonLayer.features);
+			activateModifyPolygon: function() {
+				drawPolygonControls.deactivate();
+				drawRegularPolygonControls.deactivate();
+				selectCountryControls.deactivate();
+
+				modifyPolygonControls.activate();
 			},
-			activateCountriesLayer: function(){
-				countriesLayer.setVisibility(true);
+			activateSelectCountry: function(){
+				drawPolygonControls.deactivate();
+				modifyPolygonControls.deactivate();
+				drawRegularPolygonControls.deactivate();
+
+				selectCountryControls.activate();
 			},
-			deactivateCountriesLayer: function() {
-				countriesLayer.setVisibility(false);
-			},
-			getSelectedCountries: function() {
-				return wktParser.write(countriesLayer.selectedFeatures);
+			getPolygonFilters: function() {
+				polygonFilters = [];
+				Array.prototype.push.apply(polygonFilters, polygonLayer.features);
+				Array.prototype.push.apply(polygonFilters, countriesLayer.selectedFeatures);
+				return wktParser.write(polygonFilters);
 			},
 			plotCentriod: function(QRS) {
 				if (QRS.clusterLayerId) {
