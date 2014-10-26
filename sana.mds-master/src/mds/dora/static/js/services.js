@@ -121,14 +121,14 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				var populateHashTable = function(list, flag) {
 					change = {}; //checks whether the current UUID has already been modified this round.
 					for (var j=0; j<list.length; j++) {
-						patientUuid = list[j].patient.uuid;
-						if (hashTable[flag][patientUuid] == null) {
-							hashTable[flag][patientUuid] = 1;
-							change[patientUuid] = 1;
+						encounterUuid = list[j].uuid;
+						if (hashTable[flag][encounterUuid] == null) {
+							hashTable[flag][encounterUuid] = 1;
+							change[encounterUuid] = 1;
 						} else {
-							if (change[patientUuid] != 1) { //if this patientUuid has not been modified already
-								hashTable[flag][list[j].patient.uuid] += 1;
-								change[patientUuid] = 1; //make this patientUuid dirty
+							if (change[encounterUuid] != 1) { //if this patientUuid has not been modified already
+								hashTable[flag][encounterUuid] += 1;
+								change[encounterUuid] = 1; //make this patientUuid dirty
 							}
 						}
 					}
@@ -137,7 +137,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				//flag is either assigned or unassigned
 				var populateIntersectQRS = function(list, flag) {
 					for (var j=0; j<list.length; j++) {
-						if (hashTable[flag][list[j].patient.uuid] == intersectList.length && encounterHash[list[j].uuid] != 1) {
+						if (hashTable[flag][list[j].uuid] == intersectList.length && encounterHash[list[j].uuid] != 1) {
 							intersectQRS[flag].push(list[j]);
 							encounterHash[list[j].uuid] = 1;
 						}
