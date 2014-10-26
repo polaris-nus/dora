@@ -31,6 +31,23 @@ app.directive('autocomplete', function() {
       $scope.getIndex = function(i){
         return $scope.selectedIndex;
       };
+      
+      $scope.getCaretPosition = function(inputElem){
+      	var caretPos = 0;
+      	//IE
+      	if (document.selection) {
+      		inputElem.focus();
+      		var sel = document.selection.createRange();
+      		sel.moveStart('character', -inputElem.value.length);
+      		caretPos = sel.text.length;
+      	}
+      	
+      	//Firefox, chrome
+      	else if(inputElem.selectionStart || inputElem.selectionStart == '0'){
+      		caretPos = inputElem.selectionStart;
+      	}
+      	return caretPos;
+      };
 
       // watches if the parameter filter should be changed
       var watching = true;
@@ -115,7 +132,7 @@ app.directive('autocomplete', function() {
           scope.attrs[attr] = attrs[a];
         }
       }
-
+      
       if (attrs.clickActivation) {
         element[0].onclick = function(e){
           if(!scope.searchParam){
@@ -138,7 +155,7 @@ app.directive('autocomplete', function() {
       	else return 'Add search criteria';
       };
 
-      var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9};
+      var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9, backspace:8 };
 
       document.addEventListener("keydown", function(e){
         var keycode = e.keyCode || e.which;
@@ -235,6 +252,15 @@ app.directive('autocomplete', function() {
             scope.$apply();
             e.preventDefault();
             break;
+          case key.backspace:
+          	if (scope.getCaretPosition(element.find('input')[0]) === 0) {
+          		console.log(scope.getCaretPosition(element.find('input')[0]));
+          		scope.key = '';
+          		scope.select();
+           	 	scope.setIndex(-1);
+          		scope.$apply();
+          	}
+          	break;
           default:
             return;
         }

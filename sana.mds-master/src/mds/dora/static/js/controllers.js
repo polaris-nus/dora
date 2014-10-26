@@ -160,9 +160,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				QRSServ.addToQRSHistory(QRS);
 				MapServ.clearPolygonLayer();
 
-				location = "";
+				location = "";			
+				$scope.key = '';
+				$scope.input = '';
+				$scope.filters = [];
 				
-				$scope.query = '';
 			}).error(function(data){
 				document.open();
 				document.write(data);
