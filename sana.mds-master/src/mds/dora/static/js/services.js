@@ -426,7 +426,7 @@ doraServices.service('MapServ', [
 			  clusterLayerFeatures[clusterLayer.id]['leftStack'] = [];
 			  clusterLayerFeatures[clusterLayer.id]['rightStack'] = [];
 
-			  this.setSliderMinBound(features[0].attributes.date);
+			  this.setSliderMinBound();
 			  this.temporalSliderFeaturesToggle();
 
 			  // Adding layer to selectControls
@@ -460,6 +460,7 @@ doraServices.service('MapServ', [
 					var locationLayer = map.getLayer(QRS.locationLayerId);
 					locationLayer.setVisibility(visibility);
 				}
+				this.setSliderMinBound();
 			},
 			removeVectorLayer: function(QRS) {
 				if (QRS.clusterLayerId) {
@@ -599,19 +600,31 @@ doraServices.service('MapServ', [
 				slider.min = min;
 				slider.max = max;
 			},
-			setSliderMinBound: function(minDate) {
+			setSliderMinBound: function() {
 				//Always set slider bounds to the earliest date of all feature layers
-				//alert(minDate);
-				var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
-				if (Date.parse(minDate) < Date.parse(lowerBound) || slider.firstInit) {
-					slider.firstInit = false;
-					$("#slider").dateRangeSlider({
-						bounds:{
-						    min: new Date(minDate), //This value should be changed to the latest date available
-						    max: new Date()
-					  	}
-					});
+				//Which one has the latest date
+				minDate = new Date()
+				for (var i=0; i<visibleLayers.length;i++) {
+					clusterLayerId = visibleLayers[i];
+					features = clusterLayerFeatures[clusterLayerId].features;
+					leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
+					if (leftStack.length > 0) {
+						if (Date.parse(leftStack[0].attributes.date) < Date.parse(minDate)) {
+							minDate = leftStack[0].attributes.date;
+						}
+					} else {
+						if (Date.parse(features[0].attributes.date) < Date.parse(minDate)) {
+							minDate = features[0].attributes.date;
+						}
+					}
 				}
+				var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
+				$("#slider").dateRangeSlider({
+					bounds:{
+					    min: new Date(minDate), //This value should be changed to the latest date available
+					    max: new Date()
+				  	}
+				});
 			},
 			temporalSliderFeaturesToggle: function() {
 
