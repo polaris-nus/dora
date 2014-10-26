@@ -162,10 +162,12 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 	function($scope, QRSServ, MapServ){
 		$scope.QRSHistory = QRSServ.getQRSHistory();
 		$scope.loadingStatus = QRSServ.getLoadingStatus();
+
 		$scope.selectedQRSList = [];
 		$scope.selectionFlag = false;
 		$scope.selectionFunction = '';
 		$scope.newQRS = {};
+
 		$scope.displayedQRS = {};
 		$scope.panelVisible = true;
 		$scope.encounterVisible = false;
@@ -180,6 +182,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartTwoDS();
 			drawChart();
 		};
+		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
 
 		$scope.toggleQRSVisibility = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
@@ -224,12 +227,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				$scope.encounters.push(encounter);
 			}
 		}
-
-
-
-
-
-
 
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
@@ -410,6 +407,7 @@ function drawChart() {
 
 //--End Chart Methods part2--//
 
+
 //--Start TemporalSlider Controller--//
 doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'MapServ',
 	function($scope, QRSServ, MapServ){
@@ -465,4 +463,4 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		});
 
 	}
-	]);
+]);

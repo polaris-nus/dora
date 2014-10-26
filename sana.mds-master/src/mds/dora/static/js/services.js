@@ -1,20 +1,54 @@
 var doraServices = angular.module('doraServices', []);
 
-doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
-	function(MapServ, PaletteServ){
+doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
+	function(MapServ, PaletteServ, $http){
 		var historyLimit = 10;
 		var QRSHistory = [];
 		var QRSLoadingStatus = {isLoading: false};
+		var onAddCallback = null;
 		return {
+			setOnAddCallback: function(callback) {
+				onAddCallback = callback;
+			},
 			getLoadingStatus: function(){
 				return QRSLoadingStatus;
 			},
 			initializeLoading: function(){
 				QRSLoadingStatus.isLoading = true;
 			},
+			retrieveQRS: function(data){
+				$http({
+					method: 'POST',
+					url: '/dora/query/',
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+					transformRequest: function(obj) {
+						var str = [];
+						for(var p in obj)
+							str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+						return str.join("&");
+					},
+					data: data
+				}).success(function(QRS) {
+					QRS.locationFeature = location;
+					this.addToQRSHistory(QRS);
+					MapServ.clearPolygonLayer();
+					QRSLoadingStatus.isLoading = false;
+		
+					// How to update these values! By reference?
+					// location = "";
+					// $scope.query = '';
+
+				}).error(function(data){
+					QRSLoadingStatus.isLoading = false;
+					document.open();
+					document.write(data);
+					document.close();
+				});
+
+			},
 			addToQRSHistory: function (QRS){
 				QRSLoadingStatus.isLoading = false;
-
+				
 				//Limiting size of QRSHistory
 				while (QRSHistory.length > (historyLimit-1)){
 					var removedQRS = QRSHistory.shift();
@@ -31,6 +65,9 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ',
 				QRS.isVisible = true;
 				QRSHistory.push(QRS);
 				MapServ.addVectorLayer(QRS);
+
+				onAddCallback(QRSHistory.length-1); // display last added QRS
+
 				// RETURN BOOLEAN FOR ADD SUCCESS IF EMPTY DONT ADD!
 			},
 			removeFromQRSHistory: function(QRS){
