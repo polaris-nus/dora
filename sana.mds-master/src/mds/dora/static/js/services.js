@@ -298,7 +298,7 @@ doraServices.service('MapServ', [
     map.addLayer(countriesLayer);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
-			styleMap: drawPolygonStyle
+			// styleMap: drawPolygonStyle
 		});
 		map.addLayer(polygonLayer);
 		
@@ -363,16 +363,15 @@ doraServices.service('MapServ', [
 
 			  // Check and create location polygon layer
 			  if (QRS.locationFeature) {
-			  	var locationFeature = wktParser.read(QRS.locationFeature);
+			  	// var locationFeature = wktParser.read(QRS.locationFeature);
+			  	var locationFeature = QRS.locationFeature
+			  	console.log(locationFeature);
 			  	if (locationFeature instanceof Array) {
 			  		for(index in locationFeature) {
 			  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
 			  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
 			  		}
-			  	} else {
-		  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
-		  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
-			  	}
+			  	} 
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
 			  		styleMap: QRSPolygonFilterStyle
 			  	});
@@ -562,10 +561,23 @@ doraServices.service('MapServ', [
 				selectCountryControls.activate();
 			},
 			getPolygonFilters: function() {
-				polygonFilters = [];
-				Array.prototype.push.apply(polygonFilters, polygonLayer.features);
-				Array.prototype.push.apply(polygonFilters, countriesLayer.selectedFeatures);
-				return wktParser.write(polygonFilters);
+				var filterFeatures = [];
+
+				for (var i = 0; i < polygonLayer.features.length; i++) {
+					filterFeatures.push(polygonLayer.features[i].clone());
+				}
+				for (var i = 0; i < countriesLayer.selectedFeatures.length; i++) {
+					filterFeatures.push(countriesLayer.selectedFeatures[i].clone());
+				}
+
+				var polygonFilters = {
+					features: filterFeatures,
+					wkt: wktParser.write(filterFeatures)
+				}
+
+				console.log(polygonFilters);
+
+				return polygonFilters;
 			},
 			plotCentriod: function(QRS) {
 				if (QRS.clusterLayerId) {

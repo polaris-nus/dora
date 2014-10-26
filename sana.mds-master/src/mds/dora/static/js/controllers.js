@@ -6,6 +6,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http, MapServ){
 		
 		var location = '';
+		var filterFeatures = [];
 		$scope.mapServMode = 'unselected';
 		$scope.locationSearchOn = false;
 		$scope.key = '';
@@ -14,17 +15,17 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		function changeMode(newValue) {
 			//console.log("changeMode triggered");
-			// NING NING'R! NOTE CHANGES MADE HERE!
-			//console.log(newValue);
-			MapServ.activatePolygonFilters();
-			if (newValue == 'drawing') {
+			if (newValue == 'polygon') {
 				MapServ.activateDrawPolygon();
 			}
-			else if (newValue == 'modifying') {
+			else if (newValue == 'circle') {
+				MapServ.activateDrawCircle();
+			}
+			else if (newValue == 'modify') {
 				MapServ.activateModifyPolygon();
 			}
-			else if (newValue == 'regular') {
-				MapServ.activateDrawCircle();
+			else if (newValue == 'country') {
+				MapServ.activateSelectCountry();
 			}
 		};
 
@@ -76,6 +77,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			
 			//polygon drawing mode by default
 			else {
+				MapServ.activatePolygonFilters();
 				$scope.mapServMode = 'drawing';
 			}
 			//console.log($scope.mapServMode);
@@ -99,7 +101,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.doneDrawing = function(filter){
 			MapServ.deactivatePolygonFilters();
-			location = MapServ.getPolygonFilters();
+			var polygonFilters = MapServ.getPolygonFilters();
+			location = polygonFilters.wkt;
+			filterFeatures = polygonFilters.features;
 		};
 		
 		$scope.editFilter = function(index, filter){
@@ -156,12 +160,12 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				},
 				data: data
 			}).success(function(QRS) {
-				QRS.locationFeature = location;
+				QRS.locationFeature = filterFeatures;
 				QRSServ.addToQRSHistory(QRS);
-				MapServ.clearPolygonLayer();
+				MapServ.clearPolygonFilters();
 
 				location = "";
-				
+				filterFeatures = [];
 				$scope.query = '';
 			}).error(function(data){
 				document.open();
