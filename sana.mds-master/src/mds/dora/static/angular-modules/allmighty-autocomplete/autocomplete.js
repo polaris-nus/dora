@@ -17,6 +17,7 @@ app.directive('autocomplete', function() {
     controller: ['$scope', function($scope){
       // the index of the suggestions that's currently selected
       $scope.selectedIndex = -1;
+      var data = $scope.suggestions;
 
       // set new index
       $scope.setIndex = function(i){
@@ -72,6 +73,17 @@ app.directive('autocomplete', function() {
         if($scope.onType)
           $scope.onType($scope.searchParam);
       });
+      
+      $scope.$watch('key', function(newValue, oldValue){
+      	if (newValue) {
+      		$scope.suggestions = [];
+      		$scope.attrs.placeholder = '';
+      	}
+      	else {
+      		$scope.suggestions = data;
+      		$scope.attrs.placeholder = 'Add a search criteria';
+      	}
+      });
 
       // for hovering over suggestions
       this.preSelect = function(suggestion){
@@ -102,6 +114,7 @@ app.directive('autocomplete', function() {
           $scope.searchFilter = suggestion;
           if($scope.onSelect)
             $scope.onSelect(suggestion);
+            $scope.searchParam = '';
         }
         watching = false;
         $scope.completing = false;
@@ -149,11 +162,6 @@ app.directive('autocomplete', function() {
       scope.$watch(scope.getKeyWidth, function(width){
       	scope.keyWidth = width;
       });
-      
-      scope.placeholder = function(){
-      	if (scope.key) return '';
-      	else return 'Add search criteria';
-      };
 
       var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9, backspace:8 };
 
