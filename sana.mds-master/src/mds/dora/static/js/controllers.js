@@ -84,7 +84,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.clearShapes = function() {
 			console.log("clearShapes called");
-			MapServ.clearPolygonLayer();
+			MapServ.clearPolygonFilters();
 			location = "";
 		};
 		

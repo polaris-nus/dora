@@ -261,7 +261,7 @@ doraServices.service('MapServ', [
 			fillColor: "#808080",
 		  fillOpacity: 0.4,
 		  strokeColor: "#808080",
-		  strokeWidth: 2,
+		  strokeWidth: 1,
 		  strokeOpacity: 1,
 		  graphicZIndex: 1
 		})
@@ -292,7 +292,6 @@ doraServices.service('MapServ', [
       })
     })
     map.addLayer(countriesLayer);
-    // countriesLayer.setVisibility(true);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
 			styleMap: drawPolygonStyle
@@ -342,7 +341,6 @@ doraServices.service('MapServ', [
 			toggle: true,
 		});
 		map.addControl(selectCountryControls);
-		// selectCountryControls.activate();
 		
 		var visibleLayers = [];
 		var slider = {};
@@ -491,8 +489,9 @@ doraServices.service('MapServ', [
 				polygonLayer.setVisibility(false);
 				countriesLayer.setVisibility(false);
 			},
-			clearPolygonLayer: function() {		
+			clearPolygonFilters: function() {		
 				polygonLayer.removeAllFeatures();
+				selectCountryControls.unselectAll();
 			},
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
