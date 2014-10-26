@@ -41,9 +41,15 @@
   <div class="queryForm" ng-controller="QueryFormController">
    <div class="above input-group" id="searchbox">
     <form ng-submit="submitFilter()">
-     <autocomplete ng-model="input" attr-input-class="form-control autocom-input" data="data" attr-placeholder="Add a search criteria"></autocomplete>
+     <div class="form-control autocom-input">
+      <span ng-bind="key"></span>
+      <autocomplete ng-model="input" on-select="selectFilter" 
+      attr-input-class="removeInputStyle" 
+      data="data" attr-placeholder="Add a search criteria"
+      attr-class="autocom-div"></autocomplete>
+     </div>
      <span class="input-group-btn">
-      <button type="submit" class="btn btn-info">
+      <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
        <span class="glyphicon glyphicon-plus"></span>
       </button>
      </span>
@@ -61,9 +67,10 @@
    </div>
   
   <div class="filters noselect">
+  	<button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
   	<span class="filter" ng-repeat="filter in filters">
-  		<span>&nbsp;{{filter}}&nbsp;&nbsp;</span>
-  		<span class="hover-text-shadow">&#215;&nbsp;</span>
+  		<span ng-click="editFilter($index, filter)">&nbsp;{{filter}}&nbsp;&nbsp;</span>
+  		<span ng-click="removeFilter($index)" class="bold hover-text-shadow">&#215;&nbsp;</span>
   	</span>
   </div>
  </div>
