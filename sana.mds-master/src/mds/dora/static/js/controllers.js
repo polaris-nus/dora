@@ -9,7 +9,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.mapServMode = 'unselected';
 		$scope.locationSearchOn = false;
 		$scope.key = '';
-		$scope.input = "";		
+		$scope.input = '';		
 		$scope.filters = [];
 		
 		function changeMode(newValue) {

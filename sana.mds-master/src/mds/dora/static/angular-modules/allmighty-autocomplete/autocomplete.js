@@ -123,6 +123,14 @@ app.directive('autocomplete', function() {
           }
         };
       }
+      
+      scope.getKeyWidth = function() {
+      	return $('#key').width();
+      };
+      
+      scope.$watch(scope.getKeyWidth, function(width){
+      	scope.keyWidth = width;
+      });
 
       var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9};
 
@@ -232,6 +240,7 @@ app.directive('autocomplete', function() {
           <input\
             type="text"\
             ng-model="searchParam"\
+            ng-style="{ width: (336 - keyWidth) +\'px\'}"\
             placeholder="{{ attrs.placeholder }}"\
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"/>\
