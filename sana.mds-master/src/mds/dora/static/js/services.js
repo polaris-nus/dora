@@ -241,11 +241,12 @@ doraServices.service('MapServ', [
 			}),
 			select: {
         fillColor: "#8aeeef",
-        strokeColor: "#32a8a9"
+        strokeColor: "#32a8a9",
+        graphicZIndex: 2,
       }
 		});
 
-		var polygonFilterStyle = new OpenLayers.StyleMap({
+		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 			  fillColor: "${filterFillColor}",
 			  fillOpacity: 0.4,
@@ -263,13 +264,16 @@ doraServices.service('MapServ', [
 		  strokeColor: "#808080",
 		  strokeWidth: 1,
 		  strokeOpacity: 1,
-		  graphicZIndex: 1
 		})
 
 		var countryPolygonStyle = new OpenLayers.StyleMap({
 			default: {
 			  fillOpacity: 0,
 			  strokeOpacity: 0,
+			},
+			temporary: {
+				fillColor: "#808080",
+		  	fillOpacity: 0.6,
 			},
 			select: polygonFilterStyle
 		});
@@ -340,6 +344,12 @@ doraServices.service('MapServ', [
 			multiple: true,
 			toggle: true,
 		});
+		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+			hover: true,
+      highlightOnly: true,
+      renderIntent: "temporary"
+		});
+		map.addControl(hoverCountryControls);
 		map.addControl(selectCountryControls);
 		
 		var visibleLayers = [];
@@ -364,7 +374,7 @@ doraServices.service('MapServ', [
 		  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
 			  	}
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
-			  		styleMap: polygonFilterStyle
+			  		styleMap: QRSPolygonFilterStyle
 			  	});
 			  	QRS.locationLayerId = locationLayer.id;
 			  	map.addLayer(locationLayer);
@@ -496,6 +506,7 @@ doraServices.service('MapServ', [
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				drawPolygonControls.activate();
@@ -529,6 +540,7 @@ doraServices.service('MapServ', [
 			activateDrawCircle: function() {
 				drawPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				drawRegularPolygonControls.activate();
@@ -536,6 +548,7 @@ doraServices.service('MapServ', [
 			activateModifyPolygon: function() {
 				drawPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				modifyPolygonControls.activate();
@@ -545,6 +558,7 @@ doraServices.service('MapServ', [
 				modifyPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
 
+				hoverCountryControls.activate();
 				selectCountryControls.activate();
 			},
 			getPolygonFilters: function() {
