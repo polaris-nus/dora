@@ -6,6 +6,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http, MapServ){
 		
 		var location = '';
+		var filterFeatures = [];
 		$scope.mapServMode = 'unselected';
 		$scope.locationSearchOn = false;
 		$scope.key = '';
@@ -14,17 +15,17 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		function changeMode(newValue) {
 			//console.log("changeMode triggered");
-			// NING NING'R! NOTE CHANGES MADE HERE!
-			//console.log(newValue);
-			MapServ.activatePolygonFilters();
-			if (newValue == 'drawing') {
+			if (newValue == 'polygon') {
 				MapServ.activateDrawPolygon();
 			}
-			else if (newValue == 'modifying') {
+			else if (newValue == 'circle') {
+				MapServ.activateDrawCircle();
+			}
+			else if (newValue == 'modify') {
 				MapServ.activateModifyPolygon();
 			}
-			else if (newValue == 'regular') {
-				MapServ.activateDrawCircle();
+			else if (newValue == 'country') {
+				MapServ.activateSelectCountry();
 			}
 		};
 
@@ -76,6 +77,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			
 			//polygon drawing mode by default
 			else {
+				MapServ.activatePolygonFilters();
 				$scope.mapServMode = 'drawing';
 			}
 			//console.log($scope.mapServMode);
@@ -99,7 +101,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.doneDrawing = function(filter){
 			MapServ.deactivatePolygonFilters();
-			location = MapServ.getPolygonFilters();
+			var polygonFilters = MapServ.getPolygonFilters();
+			location = polygonFilters.wkt;
+			filterFeatures = polygonFilters.features;
 		};
 		
 		$scope.editFilter = function(index, filter){
@@ -156,15 +160,16 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				},
 				data: data
 			}).success(function(QRS) {
-				QRS.locationFeature = location;
+				QRS.locationFeature = filterFeatures;
 				QRSServ.addToQRSHistory(QRS);
-				MapServ.clearPolygonLayer();
+				MapServ.clearPolygonFilters();
 
 				location = "";			
 				$scope.key = '';
 				$scope.input = '';
 				$scope.filters = [];
-				
+				filterFeatures = [];
+
 			}).error(function(data){
 				document.open();
 				document.write(data);
@@ -426,8 +431,8 @@ function drawChart() {
 
 
 //--Start TemporalSlider Controller--//
-doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'MapServ',
-	function($scope, QRSServ, MapServ){
+doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
+	function($scope, MapServ){
 		$scope.sliderVisible = true;
 
 		$scope.sliderModifier = function(arg) {
@@ -456,15 +461,15 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		$scope.sliderModifier({range:{min: {days: 7}}});
 		$scope.sliderModifier({symmetricPositionning: true});
 
-
-		var scroll_speed = 0.5; //in seconds
-		var scroller;
+		var scroll_speed = 0.1; //in seconds
+		var scroll_granularity = 1 //every 0.5 is one day
+		var scroller = null;
 
 		$scope.startAutoscroll = function() {
-			$('#slider').dateRangeSlider('scrollRight', 1);
+			$('#slider').dateRangeSlider('scrollRight', scroll_granularity);
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
 			var values = $scope.sliderModifier("values");
-			if (Date.parse(values.max) >= Date.parse(values.min)) {
+			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
 			}
 		}
@@ -473,10 +478,18 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 			clearInterval(scroller);
 		}
 
+		$scope.toggleScrolling = function() {
+			if (scroller == null) {
+				scroller = setInterval(function(){$scope.startAutoscroll()}, scroll_speed*1000);	
+			} else {
+				$scope.stopAutoscroll();
+				scroller = null;
+			}
+		}
+
 		$("#slider").bind("valuesChanging", function(e, data){
 			MapServ.setSliderMinMax(data.values.min, data.values.max);
 			MapServ.temporalSliderFeaturesToggle();
-			//scroller = setInterval(function(){$scope.startAutoscroll()}, scroll_speed*1000);
 		});
 
 	}

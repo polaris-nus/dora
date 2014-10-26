@@ -241,11 +241,12 @@ doraServices.service('MapServ', [
 			}),
 			select: {
         fillColor: "#8aeeef",
-        strokeColor: "#32a8a9"
+        strokeColor: "#32a8a9",
+        graphicZIndex: 2,
       }
 		});
 
-		var polygonFilterStyle = new OpenLayers.StyleMap({
+		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 			  fillColor: "${filterFillColor}",
 			  fillOpacity: 0.4,
@@ -263,13 +264,16 @@ doraServices.service('MapServ', [
 		  strokeColor: "#808080",
 		  strokeWidth: 1,
 		  strokeOpacity: 1,
-		  graphicZIndex: 1
 		})
 
 		var countryPolygonStyle = new OpenLayers.StyleMap({
 			default: {
 			  fillOpacity: 0,
 			  strokeOpacity: 0,
+			},
+			temporary: {
+				fillColor: "#808080",
+		  	fillOpacity: 0.6,
 			},
 			select: polygonFilterStyle
 		});
@@ -294,7 +298,7 @@ doraServices.service('MapServ', [
     map.addLayer(countriesLayer);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
-			styleMap: drawPolygonStyle
+			// styleMap: drawPolygonStyle
 		});
 		map.addLayer(polygonLayer);
 		
@@ -340,10 +344,17 @@ doraServices.service('MapServ', [
 			multiple: true,
 			toggle: true,
 		});
+		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+			hover: true,
+      highlightOnly: true,
+      renderIntent: "temporary"
+		});
+		map.addControl(hoverCountryControls);
 		map.addControl(selectCountryControls);
 		
 		var visibleLayers = [];
 		var slider = {};
+		slider.firstInit = true;
 		var clusterLayerFeatures = {};
 		var clusterStrategyReferences = {};
 
@@ -353,18 +364,17 @@ doraServices.service('MapServ', [
 
 			  // Check and create location polygon layer
 			  if (QRS.locationFeature) {
-			  	var locationFeature = wktParser.read(QRS.locationFeature);
+			  	// var locationFeature = wktParser.read(QRS.locationFeature);
+			  	var locationFeature = QRS.locationFeature
+			  	console.log(locationFeature);
 			  	if (locationFeature instanceof Array) {
 			  		for(index in locationFeature) {
 			  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
 			  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
 			  		}
-			  	} else {
-		  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
-		  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
-			  	}
+			  	} 
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
-			  		styleMap: polygonFilterStyle
+			  		styleMap: QRSPolygonFilterStyle
 			  	});
 			  	QRS.locationLayerId = locationLayer.id;
 			  	map.addLayer(locationLayer);
@@ -416,6 +426,7 @@ doraServices.service('MapServ', [
 			  clusterLayerFeatures[clusterLayer.id]['leftStack'] = [];
 			  clusterLayerFeatures[clusterLayer.id]['rightStack'] = [];
 
+			  this.setSliderMinBound(features[0].attributes.date);
 			  this.temporalSliderFeaturesToggle();
 
 			  // Adding layer to selectControls
@@ -496,6 +507,7 @@ doraServices.service('MapServ', [
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				drawPolygonControls.activate();
@@ -529,6 +541,7 @@ doraServices.service('MapServ', [
 			activateDrawCircle: function() {
 				drawPolygonControls.deactivate();
 				modifyPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				drawRegularPolygonControls.activate();
@@ -536,6 +549,7 @@ doraServices.service('MapServ', [
 			activateModifyPolygon: function() {
 				drawPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				modifyPolygonControls.activate();
@@ -545,15 +559,29 @@ doraServices.service('MapServ', [
 				modifyPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
 
+				hoverCountryControls.activate();
 				selectCountryControls.activate();
 			},
 			getPolygonFilters: function() {
-				polygonFilters = [];
-				Array.prototype.push.apply(polygonFilters, polygonLayer.features);
-				Array.prototype.push.apply(polygonFilters, countriesLayer.selectedFeatures);
-				return wktParser.write(polygonFilters);
+				var filterFeatures = [];
+
+				for (var i = 0; i < polygonLayer.features.length; i++) {
+					filterFeatures.push(polygonLayer.features[i].clone());
+				}
+				for (var i = 0; i < countriesLayer.selectedFeatures.length; i++) {
+					filterFeatures.push(countriesLayer.selectedFeatures[i].clone());
+				}
+
+				var polygonFilters = {
+					features: filterFeatures,
+					wkt: wktParser.write(filterFeatures)
+				}
+
+				console.log(polygonFilters);
+
+				return polygonFilters;
 			},
-			plotCentriod: function(QRS) {
+			plotCentroid: function(QRS) {
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					if(clusterLayer.getVisibility()) {
@@ -571,13 +599,28 @@ doraServices.service('MapServ', [
 				slider.min = min;
 				slider.max = max;
 			},
+			setSliderMinBound: function(minDate) {
+				//Always set slider bounds to the earliest date of all feature layers
+				//alert(minDate);
+				var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
+				if (Date.parse(minDate) < Date.parse(lowerBound) || slider.firstInit) {
+					slider.firstInit = false;
+					$("#slider").dateRangeSlider({
+						bounds:{
+						    min: new Date(minDate), //This value should be changed to the latest date available
+						    max: new Date()
+					  	}
+					});
+				}
+			},
 			temporalSliderFeaturesToggle: function() {
+
 				var minDate = Date.parse(slider.min);
 				var maxDate = Date.parse(slider.max);
 
 				function redrawFeatures(clusterLayer, features) {
 					clusterLayer.removeAllFeatures();
-			  	clusterLayer.addFeatures(features);
+			  		clusterLayer.addFeatures(features);
 				}
 
 				function peek(array) {
@@ -649,7 +692,6 @@ doraServices.service('MapServ', [
 				for (var i=0; i<visibleLayers.length;i++) {
 					toggleMarkerVisibility(visibleLayers[i]);
 				}
-
 			}
 		}
 	}

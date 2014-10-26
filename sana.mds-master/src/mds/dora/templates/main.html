@@ -62,9 +62,10 @@
     <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
     <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
     <div class="location-radio" ng-show="locationSearchOn">
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="drawing" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="regular" ng-change="changeMode(mapServMode)">Add Circle<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modifying" ng-change="changeMode(mapServMode)">Modify Shapes
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br>
+     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
     </div>
    </div>
   
@@ -156,7 +157,7 @@
 
   <div ng-controller="TemporalSliderController" class="above" id="slider-div"> 
     <div id="slider"></div>
-    <button type="submit" class="above" id="slider_btn">
+    <button type="submit" class="above" ng-click="toggleScrolling();" id="slider_btn">
       <img src="/static/images/play.png" width="30" height="24" alt="submit" />
     </button>
   </div>
