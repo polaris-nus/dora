@@ -43,9 +43,10 @@
     <form ng-submit="submitFilter()">
      <div class="form-control autocom-input">
       <span ng-bind="key" id="key"></span>
+      <span ng-show="key">:</span>
       <autocomplete ng-model="input" on-select="selectFilter" 
       attr-input-class="removeInputStyle"
-      data="data" attr-placeholder="Add a search criteria"
+      data="data" attr-placeholder="{{placeholder()}}"
       attr-class="autocom-div"></autocomplete>
      </div>
      <span class="input-group-btn">
@@ -69,7 +70,7 @@
   <div class="filters noselect">
   	<button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
   	<span class="filter" ng-repeat="filter in filters">
-  		<span ng-click="editFilter($index, filter)">&nbsp;{{filter}}&nbsp;&nbsp;</span>
+  		<span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
   		<span ng-click="removeFilter($index)" class="bold hover-text-shadow">&#215;&nbsp;</span>
   	</span>
   </div>

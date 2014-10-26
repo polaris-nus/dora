@@ -11,7 +11,8 @@ app.directive('autocomplete', function() {
       searchParam: '=ngModel',
       suggestions: '=data',
       onType: '=onType',
-      onSelect: '=onSelect'
+      onSelect: '=onSelect',
+      key: '=key'
     },
     controller: ['$scope', function($scope){
       // the index of the suggestions that's currently selected
@@ -131,6 +132,11 @@ app.directive('autocomplete', function() {
       scope.$watch(scope.getKeyWidth, function(width){
       	scope.keyWidth = width;
       });
+      
+      scope.placeholder = function(){
+      	if (scope.key) return '';
+      	else return 'Add search criteria';
+      };
 
       var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9};
 
@@ -240,7 +246,7 @@ app.directive('autocomplete', function() {
           <input\
             type="text"\
             ng-model="searchParam"\
-            ng-style="{ width: (336 - keyWidth) +\'px\'}"\
+            ng-style="{ width: (326 - keyWidth) +\'px\'}"\
             placeholder="{{ attrs.placeholder }}"\
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"/>\

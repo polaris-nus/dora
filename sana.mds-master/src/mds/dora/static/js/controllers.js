@@ -55,13 +55,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			'Follow up date'];
 		
 		$scope.selectFilter = function(key){
-			$scope.key = key + ': ';
+			$scope.key = key;
 			$scope.input = '';
 		};
 		
 		$scope.submitFilter = function(){
 			if ($scope.key && $scope.input) {
-				$scope.filters.push($scope.input);
+				$scope.filters.push({key:$scope.key, value:$scope.input});
 				$scope.key = '';
 				$scope.input = '';
 			}
@@ -102,8 +102,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			location = MapServ.getPolygonFilters();
 		};
 		
-		$scope.editFilter = function(index, filterText){
-			$scope.input = filterText;
+		$scope.editFilter = function(index, filter){
+			$scope.key = filter.key;
+			$scope.input = filter.value;
 			$scope.removeFilter(index);
 		};
 		
@@ -121,8 +122,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 			var data = {};
 			
-			var tokens = $scope.query.split(';');
-			
 			function escapeRegExp(string) {
 				return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 			}
@@ -131,15 +130,14 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 			}
 			
-			for (var i = 0; i < tokens.length; i++){
-				var token = tokens[i];
-				var colonPos = token.indexOf(':');
-				var key = token.substring(0,colonPos)
-				.trim()
-				.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
-				.replace(new RegExp(escapeRegExp("'"), 'g'), "")
-				.toLowerCase();
-				data[key] = token.substring(colonPos + 1).trim();
+			for (var i = 0; i < $scope.filters.length; i++){
+				var filter = $scope.filters[i];
+				var key = filter.key
+					.trim()
+					.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
+					.replace(new RegExp(escapeRegExp("'"), 'g'), "")
+					.toLowerCase();
+				data[key] = filter.value.trim();
 			}
 			
 			data.location = location;
