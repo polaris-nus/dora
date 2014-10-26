@@ -354,6 +354,7 @@ doraServices.service('MapServ', [
 		
 		var visibleLayers = [];
 		var slider = {};
+		slider.firstInit = true;
 		var clusterLayerFeatures = {};
 		var clusterStrategyReferences = {};
 
@@ -425,6 +426,7 @@ doraServices.service('MapServ', [
 			  clusterLayerFeatures[clusterLayer.id]['leftStack'] = [];
 			  clusterLayerFeatures[clusterLayer.id]['rightStack'] = [];
 
+			  this.setSliderMinBound(features[0].attributes.date);
 			  this.temporalSliderFeaturesToggle();
 
 			  // Adding layer to selectControls
@@ -579,7 +581,7 @@ doraServices.service('MapServ', [
 
 				return polygonFilters;
 			},
-			plotCentriod: function(QRS) {
+			plotCentroid: function(QRS) {
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					if(clusterLayer.getVisibility()) {
@@ -597,13 +599,28 @@ doraServices.service('MapServ', [
 				slider.min = min;
 				slider.max = max;
 			},
+			setSliderMinBound: function(minDate) {
+				//Always set slider bounds to the earliest date of all feature layers
+				//alert(minDate);
+				var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
+				if (Date.parse(minDate) < Date.parse(lowerBound) || slider.firstInit) {
+					slider.firstInit = false;
+					$("#slider").dateRangeSlider({
+						bounds:{
+						    min: new Date(minDate), //This value should be changed to the latest date available
+						    max: new Date()
+					  	}
+					});
+				}
+			},
 			temporalSliderFeaturesToggle: function() {
+
 				var minDate = Date.parse(slider.min);
 				var maxDate = Date.parse(slider.max);
 
 				function redrawFeatures(clusterLayer, features) {
 					clusterLayer.removeAllFeatures();
-			  	clusterLayer.addFeatures(features);
+			  		clusterLayer.addFeatures(features);
 				}
 
 				function peek(array) {
@@ -675,7 +692,6 @@ doraServices.service('MapServ', [
 				for (var i=0; i<visibleLayers.length;i++) {
 					toggleMarkerVisibility(visibleLayers[i]);
 				}
-
 			}
 		}
 	}

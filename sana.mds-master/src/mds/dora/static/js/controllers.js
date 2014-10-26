@@ -428,8 +428,8 @@ function drawChart() {
 
 
 //--Start TemporalSlider Controller--//
-doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'MapServ',
-	function($scope, QRSServ, MapServ){
+doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
+	function($scope, MapServ){
 		$scope.sliderVisible = true;
 
 		$scope.sliderModifier = function(arg) {
@@ -458,15 +458,15 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 		$scope.sliderModifier({range:{min: {days: 7}}});
 		$scope.sliderModifier({symmetricPositionning: true});
 
-
-		var scroll_speed = 0.5; //in seconds
-		var scroller;
+		var scroll_speed = 0.1; //in seconds
+		var scroll_granularity = 1 //every 0.5 is one day
+		var scroller = null;
 
 		$scope.startAutoscroll = function() {
-			$('#slider').dateRangeSlider('scrollRight', 1);
+			$('#slider').dateRangeSlider('scrollRight', scroll_granularity);
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
 			var values = $scope.sliderModifier("values");
-			if (Date.parse(values.max) >= Date.parse(values.min)) {
+			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
 			}
 		}
@@ -475,10 +475,18 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'QRSServ', 'Ma
 			clearInterval(scroller);
 		}
 
+		$scope.toggleScrolling = function() {
+			if (scroller == null) {
+				scroller = setInterval(function(){$scope.startAutoscroll()}, scroll_speed*1000);	
+			} else {
+				$scope.stopAutoscroll();
+				scroller = null;
+			}
+		}
+
 		$("#slider").bind("valuesChanging", function(e, data){
 			MapServ.setSliderMinMax(data.values.min, data.values.max);
 			MapServ.temporalSliderFeaturesToggle();
-			//scroller = setInterval(function(){$scope.startAutoscroll()}, scroll_speed*1000);
 		});
 
 	}
