@@ -29,6 +29,19 @@ ul{ padding-left:0; }
 
 .autocom-input {
 	width: 360px !important;
+	white-space: nowrap;
+}
+
+.autocom-div {
+	width: auto !important;
+	display: inline-block;
+}
+
+.removeInputStyle {
+	border: none;
+	outline: 0;
+	padding: 0 !important;
+	font-size: inherit !important;
 }
 
 .location-options {
@@ -40,6 +53,8 @@ ul{ padding-left:0; }
 .filters {
 	cursor: default;
 	white-space: normal;
+	width: 400px;
+	position: relative;
 }
 
 .filter {
@@ -48,6 +63,7 @@ ul{ padding-left:0; }
 	background-color: white;
 	padding: 2px;
 	display: inline-block;
+	border-radius: 3px;
 }
 
 .noselect {
@@ -61,6 +77,14 @@ ul{ padding-left:0; }
 
 .hover-text-shadow:hover {
 	text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.5);
+}
+
+.bold {
+	font-weight:bold;
+}
+
+.submitButton {
+	float: right;
 }
 
 .location-radio {

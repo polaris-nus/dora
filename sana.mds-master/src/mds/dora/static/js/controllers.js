@@ -8,6 +8,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		var location = '';
 		$scope.mapServMode = 'unselected';
 		$scope.locationSearchOn = false;
+		$scope.key = '';
+		$scope.input = "";		
+		$scope.filters = [];
 		
 		function changeMode(newValue) {
 			//console.log("changeMode triggered");
@@ -23,9 +26,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				MapServ.activateDrawRegularPolygon();
 			}
 		};
-		
-		$scope.filters = [];
-		
+
 		$scope.data = [
 			"Patient's family name",
 			"Patient's given name",
@@ -51,12 +52,18 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			'Operation date',
 			'Discharge date',
 			'Follow up date'];
-
-		$scope.input = "";
+		
+		$scope.selectFilter = function(key){
+			$scope.key = key + ': ';
+			$scope.input = '';
+		};
 		
 		$scope.submitFilter = function(){
-			$scope.filters.push($scope.input);
-			$scope.input = '';
+			if ($scope.key && $scope.input) {
+				$scope.filters.push($scope.input);
+				$scope.key = '';
+				$scope.input = '';
+			}
 		};
 
 		$scope.toggleButton = function(){
@@ -92,6 +99,15 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.doneDrawing = function(filter){
 			MapServ.deactivatePolygonLayer();
 			location = MapServ.getPolygons();
+		};
+		
+		$scope.editFilter = function(index, filterText){
+			$scope.input = filterText;
+			$scope.removeFilter(index);
+		};
+		
+		$scope.removeFilter = function(index){
+			$scope.filters.splice(index, 1);
 		};
 		
 		$scope.changeMode = changeMode;
