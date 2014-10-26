@@ -1,11 +1,5 @@
 /* --- Made by justgoscha and licensed under MIT license --- */
 
-/* Modifications by Polaris from NUS:
--add a way to use autocomplete on a string token, instead of the whole input text field
--will now set caret at the end of the input after selection
--tokens delimited by ';'
-*/
-
 var app = angular.module('autocomplete', []);
 
 app.directive('autocomplete', function() {
@@ -20,67 +14,6 @@ app.directive('autocomplete', function() {
       onSelect: '=onSelect'
     },
     controller: ['$scope', function($scope){
-    
-      $scope.startIndex = 0;
-      $scope.endIndex = 0;
-      $scope.searchParam = '';
-      $scope.searchFilter = '';
-      
-      var getCaretPosition = function(inputElem){
-      	var caretPos = 0;
-      	//IE
-      	if (document.selection) {
-      		inputElem.focus();
-      		var sel = document.selection.createRange();
-      		sel.moveStart('character', -inputElem.value.length);
-      		caretPos = sel.text.length;
-      	}
-      	
-      	//Firefox, chrome
-      	else if(inputElem.selectionStart || inputElem.selectionStart == '0'){
-      		caretPos = inputElem.selectionStart;
-      	}
-      	return caretPos;
-      };
-      
-      $scope.setCaretPositionToCurrentToken = function(inputElem, suggestion){
-      	console.log("Inside setCaretPosition");
-      	var position = $scope.startIndex + suggestion.length + 2;
-      	if (inputElem.setSelectionRange) {
-      		inputElem.focus();
-      		inputElem.setSelectionRange(position, position);
-      	}
-      	else if (inputElem.createTextRange) {
-      		var range = inputElem.createTextRange();
-      		range.collapse(true);
-      		range.moveEnd('character', position);
-      		range.moveStart('character', position);
-      		range.select();
-      	}
-      	console.log("caretPos is " + position);
-      };
-      
-      $scope.updateStartAndEndIndex = function(inputElem, queryString){
-      	var caretPos = getCaretPosition(inputElem);
-      	var tokens = queryString.split(';');
-      	var sum = 0, counter = 0;
-      	console.log(caretPos);
-      	while (caretPos > sum
-      			&& counter < tokens.length 
-      			&& caretPos > sum + tokens[counter].length) {
-      		sum += tokens[counter].length + 1;
-      		counter++;
-      	}
-      	$scope.startIndex = sum;
-      	console.log(counter);
-      	console.log(tokens[counter]);
-      	$scope.endIndex = sum + tokens[counter].length;
-      };
-      
-      function spliceSlice(str, startIndex, endIndex, add) {
-        return str.slice(0, startIndex) + add + str.slice(endIndex);
-	  }
-    
       // the index of the suggestions that's currently selected
       $scope.selectedIndex = -1;
 
@@ -106,18 +39,14 @@ app.directive('autocomplete', function() {
 
       // starts autocompleting on typing in something
       $scope.$watch('searchParam', function(newValue, oldValue){
+
         if (oldValue === newValue || !oldValue) {
-        	console.log('same');
           return;
         }
 
         if(watching && typeof $scope.searchParam !== 'undefined' && $scope.searchParam !== null) {
           $scope.completing = true;
-      	  $scope.updateStartAndEndIndex($scope.inputElem, $scope.searchParam);
-      	  //console.log($scope.startIndex + " and " + $scope.endIndex);
-      	  //console.log($scope.searchParam);
-          $scope.searchFilter = $scope.searchParam.substring( $scope.startIndex,  $scope.endIndex);
-          //console.log($scope.searchFilter);
+          $scope.searchFilter = $scope.searchParam;
           $scope.selectedIndex = -1;
         }
 
@@ -151,13 +80,11 @@ app.directive('autocomplete', function() {
       // selecting a suggestion with RIGHT ARROW or ENTER
       $scope.select = function(suggestion){
         if(suggestion){
-          $scope.searchParam = spliceSlice($scope.searchParam, $scope.startIndex, $scope.endIndex, " " + suggestion + ": ");
-          $scope.searchFilter = '';
+          $scope.searchParam = suggestion;
+          $scope.searchFilter = suggestion;
           if($scope.onSelect)
             $scope.onSelect(suggestion);
         }
-   		
-   		
         watching = false;
         $scope.completing = false;
         setTimeout(function(){watching = true;},1000);
@@ -167,8 +94,6 @@ app.directive('autocomplete', function() {
 
     }],
     link: function(scope, element, attrs){
-    
-      scope.inputElem = element.find('input')[0];
 
       var attr = '';
 
@@ -307,19 +232,18 @@ app.directive('autocomplete', function() {
           <input\
             type="text"\
             ng-model="searchParam"\
-            ng-trim="false"\
             placeholder="{{ attrs.placeholder }}"\
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"/>\
-          <ul style="width: 360px;" ng-show="completing && suggestions.length>0">\
+          <ul ng-show="completing && suggestions.length>0">\
             <li\
               suggestion\
-              ng-repeat="suggestion in suggestions | filter:searchFilter.trim() | orderBy:\'toString()\' track by $index"\
+              ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\' track by $index"\
               index="{{ $index }}"\
               val="{{ suggestion }}"\
               ng-class="{ active: ($index === selectedIndex) }"\
               ng-click="select(suggestion)"\
-              ng-bind-html="suggestion | highlight:searchFilter"></li>\
+              ng-bind-html="suggestion | highlight:searchParam"></li>\
           </ul>\
         </div>'
   };
