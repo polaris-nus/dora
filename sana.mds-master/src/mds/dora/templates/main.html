@@ -99,24 +99,30 @@
         <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
         <button ng-click="setQRSClustering(true)">Cluster On</button>
         <button ng-click="setQRSClustering(false)">Cluster Off</button>
-        <button type="submit" ng-click="exportQRS()" id="export-btn">
-          <img src="/static/images/export.png" width="20" height="20" alt="submit"/>
-        </button>
+        <button class="btn btn-info" type="submit" ng-click="exportQRS()" id="export-btn">
+        Export</button>
       </div>
 
       <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
         <!-- {{displayedQRS}} -->
         <div>
+           <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+           <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
           <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
           <div ng-show="chartOneVisible" id="line-chart"></div>
         </div>
 
         <div>
+            <img  ng-click="chartTwoVisible=!chartTwoVisible" ng-show="chartTwoVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+           <img ng-click="chartTwoVisible=!chartTwoVisible" ng-show="!chartTwoVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+     
           <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
           <div ng-show="chartTwoVisible" id="chart_div"></div>
         </div>
-
-        <a ng-click="encounterVisible=!encounterVisible">Show all encounters</a> 
+     
+           <img  ng-click="encounterVisible=!encounterVisible" ng-show="encounterVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+           <img ng-click="encounterVisible=!encounterVisible" ng-show="!encounterVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+        <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
         <br/>
 
         <div ng-show="encounterVisible">

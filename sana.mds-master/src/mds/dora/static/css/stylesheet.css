@@ -112,9 +112,13 @@ ul{ padding-left:0; }
   text-decoration: underline;
 }
 
-#export-btn{
+.triangle{
   border: 0px;
   background: transparent;
+}
+
+#export-btn{
+  border: 0px;
   display: inline-block;
   position: absolute;
   right: 10px;
