@@ -612,7 +612,7 @@ doraServices.service('MapServ', [
 						if (Date.parse(leftStack[0].attributes.date) < Date.parse(minDate)) {
 							minDate = leftStack[0].attributes.date;
 						}
-					} else {
+					} else if (features.length > 0) {
 						if (Date.parse(features[0].attributes.date) < Date.parse(minDate)) {
 							minDate = features[0].attributes.date;
 						}
