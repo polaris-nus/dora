@@ -205,7 +205,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.displayedQRS = {};
 		$scope.encounterVisible = true;
 		$scope.encounters = [];
-		$scope.assignedCount = 0;
+		// $scope.assignedCount = 0;
 		$scope.chartOneVisible = true;
 		$scope.chartTwoVisible = true;
 		$scope.filtersVisible = true;
@@ -285,10 +285,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				$scope.encounters.push(encounter);
 			}
 
-			$scope.assignedCount = $scope.encounters.length;
+			// $scope.assignedCount = $scope.encounters.length;
 			for(index in $scope.displayedQRS.unassigned){
 				var encounter = {
-					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
+					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name)+" (no location data)",
 					procedure: low($scope.displayedQRS.assigned[index].procedure),
 					observer:  cap($scope.displayedQRS.assigned[index].observer),
 					date: $scope.displayedQRS.assigned[index].created_date.split(" ")[0],
