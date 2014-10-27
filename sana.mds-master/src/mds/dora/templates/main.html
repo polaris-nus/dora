@@ -142,7 +142,11 @@
           By observer: <input ng-model="search.observer"><br> -->
           <div class="list-group" ng-show="encounterVisible" style="width:100%;">
             <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
-              <a href="#" class="list-group-item">{{encounter.patient}}<br/>
+
+              <a href="#" class="list-group-item">
+                {{encounter.patient}}
+                <span ng-show="$index>assignedCount">(no location data)</span>
+              <br/>
                 <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
                 <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
               </a>
@@ -166,9 +170,7 @@
       <button type="button" class="btn btn-primary above" ng-show="selectionFlag" ng-click="executeUnionIntersection()">Apply</button>
       <button type="button" class="btn btn-danger above" ng-show="selectionFlag" ng-click="resetUnionIntersectVariables()">Cancel</button>
     </div>
-
   </div>
-
 
   <div ng-controller="TemporalSliderController" class="above" id="slider-div"> 
     <div id="slider"></div>

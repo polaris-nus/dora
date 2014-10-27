@@ -194,6 +194,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.displayedQRS = {};
 		$scope.encounterVisible = true;
 		$scope.encounters = [];
+		$scope.assignedCount = 0;
 		$scope.chartOneVisible = true;
 		$scope.chartTwoVisible = true;
 		$scope.filtersVisible = true;
@@ -258,6 +259,20 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		function updateEncounters(){
 			$scope.encounters = [];
 			for (index in $scope.displayedQRS.assigned){
+				var encounter = {
+					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
+					procedure: low($scope.displayedQRS.assigned[index].procedure),
+					observer:  cap($scope.displayedQRS.assigned[index].observer),
+					date: $scope.displayedQRS.assigned[index].created_date.split(" ")[0],
+					gender: $scope.displayedQRS.assigned[index].subject.gender,
+					dob: $scope.displayedQRS.assigned[index].subject.dob,
+					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
+				}		
+				$scope.encounters.push(encounter);
+			}
+
+			$scope.assignedCount = $scope.encounters.length;
+			for(index in $scope.displayedQRS.unassigned){
 				var encounter = {
 					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
 					procedure: low($scope.displayedQRS.assigned[index].procedure),
