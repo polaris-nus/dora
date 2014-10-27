@@ -49,41 +49,41 @@
       data="data"
       key="key"
       attr-class="autocom-div"></autocomplete>
-     </div>
-     <span class="input-group-btn">
+    </div>
+    <span class="input-group-btn">
       <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
        <span class="glyphicon glyphicon-plus"></span>
-      </button>
-     </span>
-    </form>
-   </div>
+     </button>
+   </span>
+ </form>
+</div>
 
-   <div class="location-options">
-    <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
-    <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
-    <div class="location-radio" ng-show="locationSearchOn">
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br>
-     <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
-    </div>
-   </div>
-  
-  <div class="filters noselect">
-  	<button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
-  	<span class="filter" ng-repeat="filter in filters">
-  		<span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
-  		<span ng-click="removeFilter($index)" class="bold hover-text-shadow">&#215;&nbsp;</span>
-  	</span>
-  </div>
+<div class="location-options">
+  <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+  <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
+  <div class="location-radio" ng-show="locationSearchOn">
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br>
+   <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
  </div>
+</div>
+
+<div class="filters noselect">
+ <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
+ <span class="filter" ng-repeat="filter in filters">
+  <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
+  <span ng-click="removeFilter($index)" class="bold hover-text-shadow">&#215;&nbsp;</span>
+</span>
+</div>
+</div>
 
 
 <div ng-controller="QueryResultController">
 
   <div class="above" id="qrsbuttons">
     <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
-      
+
       <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" ng-style="($index === 0 && {'margin-top': '7px'})||($index === 1 && {'margin-top': '41px'})||($index === 2 && {'margin-top': '75px'})||($index === 3 && {'margin-top': '109px'})||($index === 4 && {'margin-top': '143px'})||($index === 5 && {'margin-top': '177px'})||($index === 6 && {'margin-top': '211px'})" id="cross"></span>
 
       <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline bottom-margin" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
@@ -97,37 +97,47 @@
     <div class="panel panel-info">
       <div class="panel-heading">
         <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
-        <button ng-click="setQRSClustering(true)">Cluster On</button>
-        <button ng-click="setQRSClustering(false)">Cluster Off</button>
-        <button class="btn btn-info" type="submit" ng-click="exportQRS()" id="export-btn">
-          Export</button>
+        <button class="btn btn-info alignR inline" type="submit" ng-click="exportQRS()">Export</button>
+        <button class="btn btn-info alignR"ng-click="setQRSClustering(false)">Cluster Off</button>
+        <button class="btn btn-info alignR" ng-click="setQRSClustering(true)">Cluster On</button>
+      </div>
+
+      <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
+        <!-- qrs alias -->
+        <div>
+          <input  type="text" class="form-control" placeholder="Name this query"> <br>
         </div>
 
-        <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
-          <!-- {{displayedQRS}} -->
-          <div>
-           <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
-           <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
-           <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
-           <div ng-show="chartOneVisible" id="line-chart"></div>
-         </div>
-
-         <div>
-          <img  ng-click="chartTwoVisible=!chartTwoVisible" ng-show="chartTwoVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
-          <img ng-click="chartTwoVisible=!chartTwoVisible" ng-show="!chartTwoVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+        <!-- display filters -->
+        <div>
           
-          <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
-          <div ng-show="chartTwoVisible" id="chart_div"></div>
+          
         </div>
         
-        <img  ng-click="encounterVisible=!encounterVisible" ng-show="encounterVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
-        <img ng-click="encounterVisible=!encounterVisible" ng-show="!encounterVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
-        <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
-        <br/>
+        <!-- charts -->
+        <div>
+         <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+         <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+         <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
+         <div ng-show="chartOneVisible" id="line-chart"></div>
+       </div>
 
-        <div ng-show="encounterVisible">
-          Filter: <input  type="text" class="form-control" ng-model="search.$"> <br>
-        </div>
+       <div>
+        <img  ng-click="chartTwoVisible=!chartTwoVisible" ng-show="chartTwoVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+        <img ng-click="chartTwoVisible=!chartTwoVisible" ng-show="!chartTwoVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+
+        <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
+        <div ng-show="chartTwoVisible" id="chart_div"></div>
+      </div>
+
+      <img  ng-click="encounterVisible=!encounterVisible" ng-show="encounterVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+      <img ng-click="encounterVisible=!encounterVisible" ng-show="!encounterVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+      <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
+      <br/>
+
+      <div ng-show="encounterVisible">
+        Filter: <input  type="text" class="form-control" ng-model="search.$"> <br>
+      </div>
 <!--           By patient name: <input ng-model="search.patient"><br>
           By Procedure: <input ng-model="search.procedure"><br>
           By observer: <input ng-model="search.observer"><br> -->

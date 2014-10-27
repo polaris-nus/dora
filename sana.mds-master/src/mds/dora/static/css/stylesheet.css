@@ -57,6 +57,12 @@ ul{ padding-left:0; }
 	position: relative;
 }
 
+.alignR{
+  margin-left: 10px;
+  float: right;
+  height: 26px;
+}
+
 .filter {
 	margin: 2px;
 	border: 1px solid black;
@@ -115,13 +121,6 @@ ul{ padding-left:0; }
 .triangle{
   border: 0px;
   background: transparent;
-}
-
-#export-btn{
-  border: 0px;
-  display: inline-block;
-  position: absolute;
-  right: 10px;
 }
 
 #qrspanel{
