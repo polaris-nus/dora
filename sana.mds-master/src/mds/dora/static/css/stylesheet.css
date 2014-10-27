@@ -234,6 +234,10 @@ html, body{
   margin-bottom:8px;
 }
 
+.bottom{
+  vertical-align: bottom;
+}
+
 #cross{
   left: 5px;
   background-color: red;
