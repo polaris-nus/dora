@@ -26,7 +26,11 @@
   <script src="/static/jquery-ui/jquery-ui.custom.js"></script>
   <script src="/static/angular-modules/slider/jQDateRangeSlider-min.js"></script>
   <script type="text/javascript" src="/static/angular-modules/allmighty-autocomplete/autocomplete.js"></script>
-  <!-- <link rel="css/iThing.css" type="text/css" /> -->
+
+  <script src="/static/bootstrap/js/bootstrap.min.js"> </script>
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<link rel="css/iThing.css" type="text/css" /> -->
 
 </head>
 {% verbatim %}
@@ -101,7 +105,6 @@
       </div>
 
       <div class="panel-body" id="qrs-panel-body">  
-
         <!-- display filters -->
         <div>
           <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
@@ -114,7 +117,7 @@
           <br/>
         </div>
 
-      <!-- charts -->
+        <!-- charts -->
         <div>
          <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
          <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
@@ -147,7 +150,7 @@
               <a href="#" class="list-group-item">
                 {{encounter.patient}}
                 <!-- <span ng-show="$index>assignedCount">(no location data)</span> -->
-              <br/>
+                <br/>
                 <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
                 <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
               </a>

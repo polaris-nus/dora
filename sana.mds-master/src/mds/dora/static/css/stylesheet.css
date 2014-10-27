@@ -159,6 +159,10 @@ html, body{
   height: 100%;
 }
 
+#myModal{
+  z-index: 5000;
+}
+
 /* MAP CONTROLS STYLING */
 .olControlAttribution {
   bottom: 5px;
