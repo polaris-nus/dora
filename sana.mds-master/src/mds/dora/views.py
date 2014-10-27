@@ -2,12 +2,27 @@ from mds.dora.utils import *
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
 
 def index(request):	
-	return render(request, 'main.html', {})
+	user = authenticate(username='admin', password='Sanamobile1')
+	if user is not None:
+		if user.is_active:
+			login(request, user)
+			# Redirect to a success page.
+			return render(request, 'main.html', {})
+		else:
+			# Return a 'disabled account' error message
+			return HttpResponse('{"assigned":[], "unassigned":[], "status":"disabled account"}', content_type="application/json")
+	else:
+		# Return an 'invalid login' error message.
+		return HttpResponse('{"assigned":[], "unassigned":[], "status":"invalid login"}', content_type="application/json")
+
 
 @csrf_exempt
 def query(request):
+	if (not request.user.is_authenticated()):
+		return HttpResponse('{"assigned":[], "unassigned":[], "status":"unauthorized"}', content_type="application/json")		
 	#Parse the request
 	query, concepts_list, locations_list = parse_request(request)
 	if (query == None and concepts_list == None and locations_list == None):
