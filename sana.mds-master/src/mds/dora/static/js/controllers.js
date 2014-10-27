@@ -198,6 +198,13 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.chartTwoVisible = true;
 		$scope.filters = [];
 
+		$scope.name = "QRS";
+
+		$scope.renameQRS = function() {
+			$scope.name = prompt("Please enter a new name for this query", $scope.name);
+		}
+
+
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateEncounters();

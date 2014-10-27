@@ -78,9 +78,7 @@
 </div>
 </div>
 
-
 <div ng-controller="QueryResultController">
-
   <div class="above" id="qrsbuttons">
     <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
 
@@ -96,18 +94,16 @@
     <!-- ng-show="{{QRSHistory}}"-->
     <div class="panel panel-info">
       <div class="panel-heading">
-        <h3 class="panel-title" ng-click="panelVisible=!panelVisible" id="qrs-panel-title"> qrs {{displayedQRS.assigned[0].disease}} </h3>
+        <h3 class="panel-title" ng-click="renameQRS()" id="qrs-panel-title">{{name}} </h3>
+<!-- ng-click="panelVisible=!panelVisible -->
+
+
         <button class="btn btn-info alignR inline" type="submit" ng-click="exportQRS()">Export</button>
         <button class="btn btn-info alignR"ng-click="setQRSClustering(false)">Cluster Off</button>
         <button class="btn btn-info alignR" ng-click="setQRSClustering(true)">Cluster On</button>
       </div>
 
       <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
-        <!-- qrs alias -->
-        <div>
-          <input  type="text" class="form-control" placeholder="Name this query"> <br>
-        </div>
-
         <!-- display filters -->
         <div>
           <span class="filter" ng-repeat="filter in filters">
