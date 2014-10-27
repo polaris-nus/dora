@@ -381,20 +381,6 @@ doraServices.service('MapServ', [
 			  	locationLayer.addFeatures(locationFeature);
 			  }
 
-				// Extract coordinates for encounters
-				// var coordinates = [];
-				// for(index in QRS.assigned) {
-				// 	var encounter = QRS.assigned[index];
-				// 	coordinates.push({coords: encounter.location.coords, created: encounter.created_date.split(' ')[0]});
-				// }
-				// Create point markers given coordinates
-				// var features = [];
-			 //  for (index in coordinates){
-			 //    var vectorFeature = wktParser.read(coordinates[index].coords);
-			 //    vectorFeature.attributes = {featureColor: QRS.color.featureColor, date: coordinates[index].created};
-			 //    features.push(vectorFeature);
-			 //  }
-
 			  // Extract coordinates for encounters
 				var features = [];
 				for(index in QRS.assigned) {
