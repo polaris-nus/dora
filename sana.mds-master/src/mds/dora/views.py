@@ -5,13 +5,14 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 
-def index(request):	
+def index(request):
 	user = authenticate(username='admin', password='Sanamobile1')
+
 	if user is not None:
 		if user.is_active:
 			login(request, user)
 			# Redirect to a success page.
-			return render(request, 'main.html', {})
+			return render(request, 'main.html', {'username':user})
 		else:
 			# Return a 'disabled account' error message
 			return HttpResponse('{"assigned":[], "unassigned":[], "status":"disabled account"}', content_type="application/json")
@@ -74,7 +75,7 @@ def delete_query(request):
 		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
 
 @csrf_exempt
-def user(request):
+def load_saved_queries(request):
 	if (not request.user.is_authenticated()):
 		return HttpResponse('{"assigned":[], "unassigned":[], "status":"unauthorized"}', content_type="application/json")
 
