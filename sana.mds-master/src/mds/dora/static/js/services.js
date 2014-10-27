@@ -6,9 +6,16 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 		var QRSHistory = [];
 		var QRSLoadingStatus = {isLoading: false};
 		var onAddCallback = null;
+		var requeryCallBack = null;
 		return {
 			setOnAddCallback: function(callback) {
 				onAddCallback = callback;
+			},
+			setRequeryCallback: function(callback){
+				requeryCallBack = callback;
+			},
+			requery:function(displayedQRS){
+				requeryCallBack(displayedQRS.filters);
 			},
 			getLoadingStatus: function(){
 				return QRSLoadingStatus;
@@ -33,7 +40,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 					this.addToQRSHistory(QRS);
 					MapServ.clearPolygonLayer();
 					QRSLoadingStatus.isLoading = false;
-		
+
 					// How to update these values! By reference?
 					// location = "";
 					// $scope.query = '';
@@ -91,8 +98,8 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 
 				for (var i=0; i<unionList.length;i++) {
 				if (unionList[i] >= QRSHistory.length) { return 0; } //if the given list is faulty, we don't do anything, and return a 0.
-					var assignedList = QRSHistory[unionList[i]].assigned;
-					var unassignedList = QRSHistory[unionList[i]].unassigned;
+				var assignedList = QRSHistory[unionList[i]].assigned;
+				var unassignedList = QRSHistory[unionList[i]].unassigned;
 					for (var j=0; j<assignedList.length; j++) { //loop through array of objects with coordinates in the given Historical QRS
 						var encounterUuid = assignedList[j].uuid;
 						if (encounterHash[encounterUuid] != 1) {
@@ -167,31 +174,31 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 			}
 		};
 	}
-]);
+	]);
 
 doraServices.service('MapServ', [
 	function(){
 		OpenLayers.ImgPath = '/static/ol2/img/';
 		
 		var map = new OpenLayers.Map({
-	    div: "map",
-	    controls: [
-	        new OpenLayers.Control.Navigation({
-	            dragPanOptions: {
-	                enableKinetic: true
-	            }
-	        }),
-	        new OpenLayers.Control.Attribution(),
-	        new OpenLayers.Control.Zoom({
-	        	zoomInId: "customZoomIn",
-	          zoomOutId: "customZoomOut"
-	        })
-	    ],
-	    layers: [
+			div: "map",
+			controls: [
+			new OpenLayers.Control.Navigation({
+				dragPanOptions: {
+					enableKinetic: true
+				}
+			}),
+			new OpenLayers.Control.Attribution(),
+			new OpenLayers.Control.Zoom({
+				zoomInId: "customZoomIn",
+				zoomOutId: "customZoomOut"
+			})
+			],
+			layers: [
 	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {buffer: 2}),
-	      new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true}),
+	    new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true}),
 	    ]
-		});
+	  });
 		var center = [0,0];
 		var zoom = 3;
 		map.setCenter(center, zoom);
@@ -204,15 +211,15 @@ doraServices.service('MapServ', [
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				pointRadius: "${radius}",
-			  fillColor: "${color}",
-			  fillOpacity: 1,
-			  strokeColor: "#fff",
-			  strokeWidth: 2,
-			  strokeOpacity: 1,
-			  graphicZIndex: 2,
+				fillColor: "${color}",
+				fillOpacity: 1,
+				strokeColor: "#fff",
+				strokeWidth: 2,
+				strokeOpacity: 1,
+				graphicZIndex: 2,
 			  // Label styling
 			  label : "${count}",
-			                
+
 			  fontColor: "#fff",
 			  fontSize: "10px",
 			  fontFamily: "Arial, sans serif",
@@ -224,78 +231,78 @@ doraServices.service('MapServ', [
 					},
 					radius: function(feature) {
 						var pix = 8;
-            if(feature.cluster) {
-              pix = Math.min(feature.attributes.count, 7) + pix;
-            }
-            return pix;
+						if(feature.cluster) {
+							pix = Math.min(feature.attributes.count, 7) + pix;
+						}
+						return pix;
 					},
 					color: function(feature) {
 						if(feature.cluster) {
-              return feature.cluster[0].attributes.featureColor;
-            } else {
-            	return feature.attributes.featureColor;
-            }
+							return feature.cluster[0].attributes.featureColor;
+						} else {
+							return feature.attributes.featureColor;
+						}
             return 'black'; // should never be used!
-					}
-				}
-			}),
+          }
+        }
+      }),
 			select: {
-        fillColor: "#8aeeef",
-        strokeColor: "#32a8a9",
-        graphicZIndex: 2,
-      }
+				fillColor: "#8aeeef",
+				strokeColor: "#32a8a9",
+				graphicZIndex: 2,
+			}
 		});
 
-		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
-			default: new OpenLayers.Style({
-			  fillColor: "${filterFillColor}",
-			  fillOpacity: 0.4,
-			  strokeColor: "${filterStrokeColor}",
-			  strokeWidth: 2,
-			  strokeOpacity: 1,
-			  strokeDashstyle: "solid",
-			  graphicZIndex: 1,
-			})
-		});
+var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
+	default: new OpenLayers.Style({
+		fillColor: "${filterFillColor}",
+		fillOpacity: 0.4,
+		strokeColor: "${filterStrokeColor}",
+		strokeWidth: 2,
+		strokeOpacity: 1,
+		strokeDashstyle: "solid",
+		graphicZIndex: 1,
+	})
+});
 
-		var polygonFilterStyle = new OpenLayers.Style({
-			fillColor: "#808080",
-		  fillOpacity: 0.4,
-		  strokeColor: "#808080",
-		  strokeWidth: 1,
-		  strokeOpacity: 1,
-		})
+var polygonFilterStyle = new OpenLayers.Style({
+	fillColor: "#808080",
+	fillOpacity: 0.4,
+	strokeColor: "#808080",
+	strokeWidth: 1,
+	strokeOpacity: 1,
+})
 
-		var countryPolygonStyle = new OpenLayers.StyleMap({
-			default: {
-			  fillOpacity: 0,
-			  strokeOpacity: 0,
-			},
-			temporary: {
-				fillColor: "#808080",
-		  	fillOpacity: 0.6,
-			},
-			select: polygonFilterStyle
-		});
+var countryPolygonStyle = new OpenLayers.StyleMap({
+	default: {
+		fillOpacity: 0,
+		strokeOpacity: 0,
+	},
+	temporary: {
+		fillColor: "#808080",
+		fillOpacity: 0.6,
+	},
+	select: polygonFilterStyle
+});
 
-		var drawPolygonStyle = new OpenLayers.StyleMap({
-			default: polygonFilterStyle
-		});
-		
+var drawPolygonStyle = new OpenLayers.StyleMap({
+	default: polygonFilterStyle
+});
+
 		// Adding Utility Layers
 		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
-      strategies: [new OpenLayers.Strategy.Fixed()],
-      styleMap: countryPolygonStyle,
-      protocol: new OpenLayers.Protocol.HTTP({
-        url: "/static/kml/countriesM.kml",
-        format: new OpenLayers.Format.KML({
-          extractStyles: false, 
-          extractAttributes: true,
-          maxDepth: 2
-        })
-      })
-    })
-    map.addLayer(countriesLayer);
+			strategies: [new OpenLayers.Strategy.Fixed()],
+			styleMap: countryPolygonStyle,
+			protocol: new OpenLayers.Protocol.HTTP({
+				url: "/static/kml/countriesM.kml",
+				format: new OpenLayers.Format.KML({
+					extractStyles: false, 
+					extractAttributes: true,
+					maxDepth: 2
+				})
+			})
+		})
+		map.addLayer(countriesLayer);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
 			// styleMap: drawPolygonStyle
@@ -321,20 +328,20 @@ doraServices.service('MapServ', [
 			toggle: true,
 			onSelect: function(feature) {
 				selectedFeature = feature;
-        popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
-                     feature.geometry.getBounds().getCenterLonLat(),
-                     null,
-                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
-                     null, true, function(){
-                     	selectClusterControls.unselect(selectedFeature);
-                     });
-        feature.popup = popup;
-        map.addPopup(popup);
+				popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
+					feature.geometry.getBounds().getCenterLonLat(),
+					null,
+					"<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
+					null, true, function(){
+						selectClusterControls.unselect(selectedFeature);
+					});
+				feature.popup = popup;
+				map.addPopup(popup);
 			},
 			onUnselect: function(feature) {
 				map.removePopup(feature.popup);
-        feature.popup.destroy();
-        feature.popup = null;
+				feature.popup.destroy();
+				feature.popup = null;
 			}
 		});
 		map.addControl(selectClusterControls);
@@ -346,8 +353,8 @@ doraServices.service('MapServ', [
 		});
 		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
 			hover: true,
-      highlightOnly: true,
-      renderIntent: "temporary"
+			highlightOnly: true,
+			renderIntent: "temporary"
 		});
 		map.addControl(hoverCountryControls);
 		map.addControl(selectCountryControls);
@@ -390,11 +397,11 @@ doraServices.service('MapServ', [
 				}
 				// Create point markers given coordinates
 				var features = [];
-			  for (index in coordinates){
-			    var vectorFeature = wktParser.read(coordinates[index].coords);
-			    vectorFeature.attributes = {featureColor: QRS.color.featureColor, date: coordinates[index].created};
-			    features.push(vectorFeature);
-			  }
+				for (index in coordinates){
+					var vectorFeature = wktParser.read(coordinates[index].coords);
+					vectorFeature.attributes = {featureColor: QRS.color.featureColor, date: coordinates[index].created};
+					features.push(vectorFeature);
+				}
 
 				features.sort(function (a,b) {
 					dateA = Date.parse(a.attributes.date);
@@ -408,11 +415,11 @@ doraServices.service('MapServ', [
 
 				var clusterStrategy = new OpenLayers.Strategy.Cluster();
 				clusterStrategy.distance = 30;
-			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
+				var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
 					styleMap: clusterMarkerStyle,
 					strategies: [clusterStrategy]
-			  });
-			  clusterStrategyReferences[clusterLayer.id] = clusterStrategy;
+				});
+				clusterStrategyReferences[clusterLayer.id] = clusterStrategy;
 
 			  // Create clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
@@ -443,7 +450,7 @@ doraServices.service('MapServ', [
 					activate ? clusterStrategy.activate() : clusterStrategy.deactivate();
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.removeAllFeatures();
-			  	clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
+					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
 				}
 			},
 			setVectorLayerVisibility: function(QRS, visibility) {
@@ -470,7 +477,7 @@ doraServices.service('MapServ', [
 						function(element) {
 							return element.id.localeCompare(QRS.clusterLayerId) !== 0
 						}
-					)
+						)
 					selectClusterControls.setLayer(selectControlsLayers);
 
 					//Manual cleanup on visibleLayers and clusterLayerFeatures
@@ -478,7 +485,7 @@ doraServices.service('MapServ', [
 						function(element) {
 							return element.localeCompare(QRS.clusterLayerId) !== 0
 						}
-					)
+						)
 					delete clusterLayerFeatures[QRS.clusterLayerId];
 
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
@@ -518,25 +525,25 @@ doraServices.service('MapServ', [
 					var handled = false;
 					switch (evt.keyCode) {
 				    case 90: // z
-			        if (evt.metaKey || evt.ctrlKey) {
-			            drawPolygonControls.undo();
-			            handled = true;
-			        }
-				        break;
+				    if (evt.metaKey || evt.ctrlKey) {
+				    	drawPolygonControls.undo();
+				    	handled = true;
+				    }
+				    break;
 				    case 89: // y
-			        if (evt.metaKey || evt.ctrlKey) {
-			            drawPolygonControls.redo();
-			            handled = true;
-			        }
-			        break;
+				    if (evt.metaKey || evt.ctrlKey) {
+				    	drawPolygonControls.redo();
+				    	handled = true;
+				    }
+				    break;
 				    case 27: // esc
-			        drawPolygonControls.cancel();
-			        handled = true;
-			        break;
-					}
-					if (handled) {
-					    OpenLayers.Event.stop(evt);
-					}
+				    drawPolygonControls.cancel();
+				    handled = true;
+				    break;
+				  }
+				  if (handled) {
+				  	OpenLayers.Event.stop(evt);
+				  }
 				});
 			},
 			activateDrawCircle: function() {
@@ -623,8 +630,8 @@ doraServices.service('MapServ', [
 					bounds:{
 					    min: new Date(minDate), //This value should be changed to the latest date available
 					    max: new Date()
-				  	}
-				});
+					  }
+					});
 			},
 			temporalSliderFeaturesToggle: function() {
 
@@ -633,57 +640,57 @@ doraServices.service('MapServ', [
 
 				function redrawFeatures(clusterLayer, features) {
 					clusterLayer.removeAllFeatures();
-			  		clusterLayer.addFeatures(features);
+					clusterLayer.addFeatures(features);
 				}
 
 				function peek(array) {
 					if (array.length === 0) {return null}
-					else {
-						return array[array.length-1];
-					}
-				}
-
-				function removeFeaturesLessThanMinDate(features,leftStack) {
-					if (features.length != 0) {
-						firstDate = Date.parse(features[0].attributes.date);
-						while (features.length > 0 && firstDate < minDate) {
-							leftStack.push(features.shift());
-							if (features.length != 0) { firstDate = Date.parse(features[0].attributes.date); }
+						else {
+							return array[array.length-1];
 						}
 					}
-				}
 
-				function addBackFromLeftStackMoreThanMinDate(features,LeftStack) {
-					if (leftStack.length != 0) {
-						leftStackTopDate = Date.parse(peek(leftStack).attributes.date);
-						while (leftStack.length != 0 && leftStackTopDate >= minDate) {
-							features.unshift(leftStack.pop());
-							if (leftStack.length != 0) { leftStackTopDate = Date.parse(peek(leftStack).attributes.date); }
+					function removeFeaturesLessThanMinDate(features,leftStack) {
+						if (features.length != 0) {
+							firstDate = Date.parse(features[0].attributes.date);
+							while (features.length > 0 && firstDate < minDate) {
+								leftStack.push(features.shift());
+								if (features.length != 0) { firstDate = Date.parse(features[0].attributes.date); }
+							}
 						}
 					}
-				}
 
-				function removeFeaturesMoreThanMaxDate(features,rightStack) {
-					if (features.length != 0) {
-						lastDate = Date.parse(peek(features).attributes.date);
-						while (features.length > 0 && lastDate > maxDate) {
-							rightStack.push(features.pop());
-							if (features.length != 0) { lastDate = Date.parse(peek(features).attributes.date); }
+					function addBackFromLeftStackMoreThanMinDate(features,LeftStack) {
+						if (leftStack.length != 0) {
+							leftStackTopDate = Date.parse(peek(leftStack).attributes.date);
+							while (leftStack.length != 0 && leftStackTopDate >= minDate) {
+								features.unshift(leftStack.pop());
+								if (leftStack.length != 0) { leftStackTopDate = Date.parse(peek(leftStack).attributes.date); }
+							}
 						}
 					}
-				}
 
-				function addBackFromrightStackLessThanMaxDate(features,LeftStack) {
-					if (rightStack.length != 0) {
-						rightStackTopDate = Date.parse(peek(rightStack).attributes.date);
-						while (rightStack.length != 0 && rightStackTopDate <= maxDate) {
-							features.push(rightStack.pop());
-							if (rightStack.length != 0) { rightStackTopDate = Date.parse(peek(rightStack).attributes.date); }
+					function removeFeaturesMoreThanMaxDate(features,rightStack) {
+						if (features.length != 0) {
+							lastDate = Date.parse(peek(features).attributes.date);
+							while (features.length > 0 && lastDate > maxDate) {
+								rightStack.push(features.pop());
+								if (features.length != 0) { lastDate = Date.parse(peek(features).attributes.date); }
+							}
 						}
 					}
-				}
 
-				function toggleMarkerVisibility(clusterLayerId) {
+					function addBackFromrightStackLessThanMaxDate(features,LeftStack) {
+						if (rightStack.length != 0) {
+							rightStackTopDate = Date.parse(peek(rightStack).attributes.date);
+							while (rightStack.length != 0 && rightStackTopDate <= maxDate) {
+								features.push(rightStack.pop());
+								if (rightStack.length != 0) { rightStackTopDate = Date.parse(peek(rightStack).attributes.date); }
+							}
+						}
+					}
+
+					function toggleMarkerVisibility(clusterLayerId) {
 					//DONE! -- Step 1: Take in temporal slider min max date.
 					clusterLayer = map.getLayer(clusterLayerId);
 					features = clusterLayerFeatures[clusterLayerId].features;
@@ -708,21 +715,21 @@ doraServices.service('MapServ', [
 			}
 		}
 	}
-]);
+	]);
 
 doraServices.service('PaletteServ', [
 	function(){
 		var palette = [
-			{cssIndex: 0, color:'#D46A6A', inUse: false},
-			{cssIndex: 1, color:'#FFBB45', inUse: false},
-			{cssIndex: 2, color:'#FFDD49', inUse: false},
-			{cssIndex: 3, color:'#B0E353', inUse: false},
-			{cssIndex: 4, color:'#41B368', inUse: false},
-			{cssIndex: 5, color:'#3D7C9B', inUse: false},
-			{cssIndex: 6, color:'#4C55A9', inUse: false},
-			{cssIndex: 7, color:'#6E46A6', inUse: false},
-			{cssIndex: 8, color:'#B94395', inUse: false},
-			{cssIndex: 9, color:'#E15273', inUse: false}
+		{cssIndex: 0, color:'#D46A6A', inUse: false},
+		{cssIndex: 1, color:'#FFBB45', inUse: false},
+		{cssIndex: 2, color:'#FFDD49', inUse: false},
+		{cssIndex: 3, color:'#B0E353', inUse: false},
+		{cssIndex: 4, color:'#41B368', inUse: false},
+		{cssIndex: 5, color:'#3D7C9B', inUse: false},
+		{cssIndex: 6, color:'#4C55A9', inUse: false},
+		{cssIndex: 7, color:'#6E46A6', inUse: false},
+		{cssIndex: 8, color:'#B94395', inUse: false},
+		{cssIndex: 9, color:'#E15273', inUse: false}
 		]
 
 		return {
@@ -749,4 +756,4 @@ doraServices.service('PaletteServ', [
 			}
 		}
 	}
-]);
+	]);

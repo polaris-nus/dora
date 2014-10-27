@@ -13,6 +13,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.input = '';		
 		$scope.filters = [];
 		
+		$scope.setfilters = function(newFilters){
+			console.log($scope.filters);
+			
+		}
+
+		QRSServ.setRequeryCallback($scope.setfilters);
+
 		function changeMode(newValue) {
 			//console.log("changeMode triggered");
 			if (newValue == 'polygon') {
@@ -206,6 +213,9 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			$scope.name = prompt("Please enter a new name for this query", $scope.name);
 		}
 
+		$scope.requery = function(){
+			QRSServ.requery($scope.displayedQRS);
+		}
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];

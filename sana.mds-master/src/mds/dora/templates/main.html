@@ -107,6 +107,7 @@
           <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
           <img ng-click="filtersVisible=!filtersVisible" ng-show="!filtersVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
           <a ng-click="filtersVisible=!filtersVisible">Filters</a>
+          <button class="btn btn-info" ng-click="requery()" id="requery-btn">requery</button>
           <div ng-show="filtersVisible">
             <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
           </div>
