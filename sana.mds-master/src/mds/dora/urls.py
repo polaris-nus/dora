@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     url(r'^query/', query),
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^savequery/', save_query),
+    url(r'^deletequery/', delete_query),
 )

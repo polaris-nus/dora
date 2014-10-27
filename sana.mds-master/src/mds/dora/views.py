@@ -55,6 +55,23 @@ def save_query(request):
 		
 	else:
 		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
+	
+def delete_query(request):
+	if request.user.is_authenticated():
+		uuid = request.POST['uuid']
+		if uuid:
+			query = SavedQuery.objects.get(uuid=uuid)
+			if query.user == request.user:
+				query.delete()
+				return HttpResponse('{"status": "ok"}', content_type="application/json")
+			else:
+				return HttpResponse('{"status": "unauthorized"}', content_type="application/json")
+		
+		else:
+			return HttpResponse('{"status": "no such query"}', content_type="application/json")
+		
+	else:
+		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
 
 @csrf_exempt
 def user(request):

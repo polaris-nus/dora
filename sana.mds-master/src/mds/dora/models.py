@@ -25,3 +25,6 @@ class SavedQuery(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	
 	query = models.TextField()
+	
+	created = models.DateTimeField(auto_now_add=True)
+    """ When the object was created """
