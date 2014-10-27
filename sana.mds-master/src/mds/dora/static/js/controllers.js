@@ -161,6 +161,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				data: data
 			}).success(function(QRS) {
 				QRS.locationFeature = filterFeatures;
+				QRS.filters = data;
 				QRSServ.addToQRSHistory(QRS);
 				MapServ.clearPolygonFilters();
 
