@@ -88,6 +88,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			console.log("clearShapes called");
 			MapServ.clearPolygonFilters();
 			location = "";
+			filterFeatures = [];
 		};
 		
 		$scope.$watch('mapServMode', changeMode);
@@ -160,6 +161,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				},
 				data: data
 			}).success(function(QRS) {
+
+				console.log(QRS);
+
 				QRS.locationFeature = filterFeatures;
 				QRS.filters = data;
 				QRSServ.addToQRSHistory(QRS);
