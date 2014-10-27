@@ -1,4 +1,5 @@
 from mds.dora.utils import *
+from mds.dora.models import SavedQuery
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -38,4 +39,18 @@ def query(request):
 	json_obj_array = generate_json_obj_to_return(json_obj_list)
 
 	return HttpResponse(json_obj_array, content_type="application/json")
+
+def save_query(request):
+	if request.user.is_authenticated():
+		if (request.META['QUERY_STRING']):
+			query = SavedQuery.objects.create(user=request.user,
+											query=request.META['QUERY_STRING'])
+			query.save()
+			return HttpResponse('{"status": "ok"}', content_type="application/json")
+		
+		else:
+			return HttpResponse('{"status": "error"}', content_type="application/json")
+		
+	else:
+		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
  
