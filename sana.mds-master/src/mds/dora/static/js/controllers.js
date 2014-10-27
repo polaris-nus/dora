@@ -196,10 +196,12 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.encounters = [];
 		$scope.chartOneVisible = true;
 		$scope.chartTwoVisible = true;
+		$scope.filters = [];
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateEncounters();
+			// updateFilters();
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
@@ -232,6 +234,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		function low(string){
 			return string.toLowerCase();
+		}
+
+		function updateEncounters(){
+			$scope.filters = $scope.displayedQRS.filters;
 		}
 
 		function updateEncounters(){

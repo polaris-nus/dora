@@ -110,8 +110,9 @@
 
         <!-- display filters -->
         <div>
-          
-          
+          <span class="filter" ng-repeat="filter in filters">
+            <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
+          </span>
         </div>
         
         <!-- charts -->
