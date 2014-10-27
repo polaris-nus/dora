@@ -544,3 +544,31 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 
 	}
 ]);
+
+//--Start TemporalSlider Controller--//
+doraControllers.controller('UserAccountController', ['$scope', 'QRSServ',
+	function($scope, QRSServ){
+
+		$scope.saved_queries = {}
+
+		//load data
+		$http({
+			method: 'POST',
+			url: '/dora/loadsavedqueries/',
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			data: data
+		}).success(function(response) {
+
+			console.log(response);
+
+		}).error(function(data){
+			document.open();
+			document.write(data);
+			document.close();
+		});
+
+		//save
+
+		//delete
+	}
+]);
