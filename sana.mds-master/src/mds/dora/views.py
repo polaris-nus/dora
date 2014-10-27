@@ -38,6 +38,8 @@ def query(request):
 	#transform json objects into one json array of objects
 	json_obj_array = generate_json_obj_to_return(json_obj_list)
 
+	print(get_user_saved_queries(request))
+
 	return HttpResponse(json_obj_array, content_type="application/json")
 
 def save_query(request):
@@ -53,4 +55,11 @@ def save_query(request):
 		
 	else:
 		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
+
+@csrf_exempt
+def user(request):
+	if (not request.user.is_authenticated()):
+		return HttpResponse('{"assigned":[], "unassigned":[], "status":"unauthorized"}', content_type="application/json")
+
+	return HttpResponse('{"assigned":[], "unassigned":[], "status":"userdata"}', content_type="application/json")
  
