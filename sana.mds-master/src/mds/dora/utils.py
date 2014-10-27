@@ -205,7 +205,11 @@ def get_user_saved_queries(request):
 
 	user_saved_queries = SavedQuery.objects.filter(user=request.user)
 	for item in user_saved_queries:
-		response['queries'].append(item.query)
+		query = {}
+		query['uuid'] = item.uuid
+		query['query'] = item.query
+		query['created'] = str(item.created)
+		response['queries'].append(query)
 
 	query1.delete()
 	query2.delete()
