@@ -324,7 +324,6 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 		map.addControl(modifyPolygonControls);
 
 		var selectClusterControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector("stub"), {
-			multiple: true,
 			toggle: true,
 			onSelect: function(feature) {
 				selectedFeature = feature;
@@ -389,19 +388,18 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 			  	locationLayer.addFeatures(locationFeature);
 			  }
 
-				// Extract coordinates for encounters
-				var coordinates = [];
+			  // Extract coordinates for encounters
+				var features = [];
 				for(index in QRS.assigned) {
 					var encounter = QRS.assigned[index];
-					coordinates.push({coords: encounter.location.coords, created: encounter.created_date.split(' ')[0]});
-				}
-				// Create point markers given coordinates
-				var features = [];
-				for (index in coordinates){
-					var vectorFeature = wktParser.read(coordinates[index].coords);
-					vectorFeature.attributes = {featureColor: QRS.color.featureColor, date: coordinates[index].created};
-					features.push(vectorFeature);
-				}
+			    var vectorFeature = wktParser.read(encounter.location.coords);    
+
+			    vectorFeature.attributes = {
+			    	featureColor: QRS.color.featureColor,
+			    	date: encounter.created_date.split(' ')[0],
+			    };
+			    features.push(vectorFeature);
+			  }
 
 				features.sort(function (a,b) {
 					dateA = Date.parse(a.attributes.date);
@@ -508,9 +506,11 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 				polygonLayer.setVisibility(false);
 				countriesLayer.setVisibility(false);
 			},
-			clearPolygonFilters: function() {		
+			clearPolygonFilters: function() {
+				// BUG: unable to remove feature selected for modification :(
 				polygonLayer.removeAllFeatures();
 				selectCountryControls.unselectAll();
+				
 			},
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
@@ -555,6 +555,7 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 				drawRegularPolygonControls.activate();
 			},
 			activateModifyPolygon: function() {
+				// BUG: cannot selectCountry after modification.
 				drawPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
 				hoverCountryControls.deactivate();
