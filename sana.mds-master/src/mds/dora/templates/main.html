@@ -95,23 +95,25 @@
     <div class="panel panel-info">
       <div class="panel-heading">
         <h3 class="panel-title" ng-click="renameQRS()" id="qrs-panel-title">{{name}} </h3>
-<!-- ng-click="panelVisible=!panelVisible -->
-
-
         <button class="btn btn-info alignR inline" type="submit" ng-click="exportQRS()">Export</button>
         <button class="btn btn-info alignR"ng-click="setQRSClustering(false)">Cluster Off</button>
         <button class="btn btn-info alignR" ng-click="setQRSClustering(true)">Cluster On</button>
       </div>
 
-      <div ng-show="panelVisible" class="panel-body" id="qrs-panel-body">  
+      <div class="panel-body" id="qrs-panel-body">  
+
         <!-- display filters -->
         <div>
-          <span class="filter" ng-repeat="filter in filters">
-            <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
-          </span>
+          <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+          <img ng-click="filtersVisible=!filtersVisible" ng-show="!filtersVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+          <a ng-click="filtersVisible=!filtersVisible">Filters</a>
+          <div ng-show="filtersVisible">
+            <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
+          </div>
+          <br/>
         </div>
-        
-        <!-- charts -->
+
+      <!-- charts -->
         <div>
          <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
          <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />

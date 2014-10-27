@@ -192,11 +192,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.newQRS = {};
 
 		$scope.displayedQRS = {};
-		$scope.panelVisible = true;
-		$scope.encounterVisible = false;
+		$scope.encounterVisible = true;
 		$scope.encounters = [];
 		$scope.chartOneVisible = true;
 		$scope.chartTwoVisible = true;
+		$scope.filtersVisible = true;
 		$scope.filters = [];
 
 		$scope.name = "QRS";
@@ -209,7 +209,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			updateEncounters();
-			// updateFilters();
+			updateFilters();
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
@@ -244,8 +244,15 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			return string.toLowerCase();
 		}
 
-		function updateEncounters(){
-			$scope.filters = $scope.displayedQRS.filters;
+		function updateFilters(){
+			$scope.filters = [];
+			$scope.displayedQRS.filters;
+			for (key in $scope.displayedQRS.filters){
+				value = $scope.displayedQRS.filters[key];
+				if(value){
+					$scope.filters.push(" "+key+": "+ value+" ");
+				}
+			}
 		}
 
 		function updateEncounters(){
