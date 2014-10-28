@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^savequery/', save_query),
     url(r'^deletequery/', delete_query),
+    url(r'^loadqueries/', load_saved_queries),
 )
