@@ -546,20 +546,39 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 ]);
 
 //--Start TemporalSlider Controller--//
-doraControllers.controller('UserAccountController', ['$scope', 'QRSServ',
-	function($scope, QRSServ){
+doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http',
+	function($scope, QRSServ, $http){
 
-		$scope.saved_queries = {}
+		$scope.saved_queries = [];
+
+		var isExist = function(query) {
+			list = $scope.saved_queries;
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].uuid == query.uuid) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 		//load data
 		$http({
 			method: 'POST',
-			url: '/dora/loadsavedqueries/',
+			url: '/dora/loadqueries/',
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			data: data
+			data: ''
 		}).success(function(response) {
 
-			console.log(response);
+			var queries = response.queries;
+			for (var i = 0; i < queries.length; i++) {
+				console.log("hello!");
+				var query = queries[i];
+				if (!isExist(query)) {
+					$scope.saved_queries.push(query);
+				}
+			}
+
+			console.log($scope.saved_queries);
 
 		}).error(function(data){
 			document.open();
