@@ -194,14 +194,6 @@ def generate_json_from_list(json_obj_list):
 def get_user_saved_queries(request):
 	response = {}
 	response['queries'] = []
-	user_saved_queries = SavedQuery.objects.filter(user=request.user)
-	for user in user_saved_queries:
-		user.delete()
-
-	query1 = SavedQuery.objects.create(user=request.user, query='query1')
-	query2 = SavedQuery.objects.create(user=request.user, query='query2')
-	query1.save()
-	query2.save()
 
 	user_saved_queries = SavedQuery.objects.filter(user=request.user)
 	for item in user_saved_queries:
@@ -210,11 +202,5 @@ def get_user_saved_queries(request):
 		query['query'] = item.query
 		query['created'] = str(item.created)
 		response['queries'].append(query)
-		response['queries'].append(query)
-
-
-	query1.delete()
-	query2.delete()
-	user_saved_queries = SavedQuery.objects.filter(user=request.user)
 
 	return json.dumps(response)
