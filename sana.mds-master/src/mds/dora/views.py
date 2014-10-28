@@ -43,9 +43,9 @@ def query(request):
 
 def save_query(request):
 	if request.user.is_authenticated():
-		if (request.META['QUERY_STRING']):
+		if (request.body):
 			query = SavedQuery.objects.create(user=request.user,
-											query=request.META['QUERY_STRING'])
+											query=request.body)
 			query.save()
 			return HttpResponse('{"status": "ok"}', content_type="application/json")
 		
@@ -57,7 +57,7 @@ def save_query(request):
 	
 def delete_query(request):
 	if request.user.is_authenticated():
-		uuid = request.POST['uuid']
+		uuid = request.body
 		if uuid:
 			query = SavedQuery.objects.get(uuid=uuid)
 			if query.user == request.user:
