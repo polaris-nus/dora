@@ -210,6 +210,8 @@ def get_user_saved_queries(request):
 		query['query'] = item.query
 		query['created'] = str(item.created)
 		response['queries'].append(query)
+		response['queries'].append(query)
+
 
 	query1.delete()
 	query2.delete()
