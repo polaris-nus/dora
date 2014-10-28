@@ -562,32 +562,66 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		}
 
 		//load data
-		$http({
-			method: 'POST',
-			url: '/dora/loadqueries/',
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			data: ''
-		}).success(function(response) {
+		$scope.loadQueries = function() {
+			$http({
+				method: 'POST',
+				url: '/dora/loadqueries/',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				data: ''
+			}).success(function(response) {
 
-			var queries = response.queries;
-			for (var i = 0; i < queries.length; i++) {
-				console.log("hello!");
-				var query = queries[i];
-				if (!isExist(query)) {
-					$scope.saved_queries.push(query);
+				var queries = response.queries;
+				for (var i = 0; i < queries.length; i++) {
+					console.log("hello!");
+					var query = queries[i];
+					if (!isExist(query)) {
+						$scope.saved_queries.push(query);
+					}
 				}
-			}
 
-			console.log($scope.saved_queries);
+				console.log($scope.saved_queries);
 
-		}).error(function(data){
-			document.open();
-			document.write(data);
-			document.close();
-		});
+			}).error(function(data){
+				document.open();
+				document.write(data);
+				document.close();
+			});
+		}
 
 		//save
+		$scope.saveQuery = function(query) {
+			$http({
+				method: 'POST',
+				url: '/dora/savequery/',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				data: query
+			}).success(function(response) {
+				console.log(response);
+			}).error(function(data){
+				document.open();
+				document.write(data);
+				document.close();
+			});	
+		}
 
 		//delete
+		$scope.deleteQuery = function(queryUuid) {
+			console.log("deleting " + queryUuid);
+			$http({
+				method: 'POST',
+				url: '/dora/deletequery/',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				data: queryUuid
+			}).success(function(response) {
+				console.log(response);
+			}).error(function(data){
+				document.open();
+				document.write(data);
+				document.close();
+			});	
+		}
+
+		$scope.loadQueries();
+
 	}
 ]);
