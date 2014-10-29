@@ -13,6 +13,10 @@ ul{ padding-left:0; }
 
 .nowrap{white-space: nowrap;}
 
+.username {
+	float: right;
+}
+
 #searchbox{
   position: relative; 
   width: 400px;

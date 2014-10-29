@@ -22,6 +22,8 @@ class SavedQuery(models.Model):
 	uuid = models.SlugField(max_length=36, unique=True, default=make_uuid, editable=False)
 	""" A universally unique identifier """
 	
+	alias = models.CharField(max_length=64)
+	
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	
 	query = models.TextField()

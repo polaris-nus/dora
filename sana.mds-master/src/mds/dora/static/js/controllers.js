@@ -5,8 +5,6 @@ var doraControllers = angular.module('doraControllers', []);
 doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
 	function($scope, QRSServ, $http, MapServ){
 		
-		var location = '';
-		var filterFeatures = [];
 		$scope.mapServMode = 'unselected';
 		$scope.locationSearchOn = false;
 		$scope.key = '';
@@ -79,7 +77,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			//mapServMode reset so that ngChange may be triggered
 			if ($scope.locationSearchOn) {
 				$scope.mapServMode = 'unselected';
-				$scope.doneDrawing();	
+				$scope.doneDrawing();
 			}
 			
 			//polygon drawing mode by default
@@ -102,16 +100,12 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		
 		$scope.buttonName = function(){
 			//console.log("location now is " + location);
-			if ($scope.locationSearchOn) return "Apply search location";
-			else if (location && location != "GEOMETRYCOLLECTION()") return "Edit search location";
-			else return "Add search location";
+			if ($scope.locationSearchOn) return "Hide location search";
+			else return "Location search";
 		};
 		
 		$scope.doneDrawing = function(filter){
 			MapServ.deactivatePolygonFilters();
-			var polygonFilters = MapServ.getPolygonFilters();
-			location = polygonFilters.wkt;
-			filterFeatures = polygonFilters.features;
 		};
 		
 		$scope.editFilter = function(index, filter){
@@ -129,6 +123,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.submitQuery = function(){
 
 			console.log("inside submitQuery()");
+			
+			var polygonFilters = MapServ.getPolygonFilters();
+			var location = polygonFilters.wkt;
+			var filterFeatures = polygonFilters.features;
 
 			QRSServ.initializeLoading();
 
@@ -545,7 +543,6 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 	}
 ]);
 
-//--Start TemporalSlider Controller--//
 doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http){
 

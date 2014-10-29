@@ -12,7 +12,7 @@ def index(request):
 		if user.is_active:
 			login(request, user)
 			# Redirect to a success page.
-			return render(request, 'main.html', {'username':user})
+			return render(request, 'main.html', {'username':user.username})
 		else:
 			# Return a 'disabled account' error message
 			return HttpResponse('{"assigned":[], "unassigned":[], "status":"disabled account"}', content_type="application/json")
