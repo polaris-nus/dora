@@ -201,6 +201,8 @@ def get_user_saved_queries(request):
 		query['uuid'] = item.uuid
 		query['query'] = item.query
 		query['created'] = str(item.created)
+		query['alias'] = item.alias
+		query['features'] = item.features
 		response['queries'].append(query)
 
 	return json.dumps(response)
