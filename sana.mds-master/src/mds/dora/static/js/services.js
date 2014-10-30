@@ -669,6 +669,7 @@ doraServices.service('MapServ', [
 					});
 			},
 			temporalSliderFeaturesToggle: function() {
+				selectClusterControls.unselectAll();
 
 				var minDate = Date.parse(slider.min);
 				var maxDate = Date.parse(slider.max);
@@ -752,13 +753,12 @@ doraServices.service('MapServ', [
 				selectClusterControls.unselectAll();
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					var found = false;
 					searchloop:
 					for (i in clusterLayer.features) {
 						var feature = clusterLayer.features[i];
 						if(feature.cluster) {
 							for(j in feature.cluster) {
-								if(feature.cluster[j].attributes.encounter.uuid === uuid) {
+								if(feature.cluster[j].attributes.encounter.uuid === uuid) {S
 									selectClusterControls.select(feature);
 									break searchloop;
 								}

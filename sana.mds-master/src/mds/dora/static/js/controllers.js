@@ -230,7 +230,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
 
 		$scope.showPopoverOnMap = function(encounterUuid) {
-			console.log(encounterUuid);
 			MapServ.triggerPopover($scope.displayedQRS, encounterUuid);
 		}
 
