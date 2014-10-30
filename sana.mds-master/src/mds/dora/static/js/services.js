@@ -326,16 +326,49 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 		var selectClusterControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector("stub"), {
 			toggle: true,
 			onSelect: function(feature) {
-				selectedFeature = feature;
-				popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
+				var popoverHtml = "";
+				var renderEncounter = function(encounter) {
+					var givenName = encounter.subject.given_name.charAt(0).toUpperCase() + encounter.subject.given_name.slice(1);
+					var familyInitial = "." + encounter.subject.family_name.charAt(0).toUpperCase();
+					var gender = encounter.subject.gender;
+					var age = new Date().getFullYear() - new Date(encounter.subject.dob).getFullYear();
+					
+					var createdDateObj = new Date(encounter.created_date);
+					var createdDate = createdDateObj.getDate() + "-" + createdDateObj.getMonth() + "-" + createdDateObj.getFullYear();
+					
+					var template = '<div class="popover-content">' +
+					    '<div class="popover-patient">'+ givenName + familyInitial + " " + age + " " + gender +'</div>'+
+					    '<div class="popover-procedure">'+ encounter.procedure +'</div>'+
+					    '<div class="popover-observer">'+ 'by ' + encounter.observer + ' on ' + createdDate +'</div>'+
+					  '</div>';
+				  return template;
+				}
+
+				if(feature.cluster) {
+					popoverHtml = '<div class="popover-list">';
+					for(index in feature.cluster) {
+        		popoverHtml += renderEncounter(feature.cluster[index].attributes.encounter);
+					}
+					popoverHtml += "</div>";
+
+        } else {
+        	popoverHtml = renderEncounter(feature.attributes.encounter);
+        }
+
+	    	var popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
 					feature.geometry.getBounds().getCenterLonLat(),
 					null,
-					"<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
-					null, true, function(){
-						selectClusterControls.unselect(selectedFeature);
-					});
-				feature.popup = popup;
-				map.addPopup(popup);
+					popoverHtml,
+					null,
+					true,
+					function(){
+						selectClusterControls.unselect(feature);
+	      	}
+	      );
+      	
+      	feature.popup = popup;
+      	map.addPopup(popup);
+
 			},
 			onUnselect: function(feature) {
 				map.removePopup(feature.popup);
@@ -397,6 +430,7 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 			    vectorFeature.attributes = {
 			    	featureColor: QRS.color.featureColor,
 			    	date: encounter.created_date.split(' ')[0],
+			    	encounter: encounter,
 			    };
 			    features.push(vectorFeature);
 			  }

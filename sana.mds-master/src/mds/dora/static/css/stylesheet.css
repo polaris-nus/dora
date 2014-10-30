@@ -232,6 +232,14 @@ html, body{
   background: transparent;
 }
 
+/* MAP POPOVER STYLES */
+
+.popover-list {
+  max-height: 150px;
+  min-width: 200px;
+  overflow: auto;
+}
+
 /* QRS BUTTON STYLES*/
 .btn-circle {
   position: relative;
