@@ -253,41 +253,41 @@ doraServices.service('MapServ', [
 			}
 		});
 
-var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
-	default: new OpenLayers.Style({
-		fillColor: "${filterFillColor}",
-		fillOpacity: 0.4,
-		strokeColor: "${filterStrokeColor}",
-		strokeWidth: 2,
-		strokeOpacity: 1,
-		strokeDashstyle: "solid",
-		graphicZIndex: 1,
-	})
-});
+		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
+			default: new OpenLayers.Style({
+				fillColor: "${filterFillColor}",
+				fillOpacity: 0.4,
+				strokeColor: "${filterStrokeColor}",
+				strokeWidth: 2,
+				strokeOpacity: 1,
+				strokeDashstyle: "solid",
+				graphicZIndex: 1,
+			})
+		});
 
-var polygonFilterStyle = new OpenLayers.Style({
-	fillColor: "#808080",
-	fillOpacity: 0.4,
-	strokeColor: "#808080",
-	strokeWidth: 1,
-	strokeOpacity: 1,
-})
+		var polygonFilterStyle = new OpenLayers.Style({
+			fillColor: "#808080",
+			fillOpacity: 0.4,
+			strokeColor: "#808080",
+			strokeWidth: 1,
+			strokeOpacity: 1,
+		})
 
-var countryPolygonStyle = new OpenLayers.StyleMap({
-	default: {
-		fillOpacity: 0,
-		strokeOpacity: 0,
-	},
-	temporary: {
-		fillColor: "#808080",
-		fillOpacity: 0.6,
-	},
-	select: polygonFilterStyle
-});
+		var countryPolygonStyle = new OpenLayers.StyleMap({
+			default: {
+				fillOpacity: 0,
+				strokeOpacity: 0,
+			},
+			temporary: {
+				fillColor: "#808080",
+				fillOpacity: 0.6,
+			},
+			select: polygonFilterStyle
+		});
 
-var drawPolygonStyle = new OpenLayers.StyleMap({
-	default: polygonFilterStyle
-});
+		var drawPolygonStyle = new OpenLayers.StyleMap({
+			default: polygonFilterStyle
+		});
 
 		// Adding Utility Layers
 		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
@@ -624,20 +624,20 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 
 				return polygonFilters;
 			},
-			plotCentroid: function(QRS) {
-				if (QRS.clusterLayerId) {
-					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					if(clusterLayer.getVisibility()) {
-						var clusterGeometries = [];
-						for(index in clusterLayer.features) {
-							clusterGeometries.push(clusterLayer.features[index].geometry);
-						}
-						var geometryCollection = new OpenLayers.Geometry.Collection(clusterGeometries);
-						var centroid = geometryCollection.getCentroid();
-						// THEN DO WHAT?! put in new layer || put in clusterLayer (learn to customize cluster strategy)
-					}
-				}
-			},
+			// plotCentroid: function(QRS) {
+			// 	if (QRS.clusterLayerId) {
+			// 		var clusterLayer = map.getLayer(QRS.clusterLayerId);
+			// 		if(clusterLayer.getVisibility()) {
+			// 			var clusterGeometries = [];
+			// 			for(index in clusterLayer.features) {
+			// 				clusterGeometries.push(clusterLayer.features[index].geometry);
+			// 			}
+			// 			var geometryCollection = new OpenLayers.Geometry.Collection(clusterGeometries);
+			// 			var centroid = geometryCollection.getCentroid();
+			// 			// THEN DO WHAT?! put in new layer || put in clusterLayer (learn to customize cluster strategy)
+			// 		}
+			// 	}
+			// },
 			setSliderMinMax: function(min, max) {
 				slider.min = min;
 				slider.max = max;
@@ -747,7 +747,32 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 				for (var i=0; i<visibleLayers.length;i++) {
 					toggleMarkerVisibility(visibleLayers[i]);
 				}
-			}
+			},
+			triggerPopover: function(QRS, uuid) {
+				selectClusterControls.unselectAll();
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					var found = false;
+					searchloop:
+					for (i in clusterLayer.features) {
+						var feature = clusterLayer.features[i];
+						if(feature.cluster) {
+							for(j in feature.cluster) {
+								if(feature.cluster[j].attributes.encounter.uuid === uuid) {
+									selectClusterControls.select(feature);
+									break searchloop;
+								}
+							}
+						} else {
+							if (feature.attributes.encounter.uuid === uuid) {
+								selectClusterControls.select(feature);
+								break searchloop;
+							}
+						}
+					}
+				}
+			},
+
 		}
 	}
 	]);

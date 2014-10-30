@@ -229,6 +229,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		};
 		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
 
+		$scope.showPopoverOnMap = function(encounterUuid) {
+			console.log(encounterUuid);
+			MapServ.triggerPopover($scope.displayedQRS, encounterUuid);
+		}
+
 		$scope.toggleQRSVisibility = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
 			var toggledVisibility = !$scope.doubleClickedQRS.isVisible;
@@ -237,7 +242,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 		$scope.setQRSClustering = function(status) {
-			console.log("clicked");
 			MapServ.setClusterStrategyStatus($scope.displayedQRS, status);
 		}
 
@@ -279,6 +283,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 					gender: $scope.displayedQRS.assigned[index].subject.gender,
 					dob: $scope.displayedQRS.assigned[index].subject.dob,
 					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
+					uuid: $scope.displayedQRS.assigned[index].uuid,
 				}		
 				$scope.encounters.push(encounter);
 			}
@@ -293,6 +298,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 					gender: $scope.displayedQRS.assigned[index].subject.gender,
 					dob: $scope.displayedQRS.assigned[index].subject.dob,
 					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
+					uuid: $scope.displayedQRS.unassigned[index].uuid,
 				}		
 				$scope.encounters.push(encounter);
 			}
