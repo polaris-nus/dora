@@ -378,6 +378,13 @@ doraServices.service('MapServ', [
 		});
 		map.addControl(selectClusterControls);
 		selectClusterControls.activate();
+		
+		// Overriding zoom for clearing popovers
+		map.zoomToProxy = map.zoomTo;
+		map.zoomTo =  function (zoom,xy){
+			selectClusterControls.unselectAll();
+			map.zoomToProxy(zoom,xy); 
+		};
 
 		var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
 			multiple: true,
@@ -758,7 +765,7 @@ doraServices.service('MapServ', [
 						var feature = clusterLayer.features[i];
 						if(feature.cluster) {
 							for(j in feature.cluster) {
-								if(feature.cluster[j].attributes.encounter.uuid === uuid) {S
+								if(feature.cluster[j].attributes.encounter.uuid === uuid) {
 									selectClusterControls.select(feature);
 									break searchloop;
 								}
