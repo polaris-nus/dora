@@ -13,8 +13,26 @@ ul{ padding-left:0; }
 
 .nowrap{white-space: nowrap;}
 
-.username {
+.account{
 	float: right;
+	margin-top: 20px;
+	margin-right: 20px;
+	cursor: default;
+}
+
+.username{
+	padding: 3px 6px 3px;
+	border: 1px solid black;
+	background-color: white;
+	float: right;
+}
+
+.savedQueries{
+	position: absolute;
+	right:0;
+	top:28px;
+	width:200px;
+	
 }
 
 #searchbox{
@@ -29,6 +47,7 @@ ul{ padding-left:0; }
 	margin-top: 20px;
   	margin-left: 20px;
   	white-space: nowrap;
+  	display: inline-block;
 }
 
 .autocom-input {

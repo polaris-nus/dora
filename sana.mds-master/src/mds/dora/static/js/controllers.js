@@ -185,6 +185,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				$scope.key = '';
 				$scope.input = '';
 				$scope.filters = [];
+				
+				$scope.$parent.saveQuery(QRS, 'test');
 
 			}).error(function(data){
 				document.open();
@@ -557,10 +559,10 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http){
 
-		$scope.saved_queries = [];
+		$scope.savedQueries = [];
 
 		var isExist = function(query) {
-			list = $scope.saved_queries;
+			list = $scope.savedQueries;
 			for (var i = 0; i < list.length; i++) {
 				if (list[i].uuid == query.uuid) {
 					return true;
@@ -569,10 +571,19 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 			return false;
 		}
 		
+		$scope.savePanelVisibility = false;
+		
+		$scope.toggleSavePanel = function(){
+			$scope.savePanelVisibility = !$scope.savePanelVisibility;
+		};
+		
 		$scope.executeQuery = function(queryObj) {
+			console.log('inside executeQuery');
+			
+			QRSServ.initializeLoading();
 			
 			var data = JSON.parse(queryObj.query);
-			var filterFeatures = JSON.parse(queryObj.features);
+			//var filterFeatures = JSON.parse(queryObj.features);
 		
 			$http({
 				method: 'POST',
@@ -589,7 +600,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 				console.log(QRS);
 
-				QRS.locationFeature = filterFeatures;
+				//QRS.locationFeature = filterFeatures;
 				QRS.filters = data;
 				QRSServ.addToQRSHistory(QRS);
 
@@ -613,11 +624,11 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 					console.log(queries[i]);
 					var query = queries[i];
 					if (!isExist(query)) {
-						$scope.saved_queries.push(query);
+						$scope.savedQueries.push(query);
 					}
 				}
 
-				console.log($scope.saved_queries);
+				console.log($scope.savedQueries);
 
 			}).error(function(data){
 				document.open();
@@ -628,10 +639,11 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//save
 		$scope.saveQuery = function(QRS, name) {
+		
 			var data = {};
 			data.alias = name;
 			data.query = JSON.stringify(QRS.filters);
-			data.features = JSON.stringify(QRS.locationFeature);
+			//data.features = JSON.stringify(QRS.locationFeature);
 			
 			$http({
 				method: 'POST',
@@ -655,14 +667,16 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		}
 
 		//delete
-		$scope.deleteQuery = function(queryUuid) {
-			console.log("deleting " + queryUuid);
+		$scope.deleteQuery = function(query, index) {
+			console.log("deleting " + query.uuid);
+			var uuid = query.uuid;
+			$scope.savedQueries.splice(index, 1);
 			
 			$http({
 				method: 'POST',
 				url: '/dora/deletequery/',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-				data: queryUuid
+				data: uuid
 			}).success(function(response) {
 				console.log(response);
 			}).error(function(data){
