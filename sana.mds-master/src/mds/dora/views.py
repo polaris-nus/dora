@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
+from mds.dora.forms import SavedQueryForm
 
 def index(request):
 	user = authenticate(username='admin', password='Sanamobile1')
@@ -41,12 +42,18 @@ def query(request):
 
 	return HttpResponse(json_obj_array, content_type="application/json")
 
+
 def save_query(request):
 	if request.user.is_authenticated():
-		if (request.body):
-			query = SavedQuery.objects.create(user=request.user,
-											query=request.body)
-			query.save()
+		form = SavedQueryForm(request.POST)
+		
+		if (form.is_valid()):
+			
+			saved_query = form.save(commit=False)
+			saved_query.user = request.user
+			saved_query.save()
+			form.save_m2m()
+			
 			return HttpResponse('{"status": "ok"}', content_type="application/json")
 		
 		else:
