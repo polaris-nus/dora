@@ -1,5 +1,7 @@
 import django.contrib.gis.forms as forms
 from django.core.validators import RegexValidator
+from django.forms import ModelForm
+from mds.dora.models import SavedQuery
 
 class QueryForm(forms.Form):
 
@@ -55,3 +57,8 @@ class QueryForm(forms.Form):
 
     def clean_dates(self):
         pass
+    
+class SavedQueryForm(ModelForm):
+    class Meta:
+        model = SavedQuery
+        fields = ['alias', 'query', 'features']
