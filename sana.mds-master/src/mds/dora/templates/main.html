@@ -44,11 +44,19 @@
       </div>
 
       <div class="login">
-{% endverbatim %}
+
        <div class="username above">
-        <span>{{ username }} &or;</span>
+        <span ng-click="toggleSavePanel()">{% endverbatim %}{{ username }}{% verbatim %}{{caret()}}</span>
+        <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
+         <div panel-heading>Saved Queries</div>
+          <ul class="list-group">
+           <li class="list-group-item" 
+           ng-repeat="query in savedQuery"
+           ng-click="">{{query.name}}</li>
+          </ul>
+        </div>
        </div>
-{% verbatim %}
+
       </div>
 
       <div class="queryForm" ng-controller="QueryFormController">
