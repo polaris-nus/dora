@@ -9,7 +9,7 @@ app.directive('autocomplete', function() {
     restrict: 'E',
     scope: {
       searchParam: '=ngModel',
-      suggestions: '=data',
+      data: '=data',
       onType: '=onType',
       onSelect: '=onSelect',
       key: '=key'
@@ -17,7 +17,7 @@ app.directive('autocomplete', function() {
     controller: ['$scope', function($scope){
       // the index of the suggestions that's currently selected
       $scope.selectedIndex = -1;
-      var data = $scope.suggestions;
+      $scope.suggestion = $scope.data;
 
       // set new index
       $scope.setIndex = function(i){
@@ -80,7 +80,7 @@ app.directive('autocomplete', function() {
       		$scope.attrs.placeholder = '';
       	}
       	else {
-      		$scope.suggestions = data;
+      		$scope.suggestions = $scope.data;
       		$scope.attrs.placeholder = 'Add a search criteria';
       	}
       });

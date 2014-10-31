@@ -11,6 +11,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.input = '';		
 		$scope.filters = [];
 		
+		//sets the filter from the QueryResultController
 		$scope.setfilters = function(newFilters){
 		
 			console.log(newFilters);
@@ -43,6 +44,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			}
 		};
 
+		//autocomplete filter types
 		$scope.data = [
 			"Patient's family name",
 			"Patient's given name",
@@ -68,6 +70,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			'Operation date',
 			'Discharge date',
 			'Follow up date'];
+			
+		console.log($scope.data);
 		
 		$scope.selectFilter = function(key){
 			$scope.key = key;
@@ -75,8 +79,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.submitFilter = function(){
+			console.log("length of data array: " + $scope.data.length);
+			console.log($scope.data);
 			if ($scope.key && $scope.input) {
+				
 				$scope.filters.push({key:$scope.key, value:$scope.input});
+				$scope.data.splice($scope.data.indexOf($scope.key),1);
+				
 				$scope.key = '';
 				$scope.input = '';
 			}
@@ -118,11 +127,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.editFilter = function(index, filter){
 			$scope.key = filter.key;
 			$scope.input = filter.value;
-			$scope.removeFilter(index);
+			$scope.removeFilter(index, filter);
 		};
 		
-		$scope.removeFilter = function(index){
+		$scope.removeFilter = function(index, filter){
+			console.log(filter);
 			$scope.filters.splice(index, 1);
+			$scope.data.push(filter.key);
 		};
 		
 		$scope.changeMode = changeMode;
