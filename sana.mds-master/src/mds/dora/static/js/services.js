@@ -125,6 +125,7 @@ doraServices.service('MapServ', [
 			internalProjection: 'EPSG:900913' //to Spherical Mercator Projection
 		});
 
+		// StyleMaps for layers
 		var clusterMarkerStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				pointRadius: "${radius}",
@@ -182,14 +183,6 @@ doraServices.service('MapServ', [
 			})
 		});
 
-		var polygonFilterStyle = new OpenLayers.Style({
-			fillColor: "#808080",
-			fillOpacity: 0.4,
-			strokeColor: "#808080",
-			strokeWidth: 1,
-			strokeOpacity: 1,
-		})
-
 		var countryPolygonStyle = new OpenLayers.StyleMap({
 			default: {
 				fillOpacity: 0,
@@ -199,11 +192,43 @@ doraServices.service('MapServ', [
 				fillColor: "#808080",
 				fillOpacity: 0.6,
 			},
-			select: polygonFilterStyle
+			select: {
+				fillColor: "#808080",
+				fillOpacity: 0.4,
+				strokeColor: "#808080",
+				strokeWidth: 1,
+				strokeOpacity: 1,
+			}
 		});
 
 		var drawPolygonStyle = new OpenLayers.StyleMap({
-			default: polygonFilterStyle
+			default: new OpenLayers.Style({
+				fillColor: "#808080",
+				fillOpacity: 0.4,
+				strokeColor: "#808080",
+				strokeWidth: 1,
+				strokeOpacity: 1,
+				label: "${dimension}"
+			}, {
+				context: {
+					dimension: function(feature){
+						if(feature.attributes.circle) {
+							var geometry = feature.geometry;
+							var center = geometry.getCentroid();
+							var point = geometry.getVertices()[0];
+							var pointClone = point.clone().transform("EPSG:900913", "EPSG:4326");
+				      var centerClone = center.clone().transform("EPSG:900913", "EPSG:4326");
+				      var distance = OpenLayers.Util.distVincenty(
+				          new OpenLayers.LonLat(pointClone.x, pointClone.y),
+				          new OpenLayers.LonLat(centerClone.x, centerClone.y)
+				      );
+							return Math.round(distance * 100) / 100 + "km";
+						} else {
+							return "";
+						}
+					}
+				}
+			})
 		});
 
 		// Adding Utility Layers
@@ -222,7 +247,7 @@ doraServices.service('MapServ', [
 		map.addLayer(countriesLayer);
 
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
-			// styleMap: drawPolygonStyle
+			styleMap: drawPolygonStyle
 		});
 		map.addLayer(polygonLayer);
 		
@@ -256,8 +281,28 @@ doraServices.service('MapServ', [
 		});
 
 		var polyOptions = {sides: 40};
-		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.RegularPolygon, {handlerOptions: polyOptions});
+		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer,
+			OpenLayers.Handler.RegularPolygon,
+			{
+				handlerOptions: polyOptions,
+				// callbacks: {
+				// 	create: function(geometry, feature) {
+				// 		console.log(geometry);
+				// 		console.log(feature);
+				// 	},
+				// 	done: function(geometry, feature) {
+				// 		console.log(geometry);
+				// 		console.log(feature);
+				// 	}
+				// }
+			});
 		map.addControl(drawRegularPolygonControls);
+		drawRegularPolygonControls.events.register('featureadded', drawRegularPolygonControls, function(f){
+			var addedFeature =  f.feature.clone();
+			addedFeature.attributes.circle = true;
+			polygonLayer.removeFeatures([f.feature], {silent:true});
+			polygonLayer.addFeatures([addedFeature], {silent:true});
+		});
 
 		// var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
 		// modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
@@ -466,7 +511,7 @@ doraServices.service('MapServ', [
 						function(element) {
 							return element.id.localeCompare(QRS.clusterLayerId) !== 0
 						}
-						)
+					)
 					selectClusterControls.setLayer(selectControlsLayers);
 
 					//Manual cleanup on visibleLayers and clusterLayerFeatures
@@ -474,7 +519,7 @@ doraServices.service('MapServ', [
 						function(element) {
 							return element.localeCompare(QRS.clusterLayerId) !== 0
 						}
-						)
+					)
 					delete clusterLayerFeatures[QRS.clusterLayerId];
 
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
@@ -498,10 +543,8 @@ doraServices.service('MapServ', [
 				countriesLayer.setVisibility(false);
 			},
 			clearPolygonFilters: function() {
-				// BUG: unable to remove feature selected for modification :(
 				polygonLayer.removeAllFeatures();
-				selectCountryControls.unselectAll();
-				
+				selectCountryControls.unselectAll();		
 			},
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
@@ -510,8 +553,6 @@ doraServices.service('MapServ', [
 				selectCountryControls.deactivate();
 
 				drawPolygonControls.activate();
-
-
 			},
 			activateDrawCircle: function() {
 				drawPolygonControls.deactivate();
