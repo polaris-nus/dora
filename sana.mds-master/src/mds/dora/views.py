@@ -51,6 +51,7 @@ def save_query(request):
 			
 			saved_query = form.save(commit=False)
 			saved_query.user = request.user
+			saved_query.features = ''
 			saved_query.save()
 			form.save_m2m()
 			

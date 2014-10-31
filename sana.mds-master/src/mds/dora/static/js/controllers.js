@@ -574,6 +574,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//load data
 		$scope.loadQueries = function() {
+			console.log("inside loadQuery");
 			$http({
 				method: 'POST',
 				url: '/dora/loadqueries/',
@@ -601,6 +602,8 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		//save
 		$scope.saveQuery = function(QRS, name) {
 		
+			console.log("inside savequery");
+			
 			var data = {};
 			data.alias = name;
 			data.query = JSON.stringify(QRS.filters);
@@ -619,6 +622,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				data: data
 			}).success(function(response) {
 				console.log('reloading queries');
+				console.log('response: '  + JSON.stringify(response));
 				$scope.loadQueries();
 			}).error(function(data){
 				document.open();

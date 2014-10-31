@@ -61,4 +61,4 @@ class QueryForm(forms.Form):
 class SavedQueryForm(ModelForm):
     class Meta:
         model = SavedQuery
-        fields = ['alias', 'query', 'features']
+        fields = ['alias', 'query']
