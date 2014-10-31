@@ -233,12 +233,12 @@ doraServices.service('MapServ', [
 		var polyOptions = {sides: 40};
 		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.RegularPolygon, {handlerOptions: polyOptions});
 		map.addControl(drawRegularPolygonControls);
-		
-		var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
-		modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
-		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
-		modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
-		map.addControl(modifyPolygonControls);
+
+		// var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
+		// modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
+		// modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
+		// modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
+		// map.addControl(modifyPolygonControls);
 
 		var selectClusterControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector("stub"), {
 			toggle: true,
@@ -481,7 +481,7 @@ doraServices.service('MapServ', [
 			},
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
+				// modifyPolygonControls.deactivate();
 				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
@@ -515,24 +515,24 @@ doraServices.service('MapServ', [
 			},
 			activateDrawCircle: function() {
 				drawPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
+				// modifyPolygonControls.deactivate();
 				hoverCountryControls.deactivate();
 				selectCountryControls.deactivate();
 
 				drawRegularPolygonControls.activate();
 			},
-			activateModifyPolygon: function() {
-				// BUG: cannot selectCountry after modification.
-				drawPolygonControls.deactivate();
-				drawRegularPolygonControls.deactivate();
-				hoverCountryControls.deactivate();
-				selectCountryControls.deactivate();
+			// activateModifyPolygon: function() {
+			// 	// BUG: cannot selectCountry after modification.
+			// 	drawPolygonControls.deactivate();
+			// 	drawRegularPolygonControls.deactivate();
+			// 	hoverCountryControls.deactivate();
+			// 	selectCountryControls.deactivate();
 
-				modifyPolygonControls.activate();
-			},
+			// 	modifyPolygonControls.activate();
+			// },
 			activateSelectCountry: function(){
 				drawPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
+				// modifyPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
 
 				hoverCountryControls.activate();

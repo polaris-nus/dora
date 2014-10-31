@@ -43,15 +43,15 @@
         </div>
       </div>
 
-      <div class="account above noselect">
-       <div class="username" ng-click="toggleSavePanel()">
-        <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
-        <span ng-show="savePanelVisibility">&and;</span>
-        <span ng-hide="savePanelVisibility">&or;</span>
-       </div>
-       <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
-        <div class="panel-heading">Saved Queries</div>
-        <ul class="list-group">
+       <div class="account above noselect">
+        <div class="username" ng-click="toggleSavePanel()">
+         <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
+         <span ng-show="savePanelVisibility">&and;</span>
+         <span ng-hide="savePanelVisibility">&or;</span>
+        </div>
+        <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
+         <div class="panel-heading">Saved Queries</div>
+         <ul class="list-group">
          <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
          <li class="list-group-item" 
          ng-repeat="query in savedQueries"
@@ -83,16 +83,16 @@
         </form>
        </div>
 
-       <div class="location-options">
-        <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
-        <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
-        <div class="location-radio" ng-show="locationSearchOn">
-         <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-         <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
-         <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br>
-         <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
-        </div>
-       </div>
+    <div class="location-options">
+      <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+      <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
+      <div class="location-radio" ng-show="locationSearchOn">
+       <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+       <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
+<!--        <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br> -->
+       <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
+     </div>
+    </div>
 
        <div class="filters noselect">
         <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
