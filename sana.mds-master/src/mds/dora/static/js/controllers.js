@@ -11,6 +11,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.input = '';		
 		$scope.filters = [];
 		
+		//Vars for error Modal
+		$scope.modalTitle = 'Error!'
+		$scope.errorMessage = 'Your query was not understood, Please Try Again!'
+
+
 		//sets the filter from the QueryResultController
 		$scope.setfilters = function(newFilters){
 		
@@ -194,13 +199,19 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 				if (QRS.status === 'unauthorized') {
 					//Some unauthorized!
-					alert("unauthorized!");
+					$scope.modalTitle = "Error: Unauthorized!"
+					$scope.errorMessage = "You are unauthorized to make this query. Please login and try again."
+					$('#myModal').modal('show');
 				} else if (QRS.status === 'error') {
 					//Some Error!
-					alert("There is an error in your Query! Please Try Again!");
+					$scope.modalTitle = "Error: Query Not Understood!"
+					$scope.errorMessage = "The query input was not understood. Please check for errors and try again!"
+					$('#myModal').modal('show');
 				} else if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
 					//Empty Set!
-					alert("The Result Set from your Query is empty. Please Try Again!");
+					$scope.modalTitle = "Error: Query Result is Empty!"
+					$scope.errorMessage = "The combination of filters provided returned an empty result set. Please generalize your query and try again!"
+					$('#myModal').modal('show');
 				} else {
 					QRS.locationFeature = filterFeatures;
 					QRS.filters = data;

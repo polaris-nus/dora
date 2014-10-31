@@ -63,25 +63,46 @@
        </div>
       </div>
       
-      <div class="queryForm" ng-controller="QueryFormController">
-       <div class="above input-group" id="searchbox">
-        <form ng-submit="submitFilter()">
-         <div class="form-control autocom-input">
-          <span ng-bind="key" id="key"></span>
-          <span ng-show="key">:</span>
-          <autocomplete ng-model="input" on-select="selectFilter" 
-          attr-input-class="removeInputStyle"
-          data="data"
-          key="key"
-          attr-class="autocom-div"></autocomplete>
+      <div ng-controller="QueryFormController">
+
+        <!-- Start Error Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel" style="color:red;" >{{ modalTitle }}</h4>
+              </div>
+              <div class="modal-body">
+                <p>{{ errorMessage }}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Error Modal -->
+
+        <div class="queryForm">
+         <div class="above input-group" id="searchbox">
+          <form ng-submit="submitFilter()">
+           <div class="form-control autocom-input">
+            <span ng-bind="key" id="key"></span>
+            <span ng-show="key">:</span>
+            <autocomplete ng-model="input" on-select="selectFilter" 
+            attr-input-class="removeInputStyle"
+            data="data"
+            key="key"
+            attr-class="autocom-div"></autocomplete>
+           </div>
+           <span class="input-group-btn">
+            <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
+             <span class="glyphicon glyphicon-plus"></span>
+            </button>
+           </span>
+          </form>
          </div>
-         <span class="input-group-btn">
-          <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
-           <span class="glyphicon glyphicon-plus"></span>
-          </button>
-         </span>
-        </form>
-       </div>
 
     <div class="location-options">
       <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
@@ -115,7 +136,7 @@
         <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
       </div>
 
-      <div class="above" id="qrspanel">  
+      <div class="above" id="qrspanel"> 
         <!-- ng-show="{{QRSHistory}}"-->
         <div class="panel panel-info">
           <div class="panel-heading">
