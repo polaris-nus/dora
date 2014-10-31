@@ -191,16 +191,29 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 				console.log(QRS);
 
-				QRS.locationFeature = filterFeatures;
-				QRS.filters = data;
-				QRSServ.addToQRSHistory(QRS);
+
+				if (QRS.status === 'unauthorized') {
+					//Some unauthorized!
+					alert("unauthorized!");
+				} else if (QRS.status === 'error') {
+					//Some Error!
+					alert("There is an error in your Query! Please Try Again!");
+				} else if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
+					//Empty Set!
+					alert("The Result Set from your Query is empty. Please Try Again!");
+				} else {
+					QRS.locationFeature = filterFeatures;
+					QRS.filters = data;
+					QRSServ.addToQRSHistory(QRS);
+					
+					$scope.$parent.saveQuery(QRS, 'test');
+				}	
+				
 				MapServ.clearPolygonFilters();
 	
 				$scope.key = '';
 				$scope.input = '';
 				$scope.filters = [];
-				
-				$scope.$parent.saveQuery(QRS, 'test');
 
 			}).error(function(data){
 				document.open();
