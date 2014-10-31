@@ -203,11 +203,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.QRSHistory = QRSServ.getQRSHistory();
 		$scope.loadingStatus = QRSServ.getLoadingStatus();
 
-		$scope.selectedQRSList = [];
-		$scope.selectionFlag = false;
-		$scope.selectionFunction = '';
-		$scope.newQRS = {};
-
 		$scope.displayedQRS = {};
 		$scope.encounterVisible = true;
 		$scope.encounters = [];
@@ -423,40 +418,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 }
 
 		//--End Export Methods--//
-
-		//--Start Union intersection Methods--//
-		$scope.resetUnionIntersectVariables = function(){
-			$scope.selectedQRSList = [];
-			$scope.selectionFlag = false;
-			$scope.selectionFunction = '';
-		}
-
-		$scope.selectQRS = function(QRS){
-			var indexOfQRS = $scope.selectedQRSList.indexOf(QRS);
-			if ($scope.selectionFlag) {
-				if (indexOfQRS === -1) {
-					$scope.selectedQRSList.push(QRS);
-				} else {
-					$scope.selectedQRSList.splice(indexOfQRS, 1);
-				}
-			}
-		};
-
-		$scope.unionIntersectQRS = {
-			union: function(){
-				$scope.newQRS = QRSServ.unionQRSHistory($scope.selectedQRSList);
-			},
-			intersect: function(){
-				$scope.newQRS = QRSServ.intersectQRSHistory($scope.selectedQRSList);
-			}
-		};
-
-		$scope.executeUnionIntersection = function(){
-			if ($scope.selectedQRSList.length === 0) {return 0;}
-			$scope.unionIntersectQRS[$scope.selectionFunction]();
-			$scope.resetUnionIntersectVariables();
-		};
-		//--End Union intersection Methods--// 
 	}
 	]);
 
