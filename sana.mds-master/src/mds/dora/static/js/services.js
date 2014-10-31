@@ -295,13 +295,6 @@ doraServices.service('MapServ', [
 		});
 		map.addControl(selectClusterControls);
 		selectClusterControls.activate();
-		
-		// Overriding zoom for clearing popovers
-		map.zoomToProxy = map.zoomTo;
-		map.zoomTo =  function (zoom,xy){
-			selectClusterControls.unselectAll();
-			map.zoomToProxy(zoom,xy); 
-		};
 
 		var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
 			multiple: true,
@@ -314,6 +307,13 @@ doraServices.service('MapServ', [
 		});
 		map.addControl(hoverCountryControls);
 		map.addControl(selectCountryControls);
+
+		// Zoom and Pan Event Listeners
+		map.zoomToProxy = map.zoomTo;
+		map.zoomTo =  function (zoom,xy){
+			selectClusterControls.unselectAll();
+			map.zoomToProxy(zoom,xy); 
+		};
 		
 		var visibleLayers = [];
 		var slider = {};
@@ -397,6 +397,9 @@ doraServices.service('MapServ', [
 			  selectControlsLayers.push(clusterLayer);
 			  selectClusterControls.setLayer(selectControlsLayers);
 
+			  // QRS specific zoom and pan center
+			  map.zoomToExtent(clusterLayer.getDataExtent());
+
 			  return returnedLayers; // for testability
 
 			},
@@ -407,6 +410,12 @@ doraServices.service('MapServ', [
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.removeAllFeatures();
 					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
+				}
+			},
+			zoomToFitVectorFeatures: function(QRS) {
+				if(QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					map.zoomToExtent(clusterLayer.getDataExtent());
 				}
 			},
 			setVectorLayerVisibility: function(QRS, visibility) {
