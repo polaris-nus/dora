@@ -180,7 +180,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			}
 			
 			console.log(data);
-			
+
+			var displayModal = function(title, msg) {
+				$scope.modalTitle = title;
+				$scope.errorMessage = msg;
+				$('#myModal').modal('show');
+			}
+
 			$http({
 				method: 'POST',
 				url: '/dora/query/',
@@ -196,22 +202,24 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 				console.log(QRS);
 
-
 				if (QRS.status === 'unauthorized') {
 					//Some unauthorized!
-					$scope.modalTitle = "Error: Unauthorized!"
-					$scope.errorMessage = "You are unauthorized to make this query. Please login and try again."
-					$('#myModal').modal('show');
+					displayModal(
+						"Error: Unauthorized!",
+						"You are unauthorized to make this query. Please login and try again."
+					);
 				} else if (QRS.status === 'error') {
 					//Some Error!
-					$scope.modalTitle = "Error: Query Not Understood!"
-					$scope.errorMessage = "The query input was not understood. Please check for errors and try again!"
-					$('#myModal').modal('show');
+					displayModal(
+						"Error: Query Not Understood!",
+						"The query input was not understood. Please check for errors and try again!"
+					);
 				} else if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
 					//Empty Set!
-					$scope.modalTitle = "Error: Query Result is Empty!"
-					$scope.errorMessage = "The combination of filters provided returned an empty result set. Please generalize your query and try again!"
-					$('#myModal').modal('show');
+					displayModal(
+						"Error: Query Result is Empty!",
+						"The combination of filters provided returned an empty result set. Please generalize your query and try again!"
+					);
 				} else {
 					QRS.locationFeature = filterFeatures;
 					QRS.filters = data;
@@ -235,6 +243,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				document.open();
 				document.write(data);
 				document.close();
+				alert('abnn')
+				displayModal(
+					"Error: Unexpected!",
+					"You have performed an unexpected command! Please report your findings to the administrator so it can be rectified ASAP. Thank you!"
+				);
 			});
 
 		};
