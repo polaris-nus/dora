@@ -503,25 +503,26 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		var scroller = null;
 
 		$scope.startAutoscroll = function() {
-			console.log($scope.scroll_granularity);
 			$('#slider').dateRangeSlider('scrollRight', $scope.scroll_granularity/2);
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
 			var values = $scope.sliderModifier("values");
 			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
+            	$scope.$apply();
 			}
 		}
 
 		$scope.stopAutoscroll = function() {
+			$scope.isPlaying = false;
 			clearInterval(scroller);
+			scroller = null;
 		}
 
 		$scope.toggleScrolling = function() {
 			if (scroller == null) {
-				scroller = setInterval(function(){$scope.startAutoscroll()}, $scope.scroll_speed*1000);	
+				scroller = setInterval(function(){$scope.startAutoscroll()}, $scope.scroll_speed*1000);
 			} else {
 				$scope.stopAutoscroll();
-				scroller = null;
 			}
 		}
 
