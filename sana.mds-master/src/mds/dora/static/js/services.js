@@ -229,6 +229,31 @@ doraServices.service('MapServ', [
 		// Adding Map Controls
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
+		// undo/redo event handlers
+		OpenLayers.Event.observe(document, "keydown", function(evt) {
+			var handled = false;
+			switch (evt.keyCode) {
+		    case 90: // z
+		    if (evt.metaKey || evt.ctrlKey) {
+		    	drawPolygonControls.undo();
+		    	handled = true;
+		    }
+		    break;
+		    case 89: // y
+		    if (evt.metaKey || evt.ctrlKey) {
+		    	drawPolygonControls.redo();
+		    	handled = true;
+		    }
+		    break;
+		    case 27: // esc
+		    drawPolygonControls.cancel();
+		    handled = true;
+		    break;
+		  }
+		  if (handled) {
+		  	OpenLayers.Event.stop(evt);
+		  }
+		});
 
 		var polyOptions = {sides: 40};
 		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.RegularPolygon, {handlerOptions: polyOptions});
@@ -324,7 +349,6 @@ doraServices.service('MapServ', [
 		return {
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
-
 			  // Check and create location polygon layer
 			  if (QRS.locationFeature) {
 			  	// var locationFeature = wktParser.read(QRS.locationFeature);
@@ -487,31 +511,7 @@ doraServices.service('MapServ', [
 
 				drawPolygonControls.activate();
 
-				// undo/redo event handlers
-				OpenLayers.Event.observe(document, "keydown", function(evt) {
-					var handled = false;
-					switch (evt.keyCode) {
-				    case 90: // z
-				    if (evt.metaKey || evt.ctrlKey) {
-				    	drawPolygonControls.undo();
-				    	handled = true;
-				    }
-				    break;
-				    case 89: // y
-				    if (evt.metaKey || evt.ctrlKey) {
-				    	drawPolygonControls.redo();
-				    	handled = true;
-				    }
-				    break;
-				    case 27: // esc
-				    drawPolygonControls.cancel();
-				    handled = true;
-				    break;
-				  }
-				  if (handled) {
-				  	OpenLayers.Event.stop(evt);
-				  }
-				});
+
 			},
 			activateDrawCircle: function() {
 				drawPolygonControls.deactivate();
