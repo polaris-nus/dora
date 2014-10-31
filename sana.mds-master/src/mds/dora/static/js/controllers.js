@@ -12,10 +12,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		$scope.filters = [];
 		
 		$scope.setfilters = function(newFilters){
+		
+			console.log(newFilters);
+			
 			$scope.filters = [];
 			for (key in newFilters) {
 				if (key != "location") {
-					$scope.filters.push({key: newFilters['key']});
+					$scope.filters.push({key: key, value: newFilters[key]});
 				}
 			}
 			
