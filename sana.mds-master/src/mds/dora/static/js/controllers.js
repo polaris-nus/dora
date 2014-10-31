@@ -459,6 +459,7 @@ function drawChart() {
 doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 	function($scope, MapServ){
 		$scope.sliderVisible = true;
+		$scope.isPlaying = false;
 
 		$scope.sliderModifier = function(arg) {
 			return $("#slider").dateRangeSlider(arg);
