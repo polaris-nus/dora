@@ -226,29 +226,39 @@ html, body{
   margin-left: 20px;
 }
 
-#slider-div{
+#slider-panel{
   position: absolute;
-  width: 40%;
   right: 25px;
   bottom: 25px;
 }
 
-#slider{
-  position: absolute;
-  width:100%;
-  padding-bottom:20px;
-  padding-top:20px;
-  bottom: 5px;
-  right: 120px;
+
+#slider-div{
+  position: relative;
+  display: inline-block;
+  float:right;
+  width: 600px;
 }
 
-#slider_btn{
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  width:40px;
+#slider{
+  position: relative;
+}
+
+#slider-btn{
+  position: relative;
   border-width:0px;
   background: transparent;
+  display: inline-block;
+  float:right;
+}
+
+.slider-input-div {
+  display:inline-block;
+  float:right;
+}
+
+.slider-input {
+  width:50px;
 }
 
 /* MAP POPOVER STYLES */

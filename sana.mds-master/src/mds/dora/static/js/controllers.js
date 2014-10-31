@@ -486,12 +486,13 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		$scope.sliderModifier({range:{min: {days: 7}}});
 		$scope.sliderModifier({symmetricPositionning: true});
 
-		var scroll_speed = 0.1; //in seconds
-		var scroll_granularity = 1 //every 0.5 is one day
+		$scope.scroll_speed = 0.1; //in seconds
+		$scope.scroll_granularity = 10; //every 0.5 is one day
 		var scroller = null;
 
 		$scope.startAutoscroll = function() {
-			$('#slider').dateRangeSlider('scrollRight', scroll_granularity);
+			console.log($scope.scroll_granularity);
+			$('#slider').dateRangeSlider('scrollRight', $scope.scroll_granularity/2);
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
 			var values = $scope.sliderModifier("values");
 			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
@@ -505,7 +506,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 
 		$scope.toggleScrolling = function() {
 			if (scroller == null) {
-				scroller = setInterval(function(){$scope.startAutoscroll()}, scroll_speed*1000);	
+				scroller = setInterval(function(){$scope.startAutoscroll()}, $scope.scroll_speed*1000);	
 			} else {
 				$scope.stopAutoscroll();
 				scroller = null;

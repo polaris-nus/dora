@@ -186,11 +186,15 @@
         <br/>
       </div>
 
-      <div ng-controller="TemporalSliderController" class="above" id="slider-div"> 
-        <div id="slider"></div>
-        <button type="submit" class="above" ng-click="toggleScrolling();" id="slider_btn">
+      <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
+        <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
+        <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
+        <button type="submit" class="above" ng-click="toggleScrolling();" id="slider-btn">
           <img src="/static/images/play.png" width="30" height="24" alt="submit" />
         </button>
+        <div id="slider-div">
+          <div id="slider"></div>
+        </div>
       </div>
 
       {% endverbatim %}
