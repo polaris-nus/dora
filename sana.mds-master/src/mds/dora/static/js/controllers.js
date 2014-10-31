@@ -213,6 +213,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 	
 				$scope.key = '';
 				$scope.input = '';
+				
+				for (var i = 0; i < $scope.filters.length; i++) {
+					$scope.data.push($scope.filters[i].key);
+				}
+				
 				$scope.filters = [];
 
 			}).error(function(data){

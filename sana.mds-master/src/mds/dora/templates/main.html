@@ -43,29 +43,26 @@
         </div>
       </div>
 
-      <div class="login">
-
-       <div class="account above noselect">
-        <div class="username" ng-click="toggleSavePanel()">
-         <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
-         <span ng-show="savePanelVisibility">&and;</span>
-         <span ng-hide="savePanelVisibility">&or;</span>
-        </div>
-        <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
-         <div class="panel-heading">Saved Queries</div>
-         <ul class="list-group">
-          <li class="list-group-item" 
-          ng-repeat="query in savedQueries"
-          ng-click="executeQuery(query)">
-           {{query.alias}}
-           <span ng-click="deleteQuery(query, $index)" class="glyphicon glyphicon-remove" style="float:right;"></span>
-          </li>
-         </ul>
-        </div>
+      <div class="account above noselect">
+       <div class="username" ng-click="toggleSavePanel()">
+        <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
+        <span ng-show="savePanelVisibility">&and;</span>
+        <span ng-hide="savePanelVisibility">&or;</span>
        </div>
-
+       <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
+        <div class="panel-heading">Saved Queries</div>
+        <ul class="list-group">
+         <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
+         <li class="list-group-item" 
+         ng-repeat="query in savedQueries"
+         ng-click="executeQuery(query)">
+          {{query.alias}}
+          <span ng-click="deleteQuery(query, $index)" class="glyphicon glyphicon-remove" style="float:right;"></span>
+         </li>
+        </ul>
+       </div>
       </div>
-
+      
       <div class="queryForm" ng-controller="QueryFormController">
        <div class="above input-group" id="searchbox">
         <form ng-submit="submitFilter()">
