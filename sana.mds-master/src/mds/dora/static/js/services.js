@@ -27,32 +27,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				QRSLoadingCounter.count--;
 			},
 			retrieveQRS: function(data){
-				$http({
-					method: 'POST',
-					url: '/dora/query/',
-					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-					transformRequest: function(obj) {
-						var str = [];
-						for(var p in obj)
-							str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-						return str.join("&");
-					},
-					data: data
-				}).success(function(QRS) {
-					QRS.locationFeature = location;
-					this.addToQRSHistory(QRS);
-					MapServ.clearPolygonLayer();
-
-					// How to update these values! By reference?
-					// location = "";
-					// $scope.query = '';
-
-				}).error(function(data){
-					document.open();
-					document.write(data);
-					document.close();
-				});
-
+				//move POST ajax here!
 			},
 			addToQRSHistory: function (QRS){
 				//Limiting size of QRSHistory
@@ -74,7 +49,6 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 
 				onAddCallback(QRSHistory.length-1); // display last added QRS
 
-				// RETURN BOOLEAN FOR ADD SUCCESS IF EMPTY DONT ADD!
 			},
 			removeFromQRSHistory: function(QRS){
 				var index = QRSHistory.indexOf(QRS);
@@ -253,7 +227,7 @@ doraServices.service('MapServ', [
 		// Adding Map Controls
 		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
-		// undo/redo event handlers
+		// undo/redo event handlers for draw polygons
 		OpenLayers.Event.observe(document, "keydown", function(evt) {
 			var handled = false;
 			switch (evt.keyCode) {
@@ -380,22 +354,33 @@ doraServices.service('MapServ', [
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
 			  // Check and create location polygon layer
-			  if (QRS.locationFeature) {
-			  	// var locationFeature = wktParser.read(QRS.locationFeature);
-			  	var locationFeature = QRS.locationFeature
-			  	if (locationFeature instanceof Array) {
-			  		for(index in locationFeature) {
-			  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
-			  			locationFeature[index].attributes.filterStrokeColor = QRS.color.featureColor;
-			  		}
-			  	} 
+			  if (QRS.filters.location) {
+			  	var polygonFeatures = [];
+
+			  	var addToPolygonFeatures = function(polygonFeature) {
+			  		polygonFeature.attributes.filterFillColor = QRS.color.featureColor;
+			  		polygonFeature.attributes.filterStrokeColor = QRS.color.featureColor;
+			  		polygonFeatures.push(polygonFeature);
+			  	}
+			  	
+			  	for(i in QRS.filters.location) {
+			  		var polygonFilter = wktParser.read(QRS.filters.location[i]);
+			  		if (polygonFilter instanceof Array) {
+				  		for(j in polygonFilter) {
+				  			addToPolygonFeatures(polygonFilter[j]);
+				  		}
+				  	} else {
+				  		addToPolygonFeatures(polygonFilter);
+				  	}
+			  	}
+			  	
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
 			  		styleMap: QRSPolygonFilterStyle
 			  	});
 			  	QRS.locationLayerId = locationLayer.id;
 			  	map.addLayer(locationLayer);
 			  	returnedLayers.locationLayer = locationLayer;
-			  	locationLayer.addFeatures(locationFeature);
+			  	locationLayer.addFeatures(polygonFeatures);
 			  }
 
 			  // Extract coordinates for encounters
@@ -567,18 +552,15 @@ doraServices.service('MapServ', [
 				var filterFeatures = [];
 
 				for (var i = 0; i < polygonLayer.features.length; i++) {
-					filterFeatures.push(polygonLayer.features[i].clone());
+					var drawnFeature = polygonLayer.features[i].clone()
+					filterFeatures.push(wktParser.write(drawnFeature));
 				}
 				for (var i = 0; i < countriesLayer.selectedFeatures.length; i++) {
-					filterFeatures.push(countriesLayer.selectedFeatures[i].clone());
+					var selectedFeature = countriesLayer.selectedFeatures[i].clone();
+					filterFeatures.push(wktParser.write(selectedFeature));
 				}
 
-				var polygonFilters = {
-					features: filterFeatures,
-					wkt: wktParser.write(filterFeatures)
-				}
-
-				return polygonFilters;
+				return filterFeatures;
 			},
 			// plotCentroid: function(QRS) {
 			// 	if (QRS.clusterLayerId) {

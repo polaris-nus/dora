@@ -19,7 +19,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		//sets the filter from the QueryResultController
 		$scope.setfilters = function(newFilters){
 		
-			console.log(newFilters);
+			// console.log(newFilters);
 			
 			$scope.filters = [];
 			for (key in newFilters) {
@@ -28,7 +28,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				}
 			}
 			
-			console.log($scope.filters);
+			// console.log($scope.filters);
 		}
 
 		QRSServ.setRequeryCallback($scope.setfilters);
@@ -41,9 +41,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			else if (newValue == 'circle') {
 				MapServ.activateDrawCircle();
 			}
-			else if (newValue == 'modify') {
-				// MapServ.activateModifyPolygon();
-			}
+			// else if (newValue == 'modify') {
+			// 	MapServ.activateModifyPolygon();
+			// }
 			else if (newValue == 'country') {
 				MapServ.activateSelectCountry();
 			}
@@ -76,7 +76,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			'Discharge date',
 			'Follow up date'];
 			
-		console.log($scope.data);
+		// console.log($scope.data);
 		
 		$scope.selectFilter = function(key){
 			$scope.key = key;
@@ -84,8 +84,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.submitFilter = function(){
-			console.log("length of data array: " + $scope.data.length);
-			console.log($scope.data);
+			// console.log("length of data array: " + $scope.data.length);
+			// console.log($scope.data);
 			if ($scope.key && $scope.input) {
 				
 				$scope.filters.push({key:$scope.key, value:$scope.input});
@@ -135,7 +135,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.removeFilter = function(index, filter){
-			console.log(filter);
+			// console.log(filter);
 			$scope.filters.splice(index, 1);
 			$scope.data.push(filter.key);
 		};
@@ -144,13 +144,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 		$scope.submitQuery = function(){
 
-			console.log("inside submitQuery()");
-			
-			var polygonFilters = MapServ.getPolygonFilters();
-			var location = polygonFilters.wkt;
-			var filterFeatures = polygonFilters.features;
-			
-			console.log(filterFeatures);
+			// console.log("inside submitQuery()");
 
 			QRSServ.initializeLoading();
 
@@ -173,12 +167,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					.toLowerCase();
 				data[key] = filter.value.trim();
 			}
-			
-			if (location != "GEOMETRYCOLLECTION()") {
+
+			var location = MapServ.getPolygonFilters();
+			if (location.length > 0) {
 				data.location = location;
 			}
 			
-			console.log(data);
+			// console.log(data);
 
 			var displayModal = function(title, msg) {
 				$scope.modalTitle = title;
@@ -220,12 +215,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 						"The combination of filters provided returned an empty result set. Please generalize your query and try again!"
 					);
 				} else {
-					QRS.locationFeature = filterFeatures;
 					QRS.filters = data;
 					QRSServ.addToQRSHistory(QRS);
-					
 					$scope.$parent.saveQuery(QRS, 'test');
-				}	
+				}
 				
 				MapServ.clearPolygonFilters();
 	
@@ -243,7 +236,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				document.open();
 				document.write(data);
 				document.close();
-				alert('abnn')
 				displayModal(
 					"Error: Unexpected!",
 					"You have performed an unexpected command! Please report your findings to the administrator so it can be rectified ASAP. Thank you!"
@@ -413,7 +405,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 			return tempDict;
 		}
-
 
 		updateChartTwoDS = function(){
 			var femaleCount=[];
@@ -602,7 +593,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		};
 		
 		$scope.executeQuery = function(queryObj) {
-			console.log('inside executeQuery');
+			// console.log('inside executeQuery');
 			
 			QRSServ.initializeLoading();
 			
@@ -621,9 +612,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				},
 				data: data
 			}).success(function(QRS) {
-
-				console.log(QRS);
-
+				QRSServ.endLoading();
 				//QRS.locationFeature = filterFeatures;
 				QRS.filters = data;
 				QRSServ.addToQRSHistory(QRS);
@@ -637,7 +626,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//load data
 		$scope.loadQueries = function() {
-			console.log("inside loadQuery");
+			// console.log("inside loadQuery");
 			$http({
 				method: 'POST',
 				url: '/dora/loadqueries/',
@@ -646,14 +635,14 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 				var queries = response.queries;
 				for (var i = 0; i < queries.length; i++) {
-					console.log(queries[i]);
+					// console.log(queries[i]);
 					var query = queries[i];
 					if (!isExist(query)) {
 						$scope.savedQueries.push(query);
 					}
 				}
 
-				console.log($scope.savedQueries);
+				// console.log($scope.savedQueries);
 
 			}).error(function(data){
 				document.open();
@@ -665,7 +654,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		//save
 		$scope.saveQuery = function(QRS, name) {
 		
-			console.log("inside savequery");
+			// console.log("inside savequery");
 			
 			var data = {};
 			data.alias = name;
@@ -684,8 +673,8 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				},
 				data: data
 			}).success(function(response) {
-				console.log('reloading queries');
-				console.log('response: '  + JSON.stringify(response));
+				// console.log('reloading queries');
+				// console.log('response: '  + JSON.stringify(response));
 				$scope.loadQueries();
 			}).error(function(data){
 				document.open();
@@ -696,7 +685,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//delete
 		$scope.deleteQuery = function(query, index) {
-			console.log("deleting " + query.uuid);
+			// console.log("deleting " + query.uuid);
 			var uuid = query.uuid;
 			$scope.savedQueries.splice(index, 1);
 			
@@ -706,7 +695,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				data: uuid
 			}).success(function(response) {
-				console.log(response);
+				// console.log(response);
 			}).error(function(data){
 				document.open();
 				document.write(data);
