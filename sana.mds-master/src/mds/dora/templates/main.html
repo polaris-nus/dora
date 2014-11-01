@@ -133,7 +133,7 @@
           <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline bottom-margin" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
 
         </div>
-        <img src="/static/loading.gif" ng-show="loadingStatus.isLoading"/>
+        <img src="/static/loading.gif" ng-show="loadingStatus.count > 0"/>
       </div>
 
       <div class="above" id="qrspanel"> 

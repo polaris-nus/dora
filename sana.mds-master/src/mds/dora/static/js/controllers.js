@@ -42,7 +42,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				MapServ.activateDrawCircle();
 			}
 			else if (newValue == 'modify') {
-				MapServ.activateModifyPolygon();
+				// MapServ.activateModifyPolygon();
 			}
 			else if (newValue == 'country') {
 				MapServ.activateSelectCountry();
@@ -113,7 +113,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 		};
 		
 		$scope.clearShapes = function() {
-			console.log("clearShapes called");
 			MapServ.clearPolygonFilters();
 		};
 		
@@ -200,7 +199,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				data: data
 			}).success(function(QRS) {
 
-				console.log(QRS);
+				QRSServ.endLoading();
 
 				if (QRS.status === 'unauthorized') {
 					//Some unauthorized!
@@ -240,6 +239,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				$scope.filters = [];
 
 			}).error(function(data){
+				QRSServ.endLoading();
 				document.open();
 				document.write(data);
 				document.close();
@@ -272,6 +272,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		$scope.renameQRS = function() {
 			$scope.name = prompt("Please enter a new name for this query", $scope.name);
+		}
+
+		$scope.removeQRS = function(index) {
+			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
 		}
 
 		$scope.requery = function(){

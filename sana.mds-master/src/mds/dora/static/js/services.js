@@ -4,7 +4,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 	function(MapServ, PaletteServ, $http){
 		var historyLimit = 10;
 		var QRSHistory = [];
-		var QRSLoadingStatus = {isLoading: false};
+		var QRSLoadingCounter = {count: 0};
 		var onAddCallback = null;
 		var requeryCallBack = null;
 		return {
@@ -18,10 +18,13 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				requeryCallBack(displayedQRS.filters);
 			},
 			getLoadingStatus: function(){
-				return QRSLoadingStatus;
+				return QRSLoadingCounter;
 			},
 			initializeLoading: function(){
-				QRSLoadingStatus.isLoading = true;
+				QRSLoadingCounter.count++;
+			},
+			endLoading: function(){
+				QRSLoadingCounter.count--;
 			},
 			retrieveQRS: function(data){
 				$http({
@@ -39,14 +42,12 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 					QRS.locationFeature = location;
 					this.addToQRSHistory(QRS);
 					MapServ.clearPolygonLayer();
-					QRSLoadingStatus.isLoading = false;
 
 					// How to update these values! By reference?
 					// location = "";
 					// $scope.query = '';
 
 				}).error(function(data){
-					QRSLoadingStatus.isLoading = false;
 					document.open();
 					document.write(data);
 					document.close();
@@ -54,8 +55,6 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 
 			},
 			addToQRSHistory: function (QRS){
-				QRSLoadingStatus.isLoading = false;
-
 				//Limiting size of QRSHistory
 				while (QRSHistory.length > (historyLimit-1)){
 					var removedQRS = QRSHistory.shift();
@@ -281,21 +280,7 @@ doraServices.service('MapServ', [
 		});
 
 		var polyOptions = {sides: 40};
-		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer,
-			OpenLayers.Handler.RegularPolygon,
-			{
-				handlerOptions: polyOptions,
-				// callbacks: {
-				// 	create: function(geometry, feature) {
-				// 		console.log(geometry);
-				// 		console.log(feature);
-				// 	},
-				// 	done: function(geometry, feature) {
-				// 		console.log(geometry);
-				// 		console.log(feature);
-				// 	}
-				// }
-			});
+		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.RegularPolygon, {handlerOptions: polyOptions});
 		map.addControl(drawRegularPolygonControls);
 		drawRegularPolygonControls.events.register('featureadded', drawRegularPolygonControls, function(f){
 			var addedFeature =  f.feature.clone();
@@ -321,7 +306,7 @@ doraServices.service('MapServ', [
 					var age = new Date().getFullYear() - new Date(encounter.subject.dob).getFullYear();
 					
 					var createdDateObj = new Date(encounter.created_date);
-					var createdDate = createdDateObj.getDate() + "-" + createdDateObj.getMonth() + "-" + createdDateObj.getFullYear();
+					var createdDate = createdDateObj.getDate() + "-" + (createdDateObj.getMonth()+1) + "-" + createdDateObj.getFullYear();
 					
 					var template = '<div class="popover-content">' +
 					    '<div class="popover-patient">'+ givenName + familyInitial + " " + age + " " + gender +'</div>'+
@@ -398,7 +383,6 @@ doraServices.service('MapServ', [
 			  if (QRS.locationFeature) {
 			  	// var locationFeature = wktParser.read(QRS.locationFeature);
 			  	var locationFeature = QRS.locationFeature
-			  	console.log(locationFeature);
 			  	if (locationFeature instanceof Array) {
 			  		for(index in locationFeature) {
 			  			locationFeature[index].attributes.filterFillColor = QRS.color.featureColor;
@@ -538,7 +522,7 @@ doraServices.service('MapServ', [
 			deactivatePolygonFilters: function() {
 				drawPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
-				modifyPolygonControls.deactivate();
+				// modifyPolygonControls.deactivate();
 				polygonLayer.setVisibility(false);
 				countriesLayer.setVisibility(false);
 			},
@@ -593,8 +577,6 @@ doraServices.service('MapServ', [
 					features: filterFeatures,
 					wkt: wktParser.write(filterFeatures)
 				}
-
-				console.log(polygonFilters);
 
 				return polygonFilters;
 			},
@@ -782,7 +764,7 @@ doraServices.service('PaletteServ', [
 			},
 			releaseColor: function(color) {
 				for(index in palette) {
-					if(palette[index].color.localeCompare(color.markerColor) == 0) {
+					if(palette[index].color.localeCompare(color.featureColor) == 0) {
 						palette[index].inUse = false;
 						break;
 					}
