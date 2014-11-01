@@ -350,30 +350,37 @@ doraServices.service('MapServ', [
 		var clusterLayerFeatures = {};
 		var clusterStrategyReferences = {};
 
+		var parseWKTArray =  function(WKTArray, featureColor) {
+			var polygonFeatures = [];
+
+	  	var addToPolygonFeatures = function(polygonFeature) {
+	  		if (featureColor) {
+	  			polygonFeature.attributes.filterFillColor = featureColor;
+	  			polygonFeature.attributes.filterStrokeColor = featureColor;
+	  		}
+	  		polygonFeatures.push(polygonFeature);
+	  	}
+	  	
+	  	for(i in WKTArray) {
+	  		var polygonFilter = wktParser.read(WKTArray[i]);
+	  		if (polygonFilter instanceof Array) {
+		  		for(j in polygonFilter) {
+		  			addToPolygonFeatures(polygonFilter[j]);
+		  		}
+		  	} else {
+		  		addToPolygonFeatures(polygonFilter);
+		  	}
+	  	}
+
+	  	return polygonFeatures;
+		}
+
 		return {
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
 			  // Check and create location polygon layer
 			  if (QRS.filters.location) {
-			  	var polygonFeatures = [];
-
-			  	var addToPolygonFeatures = function(polygonFeature) {
-			  		polygonFeature.attributes.filterFillColor = QRS.color.featureColor;
-			  		polygonFeature.attributes.filterStrokeColor = QRS.color.featureColor;
-			  		polygonFeatures.push(polygonFeature);
-			  	}
-			  	
-			  	for(i in QRS.filters.location) {
-			  		var polygonFilter = wktParser.read(QRS.filters.location[i]);
-			  		if (polygonFilter instanceof Array) {
-				  		for(j in polygonFilter) {
-				  			addToPolygonFeatures(polygonFilter[j]);
-				  		}
-				  	} else {
-				  		addToPolygonFeatures(polygonFilter);
-				  	}
-			  	}
-			  	
+			  	var polygonFeatures = parseWKTArray(QRS.filters.location, QRS.color.featureColor);
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
 			  		styleMap: QRSPolygonFilterStyle
 			  	});
@@ -515,6 +522,10 @@ doraServices.service('MapServ', [
 				polygonLayer.removeAllFeatures();
 				selectCountryControls.unselectAll();		
 			},
+			addPolygonFilters: function(WKTArray) {
+				var polygonFeatures = parseWKTArray(WKTArray);
+				polygonLayer.addFeatures(polygonFeatures);
+			},
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();
 				// modifyPolygonControls.deactivate();
@@ -562,20 +573,6 @@ doraServices.service('MapServ', [
 
 				return filterFeatures;
 			},
-			// plotCentroid: function(QRS) {
-			// 	if (QRS.clusterLayerId) {
-			// 		var clusterLayer = map.getLayer(QRS.clusterLayerId);
-			// 		if(clusterLayer.getVisibility()) {
-			// 			var clusterGeometries = [];
-			// 			for(index in clusterLayer.features) {
-			// 				clusterGeometries.push(clusterLayer.features[index].geometry);
-			// 			}
-			// 			var geometryCollection = new OpenLayers.Geometry.Collection(clusterGeometries);
-			// 			var centroid = geometryCollection.getCentroid();
-			// 			// THEN DO WHAT?! put in new layer || put in clusterLayer (learn to customize cluster strategy)
-			// 		}
-			// 	}
-			// },
 			setSliderMinMax: function(min, max) {
 				slider.min = min;
 				slider.max = max;
