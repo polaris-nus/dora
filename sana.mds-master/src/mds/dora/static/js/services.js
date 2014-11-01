@@ -715,8 +715,8 @@ doraServices.service('MapServ', [
 doraServices.service('PaletteServ', [
 	function(){
 		var palette = [
-		{cssIndex: 0, color:'#D46A6A', inUse: false},
-		{cssIndex: 1, color:'#FFBB45', inUse: false},
+		{cssIndex: 0, color:'#B71B1B', inUse: false},
+		{cssIndex: 1, color:'#FF7B11', inUse: false},
 		{cssIndex: 2, color:'#FFDD49', inUse: false},
 		{cssIndex: 3, color:'#B0E353', inUse: false},
 		{cssIndex: 4, color:'#41B368', inUse: false},
