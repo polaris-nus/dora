@@ -75,7 +75,7 @@ describe('Dora controllers', function() {
 	});
 
 	describe('QueryResultController', function() {
-    var QRSServ;
+    var QRSServ, QRS1, QRS2;
 
     beforeEach(inject(function($rootScope, $controller, _QRSServ_) {
       scope = $rootScope.$new();

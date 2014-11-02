@@ -506,25 +506,34 @@ doraServices.service('MapServ', [
 					var locationLayer = map.getLayer(QRS.locationLayerId);
 					locationLayer.destroy();
 				}
+				return map; // for testability
 			},
 			activatePolygonFilters: function() {
 				polygonLayer.setVisibility(true);
 				countriesLayer.setVisibility(true);
+				return polygonLayer.getVisibility() && countriesLayer.getVisibility();
 			},
 			deactivatePolygonFilters: function() {
 				drawPolygonControls.deactivate();
 				drawRegularPolygonControls.deactivate();
 				// modifyPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
+				selectCountryControls.deactivate();
 				polygonLayer.setVisibility(false);
 				countriesLayer.setVisibility(false);
+
+				return polygonLayer.getVisibility() || countriesLayer.getVisibility();
 			},
 			clearPolygonFilters: function() {
 				polygonLayer.removeAllFeatures();
-				selectCountryControls.unselectAll();		
+				selectCountryControls.unselectAll();
+
+				return polygonLayer.features.length + countriesLayer.selectedFeatures.length;	
 			},
 			addPolygonFilters: function(WKTArray) {
 				var polygonFeatures = parseWKTArray(WKTArray);
 				polygonLayer.addFeatures(polygonFeatures);
+				return polygonLayer.features.length;
 			},
 			activateDrawPolygon: function() {
 				drawRegularPolygonControls.deactivate();

@@ -1,87 +1,12 @@
 describe('Dora services', function() {
-  var QRS1, QRS2, QRS3;
 
 	beforeEach(module('doraServices'));
-  beforeEach(function() {
-    QRS1 = {
-        'assigned':[
-          {
-            "disease": "EBOLA",
-            "patient": {
-              "uuid": "one"
-            },
-            "location": {
-              "coords": "POINT (-87.1134192674000050 -4.0753749522299998)",
-              "alt": "alt!"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "EBOLA",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ]
-      };
-
-      QRS2 = {
-        'assigned':[
-          {
-            "disease": "TB",
-            "patient": {
-              "uuid": "four"
-            },
-            "location": {
-              "coords": "POINT (158.4795246920000100 74.5477679921000060)",
-              "alt": "alt!"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "TB",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ],
-        'locationFeature': 'GEOMETRYCOLLECTION(POLYGON((-16.171874999996632 16.13026201203599,-10.019531249996126 5.790896812872936,-3.515624999996452 13.239945499287394,-16.171874999996632 16.13026201203599)))'
-      };
-
-      QRS3 = {
-        'assigned':[
-          {
-            "disease": "HIV",
-            "patient": {
-              "uuid": "six"
-            },
-            "location": {
-              "coords": "POINT (40.3393490166000030 -41.1745275103999970)",
-              "alt": "alt!"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "HIV",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ]
-      };
-  });
 
 	describe('QRSServ', function() {
 		var QRSServ;
 
 		beforeEach(inject(function(_QRSServ_) {
       QRSServ = _QRSServ_;
-      QRSServ.addToQRSHistory(QRS1);
-      QRSServ.addToQRSHistory(QRS2);
-      QRSServ.addToQRSHistory(QRS3);
     }));
 
     it('should contain 3 QRS in QRSHistory', function() {
@@ -225,24 +150,97 @@ describe('Dora services', function() {
 	});
 
   describe('MapServ', function(){
-    var MapServ;
+    var MapServ, QRS1, QRS2;
     
     beforeEach(inject(function(_MapServ_){
       MapServ = _MapServ_;
+      QRS1 = TestingQRS.getStub(0);
+      QRS2 = TestingQRS.getStub(1);
+      spyOn(MapServ, 'setSliderMinBound');
     }));
 
-    it('should add a vector layer with 1 point marker to map', function() {
+    it('should add a vector layer with 1 cluster of 2 points on map', function() {
       var returnedLayers = MapServ.addVectorLayer(QRS1);
+
       expect(QRS1.clusterLayerId).toBeDefined();
       expect(returnedLayers.clusterLayer.features.length).toBe(1);
+      expect(returnedLayers.clusterLayer.features[0].cluster.length).toBe(2);
     });
 
-    it('should add a vector layer and a polygon layer to map', function() {
+    it('should add a vector layer with 1 cluster of 1 point to map', function() {
       var returnedLayers = MapServ.addVectorLayer(QRS2);
+
       expect(QRS2.clusterLayerId).toBeDefined();
+      expect(returnedLayers.clusterLayer.features.length).toBe(1);
+      expect(returnedLayers.clusterLayer.features[0].cluster.length).toBe(1);
+    });
+
+    it('should not add a location layer to map', function() {
+      var returnedLayers = MapServ.addVectorLayer(QRS1);
+
+      expect(QRS1.locationLayerId).not.toBeDefined();
+      expect(returnedLayers.locationLayer).not.toBeDefined();
+    });
+
+    it('should add a location layer with 1 polygon to map', function() {
+      var returnedLayers = MapServ.addVectorLayer(QRS2);
+
       expect(QRS2.locationLayerId).toBeDefined();
-      expect(returnedLayers.clusterLayer).toBeDefined();
       expect(returnedLayers.locationLayer).toBeDefined();
+      expect(returnedLayers.locationLayer.features.length).toBe(1);
+    });
+
+    it('should switch off cluster strategy of cluster layer', function() {
+      var clusterLayer = MapServ.addVectorLayer(QRS1).clusterLayer;
+      MapServ.setClusterStrategyStatus(QRS1, false);
+
+      expect(clusterLayer.features.length).toBe(2);
+    });
+
+    it('should set cluster layer and location layer to invisible', function() {
+      var returnedLayers = MapServ.addVectorLayer(QRS2);
+      MapServ.setVectorLayerVisibility(QRS2, false);
+
+      expect(returnedLayers.clusterLayer.getVisibility()).toBe(false);
+      expect(returnedLayers.locationLayer.getVisibility()).toBe(false);
+    });
+
+    it('should remove cluster layer and location layer from map', function() {
+      MapServ.addVectorLayer(QRS2);
+      var map = MapServ.removeVectorLayer(QRS2);
+
+      expect(map.getLayersByName('clusterLayer').length).toBe(0);
+      expect(map.getLayersByName('locationLayer').length).toBe(0);
+    });
+
+    it('should set polygon layer and countries layer to visible', function() {
+      expect(MapServ.activatePolygonFilters()).toBe(true);
+    });
+
+    it('should set polygon layer and countries layer to invisible', function() {
+      expect(MapServ.deactivatePolygonFilters()).toBe(false);
+    });
+
+    it('should clear all polygons in polygon layer and countries layer', function() {
+      expect(MapServ.clearPolygonFilters()).toBe(0);
+    });
+
+    it('should add no polygon to polygon layer', function() {
+      var polygonsInWKT = [];
+      expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(0);
+    });
+
+    it('should add 1 polygon to polygon layer', function() {
+      var polygonsInWKT = ["POLYGON((-9.492187500000112 27.44979032978419,-9.84375000000045 7.100892668623654,8.261718750000012 6.926426847059551,6.8554687500000115 34.95799531086818,-9.492187500000112 27.44979032978419))"];
+      expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(1);
+    });
+
+    it('should add 3 polygons to polygon layer', function() {
+      var polygonsInWKT = [
+      "POLYGON((-9.492187500000112 27.44979032978419,-9.84375000000045 7.100892668623654,8.261718750000012 6.926426847059551,6.8554687500000115 34.95799531086818,-9.492187500000112 27.44979032978419))",
+      "GEOMETRYCOLLECTION(POLYGON((-9.492187500000112 26.44979032978419,-9.84375000000045 6.100892668623654,8.261718750000012 5.926426847059551,6.8554687500000115 33.95799531086818,-9.492187500000112 26.44979032978419)),POLYGON((-8.492187500000112 27.44979032978419,-8.84375000000045 7.100892668623654,7.261718750000012 6.926426847059551,5.8554687500000115 34.95799531086818,-8.492187500000112 27.44979032978419)))"
+      ];
+      expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(3);
     });
 
   });
