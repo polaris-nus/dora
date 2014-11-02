@@ -319,9 +319,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			$scope.filters = [];
 			$scope.displayedQRS.filters;
 			for (key in $scope.displayedQRS.filters){
-				value = $scope.displayedQRS.filters[key];
-				if(value){
-					$scope.filters.push(" "+key+": "+ value+" ");
+				if (key!=="location"){
+					value = $scope.displayedQRS.filters[key];
+					if(value){
+						$scope.filters.push(" "+key+": "+ value+" ");
+					}
 				}
 			}
 		}
