@@ -19,6 +19,7 @@ module.exports = function(config) {
       'angular/angular-mocks.js',
       'angular/angular-resource.js',
       'ol2/ol.js',
+      'ol2/custom-regpolyhandler.js',
       'jquery/jquery.js',
       'js/*.js',
       'test/unit/*.js'
@@ -27,7 +28,9 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-      'js/qrspanel.js'
+      'js/qrspanel.js',
+      // 'js/controllers.js',
+      // 'test/unit/controllersSpec.js'
     ],
 
     plugins : [
