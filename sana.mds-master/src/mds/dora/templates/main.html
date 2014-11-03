@@ -95,7 +95,7 @@
             key="key"
             attr-class="autocom-div"></autocomplete>
           </div>
-          <span class="input-group-btn">
+          <span class="input-group-btn" id="addCriteria">
             <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
               <span class="glyphicon glyphicon-plus"></span>
             </button>
@@ -129,7 +129,8 @@
    <!-- <img src="/static/loading.gif" class="above loading" ng-show="loadingStatus.count > 0"/> -->
 
    <!-- Start of History Panel -->
-   <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0">
+   <!-- <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0"> -->
+   <div class="above panel panel-info" id="history-panel">
     <div class="panel-heading panel-heading-height">
       <span class="glyphicon glyphicon-th-list icon"></span>
       Query History
@@ -181,19 +182,20 @@
       <span class="glyphicon glyphicon-th-list"></span>
     </button>  
   </div>
-
   <!-- End of History Panel -->
 
+
   <!-- Start of Result Panel -->
-  <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0">
-    <div class="panel panel-info">
+
+  <!-- <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> -->
+    <div class="panel panel-info above" id="result-panel">
       <div class="panel-heading panel-heading-height">
         <span class="glyphicon glyphicon-th-list icon"></span>
         Query Result
 
         <!-- delete button -->
         <button type="button" class="btn btn-info btn-xs alignR" ng-click="qrsPanelVisibility=false">
-          <span class="glyphicon glyphicon-remove"></span>
+          <span class="glyphicon glyphicon-chevron-up"></span>
         </button>  
       </div>
 
@@ -255,7 +257,6 @@
         <!-- End of Encounters -->
       </div>
     </div>
-  </div>
   <!-- End of Result Panel -->
 </div>
 

@@ -15,7 +15,7 @@ ul{ padding-left:0; }
 
 .account{
 	float: right;
-	margin-top: 20px;
+	margin-top: 10px;
 	margin-right: 20px;
 	cursor: default;
 }
@@ -37,21 +37,21 @@ ul{ padding-left:0; }
 
 #searchbox{
   position: relative; 
-  width: 400px;
+  width: 30%;
   display: inline-block;
 }
 
 .queryForm{
 	position: relative;
 	z-index: 500;
-	margin-top: 20px;
- margin-left: 20px;
+	margin-top: 10px;
+ margin-left: 10px;
  white-space: nowrap;
  display: inline-block;
 }
 
 .autocom-input {
-	width: 360px !important;
+	width: 89% !important;
 	white-space: nowrap;
 }
 
@@ -71,6 +71,10 @@ ul{ padding-left:0; }
 	vertical-align:top;
 	display:inline-block;
 	position:relative;
+}
+
+.addCriteria{
+  margin: 0px;
 }
 
 .filters {
@@ -96,7 +100,7 @@ ul{ padding-left:0; }
 }
 
 #thumbnail-history-panel{
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .cross-btn{
@@ -154,8 +158,9 @@ ul{ padding-left:0; }
 
   #history-panel{
     width: 30%;
-    margin-left: 20px;
+    margin-left: 10px;
     margin-top: 10px;
+    margin-bottom: 0px;
   }
 
   .panel-heading-height{
@@ -168,7 +173,7 @@ ul{ padding-left:0; }
 
   #history-list{
     margin: 0px;
-    max-height: 150px;
+    max-height: 120px;
     overflow-y: scroll; 
   }
 
@@ -193,8 +198,10 @@ ul{ padding-left:0; }
     background: transparent;
   }
 
-  #qrspanel{
-    margin-left: 20px;
+  #result-panel{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 0px;
     width: 30%;
   }
 
@@ -367,7 +374,7 @@ ul{ padding-left:0; }
 }
 
 .bottom-margin{
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
 .bottom{
