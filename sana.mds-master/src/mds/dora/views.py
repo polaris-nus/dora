@@ -48,10 +48,9 @@ def save_query(request):
 		form = SavedQueryForm(request.POST)
 		
 		if (form.is_valid()):
-			
+			print form.cleaned_data
 			saved_query = form.save(commit=False)
 			saved_query.user = request.user
-			saved_query.features = ''
 			saved_query.save()
 			form.save_m2m()
 			
@@ -83,8 +82,7 @@ def delete_query(request):
 @csrf_exempt
 def load_saved_queries(request):
 	if (not request.user.is_authenticated()):
-		return HttpResponse('{"assigned":[], "unassigned":[], "status":"unauthorized"}', content_type="application/json")
-
+		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
 
 	json_response = get_user_saved_queries(request)
 

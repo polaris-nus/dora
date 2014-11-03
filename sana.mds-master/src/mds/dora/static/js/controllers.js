@@ -2,8 +2,8 @@ var dataChartOne = [];
 var dataChartTwo = [];
 var doraControllers = angular.module('doraControllers', []);
 
-doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http', 'MapServ',
-	function($scope, QRSServ, $http, MapServ){
+doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ',
+	function($scope, QRSServ, MapServ){
 		
 		$scope.mapServMode = 'unselected';
 		$scope.locationSearchOn = false;
@@ -17,7 +17,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 
 		//sets the filter from the QueryResultController
-		$scope.setfilters = function(newFilters){
+		var setfilters = function(newFilters){
 		
 			// console.log(newFilters);
 			
@@ -144,103 +144,64 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 		$scope.submitQuery = function(){
 
-			// console.log("inside submitQuery()");
+			console.log("inside submitQuery()");
 
 			QRSServ.initializeLoading();
-
-			var data = {};
 			
-			function escapeRegExp(string) {
-				return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+			var filters = $scope.filters;
+			
+			//return the keys back into autocomplete array
+			for (var i = 0; i < $scope.filters.length; i++) {
+				$scope.data.push($scope.filters[i].key);
 			}
 			
-			function replaceAll(string, find, replace) {
-				return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-			}
+			$scope.filters = [];
+			$scope.key = "";
+			$scope.input = "";
 			
-			for (var i = 0; i < $scope.filters.length; i++){
-				var filter = $scope.filters[i];
-				var key = filter.key
-					.trim()
-					.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
-					.replace(new RegExp(escapeRegExp("'"), 'g'), "")
-					.toLowerCase();
-				data[key] = filter.value.trim();
-			}
-
 			var location = MapServ.getPolygonFilters();
-			if (location.length > 0) {
-				data.location = location;
-			}
-			
-			// console.log(data);
 
 			var displayModal = function(title, msg) {
 				$scope.modalTitle = title;
 				$scope.errorMessage = msg;
 				$('#myModal').modal('show');
 			}
-
-			$http({
-				method: 'POST',
-				url: '/dora/query/',
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-				transformRequest: function(obj) {
-					var str = [];
-					for(var p in obj)
-						str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-					return str.join("&");
-				},
-				data: data
-			}).success(function(QRS) {
-
-				QRSServ.endLoading();
-
-				if (QRS.status === 'unauthorized') {
+			
+			console.log(filters);
+			
+			QRSServ.setQueryCallback(function(status){
+				if (status === 'unauthorized') {
 					//Some unauthorized!
 					displayModal(
 						"Error: Unauthorized!",
 						"You are unauthorized to make this query. Please login and try again."
 					);
-				} else if (QRS.status === 'error') {
+				} else if (status === 'error') {
 					//Some Error!
 					displayModal(
 						"Error: Query Not Understood!",
 						"The query input was not understood. Please check for errors and try again!"
 					);
-				} else if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
+				} else if (status === 'empty') {
 					//Empty Set!
 					displayModal(
 						"Error: Query Result is Empty!",
 						"The combination of filters provided returned an empty result set. Please generalize your query and try again!"
 					);
 				} else {
-					QRS.filters = data;
-					QRSServ.addToQRSHistory(QRS);
-					$scope.$parent.saveQuery(QRS, 'test');
+					//for testing saving and loading queries only!!!
+					qrs = QRSServ.getQRSHistory();
+					console.log(qrs);
+					$scope.$parent.saveQuery(qrs[qrs.length-1]);
 				}
-				
-				MapServ.clearPolygonFilters();
-	
-				$scope.key = '';
-				$scope.input = '';
-				
-				for (var i = 0; i < $scope.filters.length; i++) {
-					$scope.data.push($scope.filters[i].key);
-				}
-				
-				$scope.filters = [];
-
-			}).error(function(data){
-				QRSServ.endLoading();
-				document.open();
-				document.write(data);
-				document.close();
-				displayModal(
-					"Error: Unexpected!",
-					"You have performed an unexpected command! Please report your findings to the administrator so it can be rectified ASAP. Thank you!"
-				);
 			});
+			
+			QRSServ.generateQRS(filters, location);
+			
+			MapServ.clearPolygonFilters();
+			
+			
+
 
 		};
 	}
@@ -596,34 +557,21 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		
 		$scope.executeQuery = function(queryObj) {
 			// console.log('inside executeQuery');
+			var location, alias;
 			
 			QRSServ.initializeLoading();
+			console.log(queryObj);
+			console.log(queryObj.query);
+			var filters = JSON.parse(queryObj.query);
+			if (queryObj.location) {
+				location = JSON.parse(queryObj.location);
+			}
 			
-			var data = JSON.parse(queryObj.query);
-			//var filterFeatures = JSON.parse(queryObj.features);
+			if (queryObj.alias) {
+				alias = queryObj.alias;
+			}
 		
-			$http({
-				method: 'POST',
-				url: '/dora/query/',
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-				transformRequest: function(obj) {
-					var str = [];
-					for(var p in obj)
-						str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-					return str.join("&");
-				},
-				data: data
-			}).success(function(QRS) {
-				QRSServ.endLoading();
-				//QRS.locationFeature = filterFeatures;
-				QRS.filters = data;
-				QRSServ.addToQRSHistory(QRS);
-
-			}).error(function(data){
-				document.open();
-				document.write(data);
-				document.close();
-			});
+			QRSServ.generateQRS(filters, location, alias);
 		};
 
 		//load data
@@ -654,14 +602,17 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		}
 
 		//save
-		$scope.saveQuery = function(QRS, name) {
+		$scope.saveQuery = function(QRS) {
 		
-			// console.log("inside savequery");
-			
+			console.log("inside savequery");
+			console.log(QRS);
 			var data = {};
-			data.alias = name;
+			data.alias = QRS.alias || 'test';
 			data.query = JSON.stringify(QRS.filters);
-			//data.features = JSON.stringify(QRS.locationFeature);
+			
+			if (QRS.location) {
+				data.location = JSON.stringify(QRS.location);
+			}
 			
 			$http({
 				method: 'POST',

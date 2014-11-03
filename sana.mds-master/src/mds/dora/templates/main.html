@@ -52,7 +52,7 @@
         <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
          <div class="panel-heading">Saved Queries</div>
          <ul class="list-group">
-         <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
+         <li class="list-group-item" ng-hide="savedQueries.length">No saved queries</li>
          <li class="list-group-item" 
          ng-repeat="query in savedQueries"
          ng-click="executeQuery(query)">

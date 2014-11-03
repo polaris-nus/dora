@@ -7,12 +7,16 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 		var QRSLoadingCounter = {count: 0};
 		var onAddCallback = function(){};
 		var requeryCallBack = function(){};
+		var queryCallback = function(){};
 		return {
 			setOnAddCallback: function(callback) {
 				onAddCallback = callback;
 			},
 			setRequeryCallback: function(callback){
 				requeryCallBack = callback;
+			},
+			setQueryCallback: function(callback) {
+				queryCallback = callback;
 			},
 			requery:function(displayedQRS){
 				requeryCallBack(displayedQRS.filters);
@@ -25,9 +29,6 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 			},
 			endLoading: function(){
 				QRSLoadingCounter.count--;
-			},
-			retrieveQRS: function(data){
-				//move POST ajax here!
 			},
 			addToQRSHistory: function (QRS){
 				//Limiting size of QRSHistory
@@ -61,6 +62,79 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 			},
 			getQRSHistory: function(){
 				return QRSHistory;
+			},
+			
+			//filters is given as an array of objects
+			generateQRS: function(filters, location, alias) {
+				
+				var data = {};
+				
+				function escapeRegExp(string) {
+					return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+				}
+				
+				function replaceAll(string, find, replace) {
+					return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+				}
+				
+				for (var i = 0; i < filters.length; i++){
+					var filter = filters[i];
+					var key = filter.key
+						.trim()
+						.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
+						.replace(new RegExp(escapeRegExp("'"), 'g'), "")
+						.toLowerCase();
+					data[key] = filter.value.trim();
+				}
+				
+				if (location && location.length > 0) {
+					data.location = JSON.stringify(location);
+				}
+				
+				console.log(data);
+				var QRSServ = this;
+				
+				$http({
+					method: 'POST',
+					url: '/dora/query/',
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+					transformRequest: function(obj) {
+						var str = [];
+						for(var p in obj)
+							str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+						return str.join("&");
+					},
+					data: data
+					
+				}).success(function(QRS) {
+					
+					console.log(QRS);
+					
+					if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
+						QRS.status = 'empty'
+					} else if (QRS.status == "ok") {
+						console.log("success!");
+						console.log(location);
+						QRS.filters = filters;
+						if (alias) {
+							QRS.alias = alias;
+						}
+						if (location && location.length > 0) {
+							QRS.location = location;
+						}
+						QRSServ.addToQRSHistory(QRS);
+					}
+					
+					queryCallback(QRS.status);
+					
+					QRSServ.endLoading();
+	
+				}).error(function(data){
+					document.open();
+					document.write(data);
+					document.close();
+				});
+				
 			}
 		};
 	}
@@ -379,8 +453,8 @@ doraServices.service('MapServ', [
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
 			  // Check and create location polygon layer
-			  if (QRS.filters.location) {
-			  	var polygonFeatures = parseWKTArray(QRS.filters.location, QRS.color.featureColor);
+			  if (QRS.location) {
+			  	var polygonFeatures = parseWKTArray(QRS.location, QRS.color.featureColor);
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
 			  		styleMap: QRSPolygonFilterStyle
 			  	});
