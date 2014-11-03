@@ -455,7 +455,15 @@ doraServices.service('MapServ', [
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.removeAllFeatures();
 					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
+					console.log(clusterStrategy.active);
 				}
+			},
+			getClusterStrategyStatus: function(QRS) {
+				if(QRS.clusterLayerId) {
+					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
+					return clusterStrategy.active;
+				}
+				return null;
 			},
 			zoomToFitVectorFeatures: function(QRS) {
 				if(QRS.clusterLayerId) {
