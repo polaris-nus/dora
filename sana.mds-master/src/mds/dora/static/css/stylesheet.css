@@ -183,6 +183,11 @@ ul{ padding-left:0; }
   text-decoration: underline;
 }
 
+#qrs-alias{
+  color:#000;
+  width: 80%;
+}
+
 .triangle{
   border: 0px;
   background: transparent;

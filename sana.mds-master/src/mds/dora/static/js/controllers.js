@@ -263,12 +263,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.clustering = true;
 		$scope.qrsPanelVisibility=true;
 		$scope.historyPanelVisibility = true;
-
-		$scope.name = "QRS";
-
-		$scope.renameQRS = function() {
-			$scope.name = prompt("Please enter a new name for this query", $scope.name);
-		}
+		$scope.editingMode = false;
+		$scope.name = [];
 
 		$scope.removeQRS = function(index) {
 			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
@@ -279,6 +275,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 		$scope.setDisplayedQRS = function(index) {
+			if(index>=$scope.name.length){
+				$scope.name.push("QRS "+(index+1));
+			}
+			console.log($scope.name[index]);
+
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			$scope.displayedQRSIndex = index;
 			$scope.qrsPanelVisibility = true;
