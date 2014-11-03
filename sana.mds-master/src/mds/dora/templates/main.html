@@ -125,7 +125,7 @@
       </div>
 
       <div ng-controller="QueryResultController">
-        <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility">
+        <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0">
           <div class="panel-heading panel-heading-height">
             <span class="glyphicon glyphicon-th-list icon"></span>
             Query History
@@ -185,7 +185,7 @@
       </div>
     -->
 
-      <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility"> 
+      <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> 
         <!-- ng-show="{{QRSHistory}}"-->
         <div class="panel panel-info">
           <div class="panel-heading panel-heading-height">
@@ -231,15 +231,12 @@
           <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
           <br/>
 
-          
-          <div class="input-group input-group-lg" ng-show="encounterVisible">
-            <span class="input-group-addon">Filter</span>
-            <input type="text" class="form-control" ng-model="search.$">
+          <div ng-show="encounterVisible">
+            <div class="input-group"  ng-model="search.$">
+              <span class="input-group-addon">filter</span>
+              <input type="text" class="form-control" placeholder="Username">
+            </div>
           </div>
-
-    <!--           By patient name: <input ng-model="search.patient"><br>
-              By Procedure: <input ng-model="search.procedure"><br>
-              By observer: <input ng-model="search.observer"><br> -->
               <div class="list-group" ng-show="encounterVisible" style="width:100%;">
                 <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
 
