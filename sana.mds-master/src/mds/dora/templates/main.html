@@ -127,7 +127,7 @@
       <div ng-controller="QueryResultController">
         <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility">
           <div class="panel-heading panel-heading-height">
-            <span class="glyphicon glyphicon-th-list icon" ></span>
+            <span class="glyphicon glyphicon-th-list icon"></span>
             Query History
             <!-- hide button -->
             <button type="button" class="btn btn-info btn-xs alignR" ng-click="historyPanelVisibility=false">
@@ -155,22 +155,22 @@
           <!--   <div class="panel-body"> -->
           <div class="list-group" id="history-list">
             <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-             <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
-               <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
-               <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
-             </button>
-             <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
-             <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
-           </a>
-           <!-- </div> -->
-         </div>
-       </div>
+              <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
+                <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
+                <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
+              </button>
+              <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
+              <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
+            </a>
+            <!-- </div> -->
+          </div>
+        </div>
 
-       <div class="above" ng-show="!historyPanelVisibility">
-         <!-- <button type="button" class="btn btn-default" ng-click="historyPanelVisibility=true"> -->
-         <span class="glyphicon glyphicon-th-list"></span>
-         <!-- </button>   -->
-       </div>
+        <div class="above" ng-show="!historyPanelVisibility">
+          <button type="button" class="btn btn-default" id="thumbnail-history-panel" ng-click="historyPanelVisibility=true; qrsPanelVisibility=true">
+            <span class="glyphicon glyphicon-th-list"></span>
+          </button>  
+        </div>
 
 <!--       <div class="above" id="qrsbuttons">
         <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
@@ -183,14 +183,16 @@
       </div>
     -->
 
-      <div class="above" id="qrspanel" ng-show="qrsPanelVisibility"> 
+      <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility"> 
         <!-- ng-show="{{QRSHistory}}"-->
         <div class="panel panel-info">
           <div class="panel-heading panel-heading-height">
+            <span class="glyphicon glyphicon-th-list icon"></span>
             Query Result
-            <button type="button" class="btn-xs alignR cross-btn" ng-click="qrsPanelVisibility=false">
-             <span class="glyphicon glyphicon-remove"></span>
-           </button> 
+            <!-- delete button -->
+            <button type="button" class="btn btn-info btn-xs alignR" ng-click="qrsPanelVisibility=false">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>  
          </div>
 
          <div class="panel-body" id="qrs-panel-body">  
