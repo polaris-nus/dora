@@ -13,6 +13,7 @@ def parse_request(request):
 	query_form = QueryForm(request.POST)
 	
 	if query_form.is_valid():
+		print "form is valid"
 		cleaned_data = dict(query_form.cleaned_data)
 
 		#Non-observation filters
@@ -94,12 +95,19 @@ def parse_request(request):
 
 
 		#Location Queries
-		if (location_filter):
-			q_object_geometry = Q()
-			for geometry in location_filter:
-				q_object_geometry |= Q(coordinates__within=geometry)
-			locations_list.append(q_object_geometry)
-			flag = True;
+		#location is given by a JSON array of wkt strings
+		if location_filter:
+			try:
+				print location_filter
+				geometries = json.loads(location_filter)
+				q_object_geometry = Q()
+				for geometry in geometries:
+					q_object_geometry |= Q(coordinates__within=geometry)
+				locations_list.append(q_object_geometry)
+				flag = True
+			
+			except ValueError:
+				return None, None, None
 
 
 		if (flag == False):
@@ -108,6 +116,7 @@ def parse_request(request):
 		return q_object, concepts_list, locations_list
 
 	else:
+		print "form is invalid"
 		return None, None, None
 
 def get_query_result_set(query, concepts_list, locations_list):
@@ -200,9 +209,9 @@ def get_user_saved_queries(request):
 		query = {}
 		query['uuid'] = item.uuid
 		query['query'] = item.query
+		query['location'] = item.location
 		query['created'] = str(item.created)
 		query['alias'] = item.alias
-		query['features'] = item.features
 		response['queries'].append(query)
 
 	return json.dumps(response)

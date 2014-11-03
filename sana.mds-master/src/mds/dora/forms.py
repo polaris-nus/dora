@@ -14,7 +14,7 @@ class QueryForm(forms.Form):
     age_range = forms.CharField(required=False, max_length=128, 
             validators=[RegexValidator(regex=r"^\s*[0-9]+\s*-\s*[0-9]+\s*(,\s*[0-9]+\s*-\s*[0-9]+\s*)*$")])
 
-    location = forms.GeometryCollectionField(required=False, srid=4326)
+    location = forms.CharField(required=False)
     procedure = forms.CharField(required=False, max_length=1024)
     patients_given_name = forms.CharField(required=False, max_length=256)
     patients_family_name = forms.CharField(required=False, max_length=256)
@@ -59,6 +59,9 @@ class QueryForm(forms.Form):
         pass
     
 class SavedQueryForm(ModelForm):
+    
+    location = forms.CharField(required=False)
+    
     class Meta:
         model = SavedQuery
-        fields = ['alias', 'query']
+        fields = ['alias', 'query', 'location']

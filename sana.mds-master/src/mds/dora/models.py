@@ -26,9 +26,11 @@ class SavedQuery(models.Model):
 	
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	
+	#the filter information in json format
 	query = models.TextField()
 	
-	features = models.TextField()
+	#location in JSON format
+	location = models.TextField()
 	
 	created = models.DateTimeField(auto_now_add=True)
 	""" When the object was created """
