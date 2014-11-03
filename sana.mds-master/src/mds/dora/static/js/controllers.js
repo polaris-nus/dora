@@ -295,6 +295,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			MapServ.setVectorLayerVisibility($scope.doubleClickedQRS, toggledVisibility);
 		}
 
+		$scope.getQRSVisibility = function(index) {
+			$scope.currentQRS = $scope.QRSHistory[index];
+			return $scope.currentQRS.isVisible;
+		}
+
 		$scope.setQRSClustering = function(status) {
 			MapServ.setClusterStrategyStatus($scope.displayedQRS, status);
 		}

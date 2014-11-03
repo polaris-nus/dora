@@ -120,12 +120,10 @@
         <span class="filter" ng-repeat="filter in filters">
          <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
          <span ng-click="removeFilter($index, filter)" class="bold hover-text-shadow">&#215;&nbsp;</span>
-        </span>
-       </div>
-      </div>
-
-
-
+       </span>
+     </div>
+   </div>
+ </div>
 
 
 
@@ -133,7 +131,7 @@
       <div class="above panel panel-info" id="history-panel">
         <div class="panel-heading" id="history-panel-heading">
          Query History
-         <button type="button" class="btn btn-info btn-xs alignR" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+         <button type="button" class="btn btn-info btn-xs alignR">
            <span class="glyphicon glyphicon-remove"></span>
          </button>  
 
@@ -145,16 +143,20 @@
            <span class="glyphicon glyphicon-record"></span>
          </button>
 
-        <button type="button" class="btn btn-info btn-xs alignR">
-           <span class="  glyphicon glyphicon-pencil"></span>
+         <button type="button" class="btn btn-info btn-xs alignR">
+           <span class="glyphicon glyphicon-pencil"></span>
          </button>
-
        </div>
 
-      <!--   <div class="panel-body"> -->
-      <div class="list-group" id="history-list">
-        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);">
-          <input type="checkbox">
+       <!--   <div class="panel-body"> -->
+       <div class="list-group" id="history-list">
+        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+         <button type="button" class="btn btn-info btn-xs visibility-btn" ng-show="getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
+           <span class="glyphicon glyphicon-eye-open"></span>
+         </button>
+         <button type="button" class="btn btn-info btn-xs visibility-btn" ng-show="!getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
+           <span class="glyphicon glyphicon-eye-close"></span>
+         </button>
           <span class="alias">qrs</span>
           <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR"></button>
         </a>
