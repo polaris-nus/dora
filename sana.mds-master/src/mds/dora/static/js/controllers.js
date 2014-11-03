@@ -266,7 +266,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.editingMode = false;
 		$scope.name = [];
 
-		$scope.removeQRS = function(index) {
+		$scope.removeQRS = function() {
+			console.log($scope.QRSHistory[$scope.displayedQRSIndex]);
 			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
 		}
 
@@ -634,7 +635,6 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				//QRS.locationFeature = filterFeatures;
 				QRS.filters = data;
 				QRSServ.addToQRSHistory(QRS);
-
 			}).error(function(data){
 				document.open();
 				document.write(data);
