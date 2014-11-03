@@ -296,6 +296,12 @@ html, body{
   width:50px;
 }
 
+.section-heading{
+/*  margin: 0px;
+  width: 100%;
+  background-color: lightblue;*/
+}
+
 /* MAP POPOVER STYLES */
 
 .popover-list {

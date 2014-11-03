@@ -34,144 +34,146 @@
 
 </head>
 {% verbatim %}
-  <body>
-    <div ng-controller="UserAccountController">  
-      <div id="map">
-        <div id="customZoom">
-          <a href="#customZoomIn" id="customZoomIn">+</a>
-          <a href="#customZoomOut" id="customZoomOut">-</a>
-        </div>
+<body>
+  <div ng-controller="UserAccountController">  
+    <div id="map">
+      <div id="customZoom">
+        <a href="#customZoomIn" id="customZoomIn">+</a>
+        <a href="#customZoomOut" id="customZoomOut">-</a>
       </div>
+    </div>
 
-      <div class="account above noselect">
-        <div class="username" ng-click="toggleSavePanel()">
-          <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
-          <span ng-show="savePanelVisibility">&and;</span>
-          <span ng-hide="savePanelVisibility">&or;</span>
-        </div>
-        <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
-          <div class="panel-heading">Saved Queries</div>
-          <ul class="list-group">
-            <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
-            <li class="list-group-item" 
-            ng-repeat="query in savedQueries"
-            ng-click="executeQuery(query)">
-            {{query.alias}}
-              <span ng-click="deleteQuery(query, $index)" class="glyphicon glyphicon-remove" style="float:right;"></span>
-            </li>
-          </ul>
-        </div>
+    <div class="account above noselect">
+      <div class="username" ng-click="toggleSavePanel()">
+        <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
+        <span ng-show="savePanelVisibility">&and;</span>
+        <span ng-hide="savePanelVisibility">&or;</span>
       </div>
+      <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
+        <div class="panel-heading">Saved Queries</div>
+        <ul class="list-group">
+          <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
+          <li class="list-group-item" 
+          ng-repeat="query in savedQueries"
+          ng-click="executeQuery(query)">
+          {{query.alias}}
+          <span ng-click="deleteQuery(query, $index)" class="glyphicon glyphicon-remove" style="float:right;"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
 
-      <div ng-controller="QueryFormController">
-        <!-- Start Error Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel" style="color:red;" >{{ modalTitle }}</h4>
-              </div>
-              <div class="modal-body">
-                <p>{{ errorMessage }}</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-            </div>
+  <div ng-controller="QueryFormController">
+    <!-- Start Error Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel" style="color:red;" >{{ modalTitle }}</h4>
           </div>
-        </div>
-        <!-- End Error Modal -->
-
-        <div class="queryForm">
-          <div class="above input-group" id="searchbox">
-            <form ng-submit="submitFilter()">
-              <div class="form-control autocom-input">
-                <span ng-bind="key" id="key"></span>
-                <span ng-show="key">:</span>
-                <autocomplete ng-model="input" on-select="selectFilter" 
-                attr-input-class="removeInputStyle"
-                data="data"
-                key="key"
-                attr-class="autocom-div"></autocomplete>
-              </div>
-              <span class="input-group-btn">
-                <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
-                  <span class="glyphicon glyphicon-plus"></span>
-                </button>
-              </span>
-            </form>
+          <div class="modal-body">
+            <p>{{ errorMessage }}</p>
           </div>
-
-          <div class="location-options">
-            <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
-            <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
-            <div class="location-radio" ng-show="locationSearchOn">
-              <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-              <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
-              <!--        <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br> -->
-              <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
-            </div>
-          </div>
-
-          <div class="filters noselect">
-            <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
-            <span class="filter" ng-repeat="filter in filters">
-              <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
-              <span ng-click="removeFilter($index, filter)" class="bold hover-text-shadow">&#215;&nbsp;</span>
-            </span>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
+    </div>
+    <!-- End Error Modal -->
 
-      <div ng-controller="QueryResultController">
-        <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0">
-          <div class="panel-heading panel-heading-height">
-            <span class="glyphicon glyphicon-th-list icon"></span>
-            Query History
-            <!-- hide button -->
-            <button type="button" class="btn btn-info btn-xs alignR" ng-click="historyPanelVisibility=false">
-              <span class="glyphicon glyphicon-chevron-left"></span>
-            </button>  
-
-            <!-- delete button -->
-            <button type="button" class="btn btn-info btn-xs alignR">
-              <span class="glyphicon glyphicon-remove"></span>
-            </button>  
-            <!-- export button -->
-            <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
-              <span class="glyphicon glyphicon-save"></span>
-            </button>
-            <!-- clustering on/off button -->
-            <button type="button" class="btn btn-info btn-xs alignR" ng-click="toggleQRSClustering()">
-              <span class="glyphicon glyphicon-record"></span>
-            </button>
-            <!-- requery button -->
-            <button type="button" class="btn btn-info btn-xs alignR" ng-click="requery()" >
-              <span class="glyphicon glyphicon-pencil"></span>
-            </button>
+    <div class="queryForm">
+      <div class="above input-group" id="searchbox">
+        <form ng-submit="submitFilter()">
+          <div class="form-control autocom-input">
+            <span ng-bind="key" id="key"></span>
+            <span ng-show="key">:</span>
+            <autocomplete ng-model="input" on-select="selectFilter" 
+            attr-input-class="removeInputStyle"
+            data="data"
+            key="key"
+            attr-class="autocom-div"></autocomplete>
           </div>
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
+        </form>
+      </div>
 
-          <!--   <div class="panel-body"> -->
-          <div class="list-group" id="history-list">
-            <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-            <!-- btn-invisible:!getQRSVisibility($index) -->
-              <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
-                <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
-                <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
-              </button>
-              <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
-              <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
-            </a>
-            <!-- </div> -->
-          </div>
+      <div class="location-options">
+        <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+        <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
+        <div class="location-radio" ng-show="locationSearchOn">
+          <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+          <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
+          <!--        <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br> -->
+          <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
         </div>
+      </div>
 
-        <div class="above" ng-show="!historyPanelVisibility">
-          <button type="button" class="btn btn-default" id="thumbnail-history-panel" ng-click="historyPanelVisibility=true; qrsPanelVisibility=true">
-            <span class="glyphicon glyphicon-th-list"></span>
-          </button>  
-        </div>
+      <div class="filters noselect">
+        <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
+        <span class="filter" ng-repeat="filter in filters">
+          <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
+          <span ng-click="removeFilter($index, filter)" class="bold hover-text-shadow">&#215;&nbsp;</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div ng-controller="QueryResultController">
+    <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0">
+      <div class="panel-heading panel-heading-height">
+        <span class="glyphicon glyphicon-th-list icon"></span>
+        Query History
+        <!-- hide button -->
+        <button type="button" class="btn btn-info btn-xs alignR" ng-click="historyPanelVisibility=false">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>  
+
+        <!-- delete button -->
+        <button type="button" class="btn btn-info btn-xs alignR" ng-click="removeQRS($index)">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>  
+        <!-- export button -->
+        <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
+          <span class="glyphicon glyphicon-save"></span>
+        </button>
+        <!-- clustering on/off button -->
+        <button type="button" class="btn btn-info btn-xs alignR" ng-click="toggleQRSClustering()">
+          <span class="glyphicon glyphicon-record"></span>
+        </button>
+        <!-- requery button -->
+        <button type="button" class="btn btn-info btn-xs alignR" ng-click="requery()" >
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </div>
+
+      <!--   <div class="panel-body"> -->
+      <div class="list-group" id="history-list">
+        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+          <!-- btn-invisible:!getQRSVisibility($index) -->
+          <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
+            <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
+            <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
+          </button>
+           <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
+         <!--  <span ng-click="renameQRS()" id="qrs-alias" ng-show="!renameBoxVisible($index)"> {{name}} </span>
+          <input type="email" class="form-control" id="exampleInputEmail1" ng-show="renameBoxVisible($index)" placeholder="Enter email"> -->
+          <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
+        </a>
+        <!-- </div> -->
+      </div>
+    </div>
+
+    <div class="above" ng-show="!historyPanelVisibility">
+      <button type="button" class="btn btn-default" id="thumbnail-history-panel" ng-click="historyPanelVisibility=true; qrsPanelVisibility=true">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </button>  
+    </div>
 
 
 <!--       <div class="above" id="qrsbuttons">
@@ -185,96 +187,101 @@
       </div>
     -->
 
-      <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> 
-        <!-- ng-show="{{QRSHistory}}"-->
-        <div class="panel panel-info">
-          <div class="panel-heading panel-heading-height">
-            <span class="glyphicon glyphicon-th-list icon"></span>
-            Query Result
-            <!-- delete button -->
-            <button type="button" class="btn btn-info btn-xs alignR" ng-click="qrsPanelVisibility=false">
-              <span class="glyphicon glyphicon-remove"></span>
-            </button>  
-         </div>
+    <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> 
+      <!-- ng-show="{{QRSHistory}}"-->
+      <div class="panel panel-info">
+        <div class="panel-heading panel-heading-height">
+          <span class="glyphicon glyphicon-th-list icon"></span>
+          Query Result
+          <!-- delete button -->
+          <button type="button" class="btn btn-info btn-xs alignR" ng-click="qrsPanelVisibility=false">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>  
+        </div>
 
-         <div class="panel-body" id="qrs-panel-body">  
+        <div class="panel-body" id="qrs-panel-body">  
           <!-- display filters -->
           <div>
-            <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+            <div class="section-heading">
+              <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
               <img ng-click="filtersVisible=!filtersVisible" ng-show="!filtersVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
               <a ng-click="filtersVisible=!filtersVisible">Filters</a>
-
-              <div ng-show="filtersVisible">
-                <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
-              </div>
-              <br/>
             </div>
+            <div ng-show="filtersVisible">
+              <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
+            </div>
+          </div>
 
-            <!-- charts -->
-            <div>
+          <!-- charts -->
+          <div>
+           <div class="section-heading">
              <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
              <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
              <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
-             <div ng-show="chartOneVisible" id="line-chart"></div>
            </div>
+           <div ng-show="chartOneVisible" id="line-chart"></div>
+         </div>
 
-           <div>
+         <div>
+           <div class="section-heading">
             <img  ng-click="chartTwoVisible=!chartTwoVisible" ng-show="chartTwoVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
             <img ng-click="chartTwoVisible=!chartTwoVisible" ng-show="!chartTwoVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
 
-            <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution Along Age Groups</a>
-            <div ng-show="chartTwoVisible" id="chart_div"></div>
+            <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution</a>
           </div>
+          <div ng-show="chartTwoVisible" id="chart_div"></div>
+        </div>
 
+        <div class="section-heading">
           <img  ng-click="encounterVisible=!encounterVisible" ng-show="encounterVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
           <img ng-click="encounterVisible=!encounterVisible" ng-show="!encounterVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
           <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
-          <br/>
+        </div>
 
-          <div ng-show="encounterVisible">
-            <div class="input-group"  ng-model="search.$">
-              <span class="input-group-addon">filter</span>
-              <input type="text" class="form-control" placeholder="Username">
-            </div>
-          </div>
-              <div class="list-group" ng-show="encounterVisible" style="width:100%;">
-                <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
-
-                  <div class="list-group-item" ng-click="showPopoverOnMap(encounter.uuid)">
-                    {{encounter.patient}}
-                    <!-- <span ng-show="$index>assignedCount">(no location data)</span> -->
-                    <br/>
-                    <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
-                    <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
-                  </div>
-                </div>
-              </div> 
-            </div>
+        <div ng-show="encounterVisible">
+          <div class="input-group">
+            <span class="input-group-addon">filter</span>
+            <input type="text" class="form-control" ng-model="search.$">
           </div>
         </div>
-        <br/>
+        <div class="list-group" ng-show="encounterVisible" style="width:100%;">
+          <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
+
+            <div class="list-group-item" ng-click="showPopoverOnMap(encounter.uuid)">
+              {{encounter.patient}}
+              <!-- <span ng-show="$index>assignedCount">(no location data)</span> -->
+              <br/>
+              <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
+              <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
+            </div>
+          </div>
+        </div> 
       </div>
-
-
-
-
-      <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
-        <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
-        <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
-        <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
-          <img src="/static/images/play.png" width="30" height="24" alt="submit" />
-        </button>
-        <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
-          <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
-        </button>
-        <div id="slider-div">
-          <div id="slider"></div>
-        </div>
-      </div>
-
-      {% endverbatim %}
-      <!-- scripts loaded after html-->
     </div>
-  </body>
+  </div>
+  <br/>
+</div>
+
+
+
+
+<div ng-controller="TemporalSliderController" class="above" id="slider-panel">
+  <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
+  <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
+  <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
+    <img src="/static/images/play.png" width="30" height="24" alt="submit" />
+  </button>
+  <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
+    <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
+  </button>
+  <div id="slider-div">
+    <div id="slider"></div>
+  </div>
+</div>
+
+{% endverbatim %}
+<!-- scripts loaded after html-->
+</div>
+</body>
 
 </html>
