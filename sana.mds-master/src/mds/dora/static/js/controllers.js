@@ -558,7 +558,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		$scope.scroll_granularity = 10; //every 0.5 is one day
 		var scroller = null;
 
-		$scope.startAutoscroll = function() {
+		$scope.autoscroll = function() {
 			$('#slider').dateRangeSlider('scrollRight', $scope.scroll_granularity/2);
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
 			var values = $scope.sliderModifier("values");
@@ -576,7 +576,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 
 		$scope.toggleScrolling = function() {
 			if (scroller == null) {
-				scroller = setInterval(function(){$scope.startAutoscroll()}, $scope.scroll_speed*1000);
+				scroller = setInterval(function(){$scope.autoscroll()}, $scope.scroll_speed*1000);
 			} else {
 				$scope.stopAutoscroll();
 			}
@@ -588,7 +588,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		});
 
 	}
-	]);
+]);
 
 doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http){
@@ -724,4 +724,4 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		$scope.loadQueries();
 
 	}
-	]);
+]);
