@@ -26,11 +26,7 @@
   <script src="/static/jquery-ui/jquery-ui.custom.js"></script>
   <script src="/static/angular-modules/slider/jQDateRangeSlider-min.js"></script>
   <script type="text/javascript" src="/static/angular-modules/allmighty-autocomplete/autocomplete.js"></script>
-
   <script src="/static/bootstrap/js/bootstrap.min.js"> </script>
-  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<link rel="css/iThing.css" type="text/css" /> -->
 
 </head>
 {% verbatim %}
@@ -125,6 +121,7 @@
   </div>
 
   <div ng-controller="QueryResultController">
+    <!-- Start of History Panel -->
     <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0">
       <div class="panel-heading panel-heading-height">
         <span class="glyphicon glyphicon-th-list icon"></span>
@@ -160,12 +157,12 @@
             <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
             <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
           </button>
-           <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
-         <!--  <span ng-click="renameQRS()" id="qrs-alias" ng-show="!renameBoxVisible($index)"> {{name}} </span>
-          <input type="email" class="form-control" id="exampleInputEmail1" ng-show="renameBoxVisible($index)" placeholder="Enter email"> -->
+          <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
+          <!--  <span ng-click="renameQRS()" id="qrs-alias" ng-show="!renameBoxVisible($index)"> {{name}} </span>
+         <input type="email" class="form-control" id="exampleInputEmail1" ng-show="renameBoxVisible($index)" placeholder="Enter email"> -->
           <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
         </a>
-        <!-- </div> -->
+       <!-- </div> -->
       </div>
     </div>
 
@@ -175,24 +172,16 @@
       </button>  
     </div>
 
+    <!-- End of History Panel -->
+    <!--<img src="/static/loading.gif" ng-show="loadingStatus.count > 0"/>-->
 
-<!--       <div class="above" id="qrsbuttons">
-        <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
-
-          <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" id="cross"></span>
-          <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline bottom-margin" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
-
-        </div>
-        <img src="/static/loading.gif" ng-show="loadingStatus.count > 0"/>
-      </div>
-    -->
-
-    <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> 
-      <!-- ng-show="{{QRSHistory}}"-->
+    <!-- Start of Result Panel -->
+    <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0">
       <div class="panel panel-info">
         <div class="panel-heading panel-heading-height">
           <span class="glyphicon glyphicon-th-list icon"></span>
           Query Result
+
           <!-- delete button -->
           <button type="button" class="btn btn-info btn-xs alignR" ng-click="qrsPanelVisibility=false">
             <span class="glyphicon glyphicon-remove"></span>
@@ -214,73 +203,70 @@
 
           <!-- charts -->
           <div>
-           <div class="section-heading">
-             <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
-             <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
-             <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
-           </div>
-           <div ng-show="chartOneVisible" id="line-chart"></div>
-         </div>
-
-         <div>
-           <div class="section-heading">
-            <img  ng-click="chartTwoVisible=!chartTwoVisible" ng-show="chartTwoVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
-            <img ng-click="chartTwoVisible=!chartTwoVisible" ng-show="!chartTwoVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
-
-            <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution</a>
+            <div class="section-heading">
+              <img  ng-click="chartOneVisible=!chartOneVisible" ng-show="chartOneVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+              <img ng-click="chartOneVisible=!chartOneVisible" ng-show="!chartOneVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+              <a ng-click="chartOneVisible=!chartOneVisible">Patient Number</a>
+            </div>
+            <div ng-show="chartOneVisible" id="line-chart"></div>
           </div>
-          <div ng-show="chartTwoVisible" id="chart_div"></div>
-        </div>
 
-        <div class="section-heading">
-          <img  ng-click="encounterVisible=!encounterVisible" ng-show="encounterVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
-          <img ng-click="encounterVisible=!encounterVisible" ng-show="!encounterVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
-          <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
-        </div>
+          <div>
+            <div class="section-heading">
+              <img  ng-click="chartTwoVisible=!chartTwoVisible" ng-show="chartTwoVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+              <img ng-click="chartTwoVisible=!chartTwoVisible" ng-show="!chartTwoVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
 
-        <div ng-show="encounterVisible">
-          <div class="input-group">
-            <span class="input-group-addon">filter</span>
-            <input type="text" class="form-control" ng-model="search.$">
+              <a ng-click="chartTwoVisible=!chartTwoVisible">Patient Distribution</a>
+            </div>
+            <div ng-show="chartTwoVisible" id="chart_div"></div>
           </div>
-        </div>
-        <div class="list-group" ng-show="encounterVisible" style="width:100%;">
-          <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
 
-            <div class="list-group-item" ng-click="showPopoverOnMap(encounter.uuid)">
-              {{encounter.patient}}
-              <!-- <span ng-show="$index>assignedCount">(no location data)</span> -->
-              <br/>
-              <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
-              <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
+          <div class="section-heading">
+            <img  ng-click="encounterVisible=!encounterVisible" ng-show="encounterVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+            <img ng-click="encounterVisible=!encounterVisible" ng-show="!encounterVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
+            <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
+          </div>
+
+          <div ng-show="encounterVisible">
+            <div class="input-group">
+              <span class="input-group-addon">filter</span>
+              <input type="text" class="form-control" ng-model="search.$">
             </div>
           </div>
-        </div> 
+          <div class="list-group" ng-show="encounterVisible" style="width:100%;">
+            <div id="encounter" ng-repeat="encounter in encounters| filter:search:strict">
+
+              <div class="list-group-item" ng-click="showPopoverOnMap(encounter.uuid)">
+                {{encounter.patient}}
+                <!-- <span ng-show="$index>assignedCount">(no location data)</span> -->
+                <br/>
+                <div style="font-size:medium;white-space: nowrap; width: 100%;  overflow: hidden; text-overflow:ellipsis;">{{encounter.procedure}}</div>
+                <div style="text-align: right;">by {{encounter.observer}} on {{encounter.date}}</div>
+              </div>
+            </div>
+          </div> 
+        </div>
       </div>
     </div>
+    <!-- End of Result Panel -->
   </div>
-  <br/>
-</div>
 
-
-
-
-<div ng-controller="TemporalSliderController" class="above" id="slider-panel">
-  <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
-  <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
-  <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
-    <img src="/static/images/play.png" width="30" height="24" alt="submit" />
-  </button>
-  <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
-    <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
-  </button>
-  <div id="slider-div">
-    <div id="slider"></div>
+  <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
+    <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
+    <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
+    <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
+      <img src="/static/images/play.png" width="30" height="24" alt="submit" />
+    </button>
+    <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
+      <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
+    </button>
+    <div id="slider-div">
+      <div id="slider"></div>
+    </div>
   </div>
-</div>
 
-{% endverbatim %}
-<!-- scripts loaded after html-->
+  {% endverbatim %}
+  <!-- scripts loaded after html-->
 </div>
 </body>
 
