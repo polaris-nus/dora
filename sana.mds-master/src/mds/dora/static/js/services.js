@@ -612,13 +612,18 @@ map.addControl(selectCountryControls);
 						}
 					}
 				}
-				var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
-				$("#slider").dateRangeSlider({
-					bounds:{
-					    min: new Date(minDate), //This value should be changed to the latest date available
-					    max: new Date()
-					  }
+
+				var modifySliderMinBound = function() {
+					var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
+					$("#slider").dateRangeSlider({
+						bounds:{
+						    min: new Date(minDate), //This value should be changed to the latest date available
+						    max: new Date()
+						}
 					});
+					console.log(this);
+				}
+				modifySliderMinBound();
 			},
 			temporalSliderFeaturesToggle: function() {
 				selectClusterControls.unselectAll();
