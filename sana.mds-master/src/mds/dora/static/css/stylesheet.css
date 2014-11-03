@@ -169,10 +169,6 @@ ul{ padding-left:0; }
   padding-top: 0px;
 }
 
-#qrs-panel-title{
-  display: inline-block;
-}
-
 #qrs-panel-title:hover{
   text-decoration: underline;
 }
@@ -326,6 +322,13 @@ html, body{
   left: 5px;
   background-color: red;
   display: inline-block;
+}
+
+.btn-indicator{
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  border-color: white;
 }
 
 .btn-invisible {

@@ -135,7 +135,7 @@
            <span class="glyphicon glyphicon-remove"></span>
          </button>  
 
-         <button type="button" class="btn btn-info btn-xs alignR">
+         <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
            <span class="glyphicon glyphicon-save"></span>
          </button>
 
@@ -151,14 +151,12 @@
        <!--   <div class="panel-body"> -->
        <div class="list-group" id="history-list">
         <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-         <button type="button" class="btn-xs visibility-btn" ng-show="getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
-           <span class="glyphicon glyphicon-eye-open"></span>
+         <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
+           <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
+           <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
          </button>
-         <button type="button" class="btn-xs visibility-btn" ng-show="!getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
-           <span class="glyphicon glyphicon-eye-close"></span>
-         </button>
-          <span class="alias">qrs</span>
-          <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR"></button>
+          <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
+          <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
         </a>
         <!-- </div> -->
       </div>
@@ -180,8 +178,8 @@
         <!-- ng-show="{{QRSHistory}}"-->
         <div class="panel panel-info">
           <div class="panel-heading">
-            <h3 class="panel-title" ng-click="renameQRS()" id="qrs-panel-title">{{name}} </h3>
-            <button class="btn btn-info alignR inline" type="submit" ng-click="exportQRS()">Export</button>
+         
+          
             <button class="btn btn-info alignR"ng-click="setQRSClustering(false)">Cluster Off</button>
             <button class="btn btn-info alignR" ng-click="setQRSClustering(true)">Cluster On</button>
           </div>
