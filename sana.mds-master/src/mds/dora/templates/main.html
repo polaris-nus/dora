@@ -154,7 +154,8 @@
 
           <!--   <div class="panel-body"> -->
           <div class="list-group" id="history-list">
-            <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+            <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+            <!-- btn-invisible:!getQRSVisibility($index) -->
               <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
                 <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
                 <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
@@ -171,6 +172,7 @@
             <span class="glyphicon glyphicon-th-list"></span>
           </button>  
         </div>
+
 
 <!--       <div class="above" id="qrsbuttons">
         <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
@@ -229,9 +231,12 @@
           <a ng-click="encounterVisible=!encounterVisible">Encounter list</a> 
           <br/>
 
-          <div ng-show="encounterVisible">
-            Filter: <input  type="text" class="form-control" ng-model="search.$"> <br>
+          
+          <div class="input-group input-group-lg" ng-show="encounterVisible">
+            <span class="input-group-addon">Filter</span>
+            <input type="text" class="form-control" ng-model="search.$">
           </div>
+
     <!--           By patient name: <input ng-model="search.patient"><br>
               By Procedure: <input ng-model="search.procedure"><br>
               By observer: <input ng-model="search.observer"><br> -->

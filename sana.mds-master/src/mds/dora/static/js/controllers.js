@@ -252,6 +252,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.loadingStatus = QRSServ.getLoadingStatus();
 
 		$scope.displayedQRS = {};
+		$scope.displayedQRSIndex = 0;
 		$scope.encounterVisible = true;
 		$scope.encounters = [];
 		// $scope.assignedCount = 0;
@@ -279,6 +280,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
+			$scope.displayedQRSIndex = index;
+			$scope.qrsPanelVisibility = true;
 			updateEncounters();
 			updateFilters();
 			updateChartOneDS();

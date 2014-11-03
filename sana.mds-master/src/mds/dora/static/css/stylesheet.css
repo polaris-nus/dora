@@ -332,9 +332,9 @@ html, body{
 }
 
 .btn-indicator{
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
+  width: 5px;
+  height: 5px;
+  /*border-radius: 100%;*/
   border-color: white;
 }
 
