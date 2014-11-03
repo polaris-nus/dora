@@ -87,7 +87,7 @@ ul{ padding-left:0; }
 .alignR{
   margin-left: 10px;
   float: right;
-  height: 26px;
+  margin-top: 5px;
 }
 
 .filter {
@@ -124,18 +124,45 @@ ul{ padding-left:0; }
 	position:absolute;
 }
 
-#qrsbuttons{
+/*#qrsbuttons{
   position: absolute;
   top:70px;
   width: 55px;
   margin-left: 0px;
   display: inline-block;
-}
+}*/
 
 /*#placeholder{
   width: 20px;
   background-color: red;
 }*/
+
+#history-panel{
+  width: 25%;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+#history-panel-heading{
+  height: 30px;
+  line-height:30px;
+  vertical-align: middle;
+  font-size: 14px;
+  padding-top: 0px;
+}
+
+#history-list{
+  margin: 0px;
+  max-height: 150px;
+  overflow-y: scroll; 
+}
+
+.history-entry{
+  height: 25px;
+  line-height:25px;
+  vertical-align: middle;
+  padding-top: 0px;
+}
 
 #qrs-panel-title{
   display: inline-block;

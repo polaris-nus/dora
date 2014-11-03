@@ -124,17 +124,55 @@
        </div>
       </div>
 
+
+
+
+
+
     <div ng-controller="QueryResultController">
-      <div class="above" id="qrsbuttons">
+      <div class="above panel panel-info" id="history-panel">
+        <div class="panel-heading" id="history-panel-heading">
+         Query History
+         <button type="button" class="btn btn-info btn-xs alignR" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+           <span class="glyphicon glyphicon-remove"></span>
+         </button>  
+
+         <button type="button" class="btn btn-info btn-xs alignR">
+           <span class="glyphicon glyphicon-save"></span>
+         </button>
+
+         <button type="button" class="btn btn-info btn-xs alignR">
+           <span class="glyphicon glyphicon-record"></span>
+         </button>
+
+        <button type="button" class="btn btn-info btn-xs alignR">
+           <span class="  glyphicon glyphicon-pencil"></span>
+         </button>
+
+       </div>
+
+      <!--   <div class="panel-body"> -->
+      <div class="list-group" id="history-list">
+        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);">
+          <input type="checkbox">
+          <span class="alias">qrs</span>
+          <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR"></button>
+        </a>
+        <!-- </div> -->
+      </div>
+    </div>
+
+
+<!--       <div class="above" id="qrsbuttons">
         <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
 
-          <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" ng-style="($index === 0 && {'margin-top': '7px'})||($index === 1 && {'margin-top': '41px'})||($index === 2 && {'margin-top': '75px'})||($index === 3 && {'margin-top': '109px'})||($index === 4 && {'margin-top': '143px'})||($index === 5 && {'margin-top': '177px'})||($index === 6 && {'margin-top': '211px'})" id="cross"></span>
-
+          <span ng-show="hover" ng-click="removeQRS($index)" class="glyphicon glyphicon-remove inline" id="cross"></span>
           <button type="button" class="btn btn-success btn-circle btn-color-{{qrs.color.buttonStyleIndex}} inline bottom-margin" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);" ng-dblclick="toggleQRSVisibility($index);" ng-mouseenter="hover=true"></button>
 
         </div>
         <img src="/static/loading.gif" ng-show="loadingStatus.count > 0"/>
       </div>
+ -->
 
       <div class="above" id="qrspanel"> 
         <!-- ng-show="{{QRSHistory}}"-->
@@ -203,6 +241,9 @@
         </div>
         <br/>
       </div>
+
+
+
 
       <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
         <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
