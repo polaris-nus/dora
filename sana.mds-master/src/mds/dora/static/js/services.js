@@ -456,7 +456,6 @@ map.addControl(selectCountryControls);
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.removeAllFeatures();
 					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
-					console.log(clusterStrategy.active);
 				}
 			},
 			getClusterStrategyStatus: function(QRS) {

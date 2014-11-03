@@ -308,12 +308,9 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			return $scope.currentQRS.isVisible;
 		}
 
-		$scope.setQRSClustering = function(status) {
-			MapServ.setClusterStrategyStatus($scope.displayedQRS, status);
-		}
-
 		$scope.toggleQRSClustering = function() {
-			$scope.setQRSClustering(!$scope.clustering);
+			var status = MapServ.getClusterStrategyStatus($scope.displayedQRS);
+			MapServ.setClusterStrategyStatus($scope.displayedQRS, !status);
 		}
 
 		$scope.visibility = function(index){
