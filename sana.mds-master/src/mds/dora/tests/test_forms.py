@@ -1,4 +1,4 @@
-from dora.forms import QueryForm
+from mds.dora.forms import QueryForm
 from django.test import TestCase
 
 class QueryFormTestCase(TestCase):

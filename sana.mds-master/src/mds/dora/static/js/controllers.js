@@ -18,7 +18,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 
 		//sets the filter from the QueryResultController
 		var setfilters = function(newFilters){
-		
 			// console.log(newFilters);
 			
 			$scope.filters = [];
@@ -31,7 +30,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			// console.log($scope.filters);
 		}
 
-		QRSServ.setRequeryCallback($scope.setfilters);
+		QRSServ.setRequeryCallback(setfilters);
 
 		function changeMode(newValue) {
 			//console.log("changeMode triggered");
@@ -51,11 +50,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 
 		//autocomplete filter types
 		$scope.data = [
-			"Patient's family name",
-			"Patient's given name",
-			'Gender',
-			'Procedure',
-			'Age range',
+		"Patient's family name",
+		"Patient's given name",
+		'Gender',
+		'Procedure',
+		'Age range',
 			//"Observer's first name",
 			//"Observer's last name",
 			"Observer's username",
@@ -200,9 +199,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			
 			MapServ.clearPolygonFilters();
 			
-			
-
-
 		};
 	}
 	]);
@@ -213,6 +209,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.loadingStatus = QRSServ.getLoadingStatus();
 
 		$scope.displayedQRS = {};
+		$scope.displayedQRSIndex = 0;
 		$scope.encounterVisible = true;
 		$scope.encounters = [];
 		// $scope.assignedCount = 0;
@@ -220,15 +217,15 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.chartTwoVisible = true;
 		$scope.filtersVisible = true;
 		$scope.filters = [];
+		$scope.clustering = true;
+		$scope.qrsPanelVisibility=true;
+		$scope.historyPanelVisibility = true;
+		$scope.editingMode = false;
+		$scope.name = [];
 
-		$scope.name = "QRS";
-
-		$scope.renameQRS = function() {
-			$scope.name = prompt("Please enter a new name for this query", $scope.name);
-		}
-
-		$scope.removeQRS = function(index) {
-			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
+		$scope.removeQRS = function() {
+			console.log($scope.displayedQRSIndex);
+			QRSServ.removeFromQRSHistory($scope.QRSHistory[$scope.displayedQRSIndex]);
 		}
 
 		$scope.requery = function(){
@@ -236,7 +233,14 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 		$scope.setDisplayedQRS = function(index) {
+			if(index>=$scope.name.length){
+				$scope.name.push("QRS "+(index+1));
+			}
+			console.log($scope.name[index]);
+
 			$scope.displayedQRS = $scope.QRSHistory[index];
+			$scope.displayedQRSIndex = index;
+			$scope.qrsPanelVisibility = true;
 			updateEncounters();
 			updateFilters();
 			updateChartOneDS();
@@ -256,8 +260,14 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			MapServ.setVectorLayerVisibility($scope.doubleClickedQRS, toggledVisibility);
 		}
 
-		$scope.setQRSClustering = function(status) {
-			MapServ.setClusterStrategyStatus($scope.displayedQRS, status);
+		$scope.getQRSVisibility = function(index) {
+			$scope.currentQRS = $scope.QRSHistory[index];
+			return $scope.currentQRS.isVisible;
+		}
+
+		$scope.toggleQRSClustering = function() {
+			var status = MapServ.getClusterStrategyStatus($scope.displayedQRS);
+			MapServ.setClusterStrategyStatus($scope.displayedQRS, !status);
 		}
 
 		$scope.visibility = function(index){
@@ -429,7 +439,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			a.download    = 'qrs.csv';
 			document.body.appendChild(a);
 			a.click();
-}
+		}
 
 		//--End Export Methods--//
 	}
@@ -502,13 +512,13 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		$scope.scroll_granularity = 10; //every 0.5 is one day
 		var scroller = null;
 
-		$scope.startAutoscroll = function() {
+		$scope.autoscroll = function() {
 			$('#slider').dateRangeSlider('scrollRight', $scope.scroll_granularity/2);
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
 			var values = $scope.sliderModifier("values");
 			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
-            	$scope.$apply();
+				$scope.$apply();
 			}
 		}
 
@@ -520,7 +530,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 
 		$scope.toggleScrolling = function() {
 			if (scroller == null) {
-				scroller = setInterval(function(){$scope.startAutoscroll()}, $scope.scroll_speed*1000);
+				scroller = setInterval(function(){$scope.autoscroll()}, $scope.scroll_speed*1000);
 			} else {
 				$scope.stopAutoscroll();
 			}
@@ -606,7 +616,10 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		
 			console.log("inside savequery");
 			console.log(QRS);
+
 			var data = {};
+			
+			//remember to add a name!
 			data.alias = QRS.alias || 'test';
 			data.query = JSON.stringify(QRS.filters);
 			

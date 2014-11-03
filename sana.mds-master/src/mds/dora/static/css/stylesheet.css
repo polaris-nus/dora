@@ -15,7 +15,7 @@ ul{ padding-left:0; }
 
 .account{
 	float: right;
-	margin-top: 20px;
+	margin-top: 10px;
 	margin-right: 20px;
 	cursor: default;
 }
@@ -37,21 +37,21 @@ ul{ padding-left:0; }
 
 #searchbox{
   position: relative; 
-  width: 400px;
+  width: 30%;
   display: inline-block;
 }
 
 .queryForm{
 	position: relative;
 	z-index: 500;
-	margin-top: 20px;
-  	margin-left: 20px;
-  	white-space: nowrap;
-  	display: inline-block;
+	margin-top: 10px;
+ margin-left: 10px;
+ white-space: nowrap;
+ display: inline-block;
 }
 
 .autocom-input {
-	width: 360px !important;
+	width: 89% !important;
 	white-space: nowrap;
 }
 
@@ -73,6 +73,10 @@ ul{ padding-left:0; }
 	position:relative;
 }
 
+.addCriteria{
+  margin: 0px;
+}
+
 .filters {
 	cursor: default;
 	white-space: normal;
@@ -80,14 +84,29 @@ ul{ padding-left:0; }
 	position: relative;
 }
 
-#requery-btn{
-  float: right;
-}
-
 .alignR{
   margin-left: 10px;
   float: right;
-  height: 26px;
+  margin-top: 5px;
+}
+
+.visibility-btn{
+  border:0px;
+  background-color: transparent;
+}
+
+.icon{
+  right: 5px;
+}
+
+#thumbnail-history-panel{
+  margin-left: 10px;
+}
+
+.cross-btn{
+  border:0px;
+  background-color: transparent;
+  margin-top:5px;
 }
 
 .filter {
@@ -100,12 +119,12 @@ ul{ padding-left:0; }
 }
 
 .noselect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .hover-text-shadow:hover {
@@ -124,144 +143,216 @@ ul{ padding-left:0; }
 	position:absolute;
 }
 
-#qrsbuttons{
+/*#qrsbuttons{
   position: absolute;
   top:70px;
   width: 55px;
   margin-left: 0px;
   display: inline-block;
-}
+  }*/
 
 /*#placeholder{
   width: 20px;
   background-color: red;
-}*/
+  }*/
 
-#qrs-panel-title{
-  display: inline-block;
-}
+  #history-panel{
+    width: 30%;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+  }
 
-#qrs-panel-title:hover{
-  text-decoration: underline;
-}
+  .panel-heading-height{
+    height: 30px;
+    line-height:30px;
+    vertical-align: middle;
+    font-size: 14px;
+    padding-top: 0px;
+  }
 
-.triangle{
-  border: 0px;
-  background: transparent;
-}
+  #history-list{
+    margin: 0px;
+    max-height: 120px;
+    overflow-y: scroll; 
+  }
 
-#qrspanel{
-  position: relative;
-  margin-top: 10px;
-  margin-left: 70px;
-  width: 350px;
-  display: inline-block;
-}
+  .history-entry{
+    height: 25px;
+    line-height:25px;
+    vertical-align: middle;
+    padding-top: 0px;
+  }
+
+  #qrs-panel-title:hover{
+    text-decoration: underline;
+  }
+
+  #qrs-alias{
+    color:#000;
+    width: 80%;
+  }
+
+  .triangle{
+    border: 0px;
+    background: transparent;
+  }
+
+  #result-panel{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 0px;
+    width: 30%;
+  }
+
+  .tooltip .tooltip-inner {
+    z-index: 10001;
+    background-color: #369;
+  }
+  .tooltip.top .tooltip-arrow {
+    border-top-color:  #369;
+    z-index: 10001;
+  }
+
+  #qrs-panel-body{
+    max-height: 450px;
+    overflow-y: scroll; 
+  }
+
+  .side-margin {
+    margin:0px;
+    margin-left:3px;
+    margin-right:3px;
+  }
+
+  html, body{
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #map {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #myModal{
+    z-index: 5000;
+  }
+
+  /* MAP CONTROLS STYLING */
+  .olControlAttribution {
+    bottom: 5px;
+    font-size: smaller;
+  }
+
+  #customZoom {
+    z-index: 1001;
+    position: absolute;
+    bottom: 120px;
+    float: right;
+    right: 60px;
+  }
+
+  .loading{
+    width: 10px;
+    height: 10px;
+  }
+
+  #customZoom a {
+    text-decoration: none;
+    position: absolute;
+    display: block;
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    background: #369;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  #customZoom a:hover {
+    background: #036;
+  }
+  #customZoomOut {
+    top: 30px;
+  }
+
+  #union-intersection{
+    position: absolute;
+    bottom: 20px;
+    margin-left: 20px;
+  }
+
+  #slider-panel{
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+  }
 
 
-#qrs-panel-body{
-  max-height: 450px;
-  overflow-y: scroll; 
-}
+  #slider-div{
+    position: relative;
+    display: inline-block;
+    float:right;
+    width: 600px;
+  }
 
-.side-margin {
-  margin:0px;
-  margin-left:3px;
-  margin-right:3px;
-}
+  #slider{
+    position: relative;
+  }
 
-html, body{
-  margin: 0;
+  #slider-btn{
+    position: relative;
+    border-width:0px;
+    background: transparent;
+    display: inline-block;
+    float:right;
+  }
+
+  .slider-input-div {
+    display:inline-block;
+    float:right;
+  }
+
+  .slider-input {
+    width:50px;
+  }
+
+  .section-heading{
+/*  margin: 0px;
   width: 100%;
-  height: 100%;
-}
-
-#map {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
-
-#myModal{
-  z-index: 5000;
-}
-
-/* MAP CONTROLS STYLING */
-.olControlAttribution {
-  bottom: 5px;
-  font-size: smaller;
-}
-
-#customZoom {
-  z-index: 1001;
-  position: absolute;
-  bottom: 120px;
-  float: right;
-  right: 60px;
-}
-
-#customZoom a {
-  text-decoration: none;
-  position: absolute;
-  display: block;
-  width: 30px;
-  text-align: center;
-  font-weight: bold;
-  color: #fff;
-  background: #369;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-#customZoom a:hover {
-  background: #036;
-}
-#customZoomOut {
-  top: 30px;
-}
-
-#union-intersection{
-  position: absolute;
-  bottom: 20px;
-  margin-left: 20px;
-}
-
-#slider-panel{
-  position: absolute;
-  right: 25px;
-  bottom: 25px;
-}
-
-
-#slider-div{
-  position: relative;
-  display: inline-block;
-  float:right;
-  width: 600px;
-}
-
-#slider{
-  position: relative;
-}
-
-#slider-btn{
-  position: relative;
-  border-width:0px;
-  background: transparent;
-  display: inline-block;
-  float:right;
-}
-
-.slider-input-div {
-  display:inline-block;
-  float:right;
-}
-
-.slider-input {
-  width:50px;
+  background-color: lightblue;*/
 }
 
 /* MAP POPOVER STYLES */
+
+
+.encounter-list{
+  width:100%;
+}
+
+.encounter-name{
+  margin: 0px;
+  font-size: small;
+}
+
+.encounter-procedure{
+ margin: 0px;
+ font-size:medium;
+ white-space: nowrap; 
+ width: 100%;  
+ overflow: hidden; 
+ text-overflow:ellipsis;
+}
+
+.encounter-obeserver{
+ margin: 0px;
+ font-size: small;
+ text-align: right;
+}
 
 .popover-list {
   max-height: 150px;
@@ -283,7 +374,7 @@ html, body{
 }
 
 .bottom-margin{
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
 .bottom{
@@ -294,6 +385,13 @@ html, body{
   left: 5px;
   background-color: red;
   display: inline-block;
+}
+
+.btn-indicator{
+  width: 5px;
+  height: 5px;
+  /*border-radius: 100%;*/
+  border-color: white;
 }
 
 .btn-invisible {

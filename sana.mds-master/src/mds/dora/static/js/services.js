@@ -52,8 +52,9 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 
 			},
 			removeFromQRSHistory: function(QRS){
+				console.log(QRS);
 				var index = QRSHistory.indexOf(QRS);
-
+				console.log(index);
 				if (index > -1) {
 					QRSHistory.splice(index, 1);
 					MapServ.removeVectorLayer(QRS);
@@ -218,65 +219,65 @@ doraServices.service('MapServ', [
 			}
 		});
 
-		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
-			default: new OpenLayers.Style({
-				fillColor: "${filterFillColor}",
-				fillOpacity: 0.4,
-				strokeColor: "${filterStrokeColor}",
-				strokeWidth: 2,
-				strokeOpacity: 1,
-				strokeDashstyle: "solid",
-				graphicZIndex: 1,
-			})
-		});
+var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
+	default: new OpenLayers.Style({
+		fillColor: "${filterFillColor}",
+		fillOpacity: 0.4,
+		strokeColor: "${filterStrokeColor}",
+		strokeWidth: 2,
+		strokeOpacity: 1,
+		strokeDashstyle: "solid",
+		graphicZIndex: 1,
+	})
+});
 
-		var countryPolygonStyle = new OpenLayers.StyleMap({
-			default: {
-				fillOpacity: 0,
-				strokeOpacity: 0,
-			},
-			temporary: {
-				fillColor: "#808080",
-				fillOpacity: 0.6,
-			},
-			select: {
-				fillColor: "#808080",
-				fillOpacity: 0.4,
-				strokeColor: "#808080",
-				strokeWidth: 1,
-				strokeOpacity: 1,
-			}
-		});
+var countryPolygonStyle = new OpenLayers.StyleMap({
+	default: {
+		fillOpacity: 0,
+		strokeOpacity: 0,
+	},
+	temporary: {
+		fillColor: "#808080",
+		fillOpacity: 0.6,
+	},
+	select: {
+		fillColor: "#808080",
+		fillOpacity: 0.4,
+		strokeColor: "#808080",
+		strokeWidth: 1,
+		strokeOpacity: 1,
+	}
+});
 
-		var drawPolygonStyle = new OpenLayers.StyleMap({
-			default: new OpenLayers.Style({
-				fillColor: "#808080",
-				fillOpacity: 0.4,
-				strokeColor: "#808080",
-				strokeWidth: 1,
-				strokeOpacity: 1,
-				label: "${dimension}"
-			}, {
-				context: {
-					dimension: function(feature){
-						if(feature.attributes.circle) {
-							var geometry = feature.geometry;
-							var center = geometry.getCentroid();
-							var point = geometry.getVertices()[0];
-							var pointClone = point.clone().transform("EPSG:900913", "EPSG:4326");
-				      var centerClone = center.clone().transform("EPSG:900913", "EPSG:4326");
-				      var distance = OpenLayers.Util.distVincenty(
-				          new OpenLayers.LonLat(pointClone.x, pointClone.y),
-				          new OpenLayers.LonLat(centerClone.x, centerClone.y)
-				      );
-							return Math.round(distance * 100) / 100 + "km";
-						} else {
-							return "";
-						}
-					}
+var drawPolygonStyle = new OpenLayers.StyleMap({
+	default: new OpenLayers.Style({
+		fillColor: "#808080",
+		fillOpacity: 0.4,
+		strokeColor: "#808080",
+		strokeWidth: 1,
+		strokeOpacity: 1,
+		label: "${dimension}"
+	}, {
+		context: {
+			dimension: function(feature){
+				if(feature.attributes.circle) {
+					var geometry = feature.geometry;
+					var center = geometry.getCentroid();
+					var point = geometry.getVertices()[0];
+					var pointClone = point.clone().transform("EPSG:900913", "EPSG:4326");
+					var centerClone = center.clone().transform("EPSG:900913", "EPSG:4326");
+					var distance = OpenLayers.Util.distVincenty(
+						new OpenLayers.LonLat(pointClone.x, pointClone.y),
+						new OpenLayers.LonLat(centerClone.x, centerClone.y)
+						);
+					return Math.round(distance * 100) / 100 + "km";
+				} else {
+					return "";
 				}
-			})
-		});
+			}
+		}
+	})
+});
 
 		// Adding Utility Layers
 		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
@@ -357,25 +358,25 @@ doraServices.service('MapServ', [
 					var createdDate = createdDateObj.getDate() + "-" + (createdDateObj.getMonth()+1) + "-" + createdDateObj.getFullYear();
 					
 					var template = '<div class="popover-content">' +
-					    '<div class="popover-patient">'+ givenName + familyInitial + " " + age + " " + gender +'</div>'+
-					    '<div class="popover-procedure">'+ encounter.procedure +'</div>'+
-					    '<div class="popover-observer">'+ 'by ' + encounter.observer + ' on ' + createdDate +'</div>'+
-					  '</div>';
-				  return template;
+					'<div class="popover-patient">'+ givenName + familyInitial + " " + age + " " + gender +'</div>'+
+					'<div class="popover-procedure">'+ encounter.procedure +'</div>'+
+					'<div class="popover-observer">'+ 'by ' + encounter.observer + ' on ' + createdDate +'</div>'+
+					'</div>';
+					return template;
 				}
 
 				if(feature.cluster) {
 					popoverHtml = '<div class="popover-list">';
 					for(index in feature.cluster) {
-        		popoverHtml += renderEncounter(feature.cluster[index].attributes.encounter);
+						popoverHtml += renderEncounter(feature.cluster[index].attributes.encounter);
 					}
 					popoverHtml += "</div>";
 
-        } else {
-        	popoverHtml = renderEncounter(feature.attributes.encounter);
-        }
+				} else {
+					popoverHtml = renderEncounter(feature.attributes.encounter);
+				}
 
-	    	var popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
+				var popup = new OpenLayers.Popup.FramedCloud("clusterpopup", 
 					feature.geometry.getBounds().getCenterLonLat(),
 					null,
 					popoverHtml,
@@ -383,11 +384,11 @@ doraServices.service('MapServ', [
 					true,
 					function(){
 						selectClusterControls.unselect(feature);
-	      	}
-	      );
-      	
-      	feature.popup = popup;
-      	map.addPopup(popup);
+					}
+					);
+
+				feature.popup = popup;
+				map.addPopup(popup);
 
 			},
 			onUnselect: function(feature) {
@@ -396,20 +397,20 @@ doraServices.service('MapServ', [
 				feature.popup = null;
 			}
 		});
-		map.addControl(selectClusterControls);
-		selectClusterControls.activate();
+map.addControl(selectClusterControls);
+selectClusterControls.activate();
 
-		var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
-			multiple: true,
-			toggle: true,
-		});
-		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
-			hover: true,
-			highlightOnly: true,
-			renderIntent: "temporary"
-		});
-		map.addControl(hoverCountryControls);
-		map.addControl(selectCountryControls);
+var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+	multiple: true,
+	toggle: true,
+});
+var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+	hover: true,
+	highlightOnly: true,
+	renderIntent: "temporary"
+});
+map.addControl(hoverCountryControls);
+map.addControl(selectCountryControls);
 
 		// Zoom and Pan Event Listeners
 		map.zoomToProxy = map.zoomTo;
@@ -427,26 +428,26 @@ doraServices.service('MapServ', [
 		var parseWKTArray =  function(WKTArray, featureColor) {
 			var polygonFeatures = [];
 
-	  	var addToPolygonFeatures = function(polygonFeature) {
-	  		if (featureColor) {
-	  			polygonFeature.attributes.filterFillColor = featureColor;
-	  			polygonFeature.attributes.filterStrokeColor = featureColor;
-	  		}
-	  		polygonFeatures.push(polygonFeature);
-	  	}
-	  	
-	  	for(i in WKTArray) {
-	  		var polygonFilter = wktParser.read(WKTArray[i]);
-	  		if (polygonFilter instanceof Array) {
-		  		for(j in polygonFilter) {
-		  			addToPolygonFeatures(polygonFilter[j]);
-		  		}
-		  	} else {
-		  		addToPolygonFeatures(polygonFilter);
-		  	}
-	  	}
+			var addToPolygonFeatures = function(polygonFeature) {
+				if (featureColor) {
+					polygonFeature.attributes.filterFillColor = featureColor;
+					polygonFeature.attributes.filterStrokeColor = featureColor;
+				}
+				polygonFeatures.push(polygonFeature);
+			}
 
-	  	return polygonFeatures;
+			for(i in WKTArray) {
+				var polygonFilter = wktParser.read(WKTArray[i]);
+				if (polygonFilter instanceof Array) {
+					for(j in polygonFilter) {
+						addToPolygonFeatures(polygonFilter[j]);
+					}
+				} else {
+					addToPolygonFeatures(polygonFilter);
+				}
+			}
+
+			return polygonFeatures;
 		}
 
 		return {
@@ -465,36 +466,36 @@ doraServices.service('MapServ', [
 			  }
 
 			  // Extract coordinates for encounters
-				var features = [];
-				for(index in QRS.assigned) {
-					var encounter = QRS.assigned[index];
-			    var vectorFeature = wktParser.read(encounter.location.coords);    
+			  var features = [];
+			  for(index in QRS.assigned) {
+			  	var encounter = QRS.assigned[index];
+			  	var vectorFeature = wktParser.read(encounter.location.coords);    
 
-			    vectorFeature.attributes = {
-			    	featureColor: QRS.color.featureColor,
-			    	date: encounter.created_date.split(' ')[0],
-			    	encounter: encounter,
-			    };
-			    features.push(vectorFeature);
+			  	vectorFeature.attributes = {
+			  		featureColor: QRS.color.featureColor,
+			  		date: encounter.created_date.split(' ')[0],
+			  		encounter: encounter,
+			  	};
+			  	features.push(vectorFeature);
 			  }
 
-				features.sort(function (a,b) {
-					dateA = Date.parse(a.attributes.date);
-					dateB = Date.parse(b.attributes.date);
-					if (dateA < dateB)
-						return -1;
-					if (dateA > dateB)
-						return 1;
-					return 0;
-				});
+			  features.sort(function (a,b) {
+			  	dateA = Date.parse(a.attributes.date);
+			  	dateB = Date.parse(b.attributes.date);
+			  	if (dateA < dateB)
+			  		return -1;
+			  	if (dateA > dateB)
+			  		return 1;
+			  	return 0;
+			  });
 
-				var clusterStrategy = new OpenLayers.Strategy.Cluster();
-				clusterStrategy.distance = 30;
-				var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
-					styleMap: clusterMarkerStyle,
-					strategies: [clusterStrategy]
-				});
-				clusterStrategyReferences[clusterLayer.id] = clusterStrategy;
+			  var clusterStrategy = new OpenLayers.Strategy.Cluster();
+			  clusterStrategy.distance = 30;
+			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
+			  	styleMap: clusterMarkerStyle,
+			  	strategies: [clusterStrategy]
+			  });
+			  clusterStrategyReferences[clusterLayer.id] = clusterStrategy;
 
 			  // Create clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
@@ -531,6 +532,13 @@ doraServices.service('MapServ', [
 					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
 				}
 			},
+			getClusterStrategyStatus: function(QRS) {
+				if(QRS.clusterLayerId) {
+					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
+					return clusterStrategy.active;
+				}
+				return null;
+			},
 			zoomToFitVectorFeatures: function(QRS) {
 				if(QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
@@ -561,7 +569,7 @@ doraServices.service('MapServ', [
 						function(element) {
 							return element.id.localeCompare(QRS.clusterLayerId) !== 0
 						}
-					)
+						)
 					selectClusterControls.setLayer(selectControlsLayers);
 
 					//Manual cleanup on visibleLayers and clusterLayerFeatures
@@ -569,7 +577,7 @@ doraServices.service('MapServ', [
 						function(element) {
 							return element.localeCompare(QRS.clusterLayerId) !== 0
 						}
-					)
+						)
 					delete clusterLayerFeatures[QRS.clusterLayerId];
 
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
@@ -678,13 +686,18 @@ doraServices.service('MapServ', [
 						}
 					}
 				}
-				var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
-				$("#slider").dateRangeSlider({
-					bounds:{
-					    min: new Date(minDate), //This value should be changed to the latest date available
-					    max: new Date()
-					  }
+
+				var modifySliderMinBound = function() {
+					var lowerBound = $("#slider").dateRangeSlider("option", "bounds").min;
+					$("#slider").dateRangeSlider({
+						bounds:{
+						    min: new Date(minDate), //This value should be changed to the latest date available
+						    max: new Date()
+						}
 					});
+					console.log(this);
+				}
+				modifySliderMinBound();
 			},
 			temporalSliderFeaturesToggle: function() {
 				selectClusterControls.unselectAll();
@@ -798,16 +811,16 @@ doraServices.service('MapServ', [
 doraServices.service('PaletteServ', [
 	function(){
 		var palette = [
-			{cssIndex: 0, color:'#B71B1B', inUse: false},
-			{cssIndex: 1, color:'#FF7B11', inUse: false},
-			{cssIndex: 2, color:'#FFDD49', inUse: false},
-			{cssIndex: 3, color:'#B0E353', inUse: false},
-			{cssIndex: 4, color:'#41B368', inUse: false},
-			{cssIndex: 5, color:'#3D7C9B', inUse: false},
-			{cssIndex: 6, color:'#4C55A9', inUse: false},
-			{cssIndex: 7, color:'#6E46A6', inUse: false},
-			{cssIndex: 8, color:'#B94395', inUse: false},
-			{cssIndex: 9, color:'#E15273', inUse: false}
+		{cssIndex: 0, color:'#B71B1B', inUse: false},
+		{cssIndex: 1, color:'#FF7B11', inUse: false},
+		{cssIndex: 2, color:'#FFDD49', inUse: false},
+		{cssIndex: 3, color:'#B0E353', inUse: false},
+		{cssIndex: 4, color:'#41B368', inUse: false},
+		{cssIndex: 5, color:'#3D7C9B', inUse: false},
+		{cssIndex: 6, color:'#4C55A9', inUse: false},
+		{cssIndex: 7, color:'#6E46A6', inUse: false},
+		{cssIndex: 8, color:'#B94395', inUse: false},
+		{cssIndex: 9, color:'#E15273', inUse: false}
 		]
 
 		return {
