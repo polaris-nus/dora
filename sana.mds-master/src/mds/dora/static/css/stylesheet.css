@@ -193,6 +193,14 @@ ul{ padding-left:0; }
   width: 30%;
 }
 
+.tooltip .tooltip-inner {
+  z-index: 10001;
+  background-color: #369;
+}
+.tooltip.top .tooltip-arrow {
+  border-top-color:  #369;
+  z-index: 10001;
+}
 
 #qrs-panel-body{
   max-height: 450px;

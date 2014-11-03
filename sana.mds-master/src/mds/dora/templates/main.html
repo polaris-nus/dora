@@ -27,6 +27,11 @@
   <script src="/static/angular-modules/slider/jQDateRangeSlider-min.js"></script>
   <script type="text/javascript" src="/static/angular-modules/allmighty-autocomplete/autocomplete.js"></script>
   <script src="/static/bootstrap/js/bootstrap.min.js"> </script>
+  <script>
+  $(document).ready(function (){
+    $('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+  });
+  </script>
 </head>
 {% verbatim %}
 <body>
@@ -126,27 +131,27 @@
         <span class="glyphicon glyphicon-th-list icon"></span>
         Query History
         <!-- hide button -->
-        <button type="button" class="btn btn-info btn-xs alignR" ng-click="historyPanelVisibility=false">
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="historyPanelVisibility=false" data-toggle="tooltip" title="hide panels">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </button>  
         <!-- delete button -->
-        <button type="button" class="btn btn-info btn-xs alignR" ng-click="removeQRS($index)">
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS($index)" data-toggle="tooltip" title="delete">
           <span class="glyphicon glyphicon-remove"></span>
         </button>  
         <!-- save button -->
-        <button type="button" class="btn btn-info btn-xs alignR" type="submit">
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" data-toggle="tooltip" title="save">
           <span class="glyphicon glyphicon-floppy-disk"></span>
         </button>
         <!-- export button -->
-        <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" ng-click="exportQRS()" data-toggle="tooltip" title="export">
           <span class="glyphicon glyphicon-save"></span>
         </button>
         <!-- clustering on/off button -->
-        <button type="button" class="btn btn-info btn-xs alignR" ng-click="toggleQRSClustering()">
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="toggleQRSClustering()" data-toggle="tooltip" title="toggle clustering">
           <span class="glyphicon glyphicon-record"></span>
         </button>
-        <!-- requery button -->
-        <button type="button" class="btn btn-info btn-xs alignR" ng-click="requery()" >
+        <!-- copy button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="requery()" data-toggle="tooltip" title="duplicate query">
           <span class="glyphicon glyphicon-pencil"></span>
         </button>
       </div>
