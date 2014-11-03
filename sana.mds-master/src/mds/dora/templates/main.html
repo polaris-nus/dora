@@ -27,7 +27,6 @@
   <script src="/static/angular-modules/slider/jQDateRangeSlider-min.js"></script>
   <script type="text/javascript" src="/static/angular-modules/allmighty-autocomplete/autocomplete.js"></script>
   <script src="/static/bootstrap/js/bootstrap.min.js"> </script>
-
 </head>
 {% verbatim %}
 <body>
@@ -130,11 +129,14 @@
         <button type="button" class="btn btn-info btn-xs alignR" ng-click="historyPanelVisibility=false">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </button>  
-
         <!-- delete button -->
         <button type="button" class="btn btn-info btn-xs alignR" ng-click="removeQRS($index)">
           <span class="glyphicon glyphicon-remove"></span>
         </button>  
+        <!-- save button -->
+        <button type="button" class="btn btn-info btn-xs alignR" type="submit">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+        </button>
         <!-- export button -->
         <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
           <span class="glyphicon glyphicon-save"></span>
