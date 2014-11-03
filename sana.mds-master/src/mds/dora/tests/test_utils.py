@@ -21,24 +21,28 @@ class UtilsTestCase(TestCase):
 		request = self.factory.post('/dora/query/', {'gender': 'M'})
 		query, concepts_list, locations_list = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
+		query_result_set = query_result_set.order_by('uuid')
 		check_assertions(self, query_result_set, results, 0)
 
 		#assert with age_range
 		request = self.factory.post('/dora/query/', {'age_range': '65-75', 'gender':'M'})
 		query, concepts_list, locations_list = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
+		query_result_set = query_result_set.order_by('uuid')
 		check_assertions(self, query_result_set, results, 1)
 
 		#assert with concept, non-concept, age_range
 		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'age_range':'65-75'})
 		query, concepts_list, locations_list = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
+		query_result_set = query_result_set.order_by('uuid')
 		check_assertions(self, query_result_set, results, 2)
 
 		#assert with disease,gender,location,age_range
 		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'location':'GEOMETRYCOLLECTION(POLYGON ((-3 0, -3 15, 0 15, 0 0, -3 0)))', 'age_range':'65-75'})
 		query, concepts_list, locations_list = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
+		query_result_set = query_result_set.order_by('uuid')
 		check_assertions(self, query_result_set, results, 3)
 
 		#assert with nothing (edge case)
