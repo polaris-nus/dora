@@ -151,10 +151,10 @@
        <!--   <div class="panel-body"> -->
        <div class="list-group" id="history-list">
         <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-         <button type="button" class="btn btn-info btn-xs visibility-btn" ng-show="getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
+         <button type="button" class="btn-xs visibility-btn" ng-show="getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
            <span class="glyphicon glyphicon-eye-open"></span>
          </button>
-         <button type="button" class="btn btn-info btn-xs visibility-btn" ng-show="!getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
+         <button type="button" class="btn-xs visibility-btn" ng-show="!getQRSVisibility($index);" ng-click="toggleQRSVisibility($index);">
            <span class="glyphicon glyphicon-eye-close"></span>
          </button>
           <span class="alias">qrs</span>
