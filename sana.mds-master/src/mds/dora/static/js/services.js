@@ -51,6 +51,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 
 			},
 			removeFromQRSHistory: function(QRS){
+				console.log(QRS);
 				var index = QRSHistory.indexOf(QRS);
 				console.log(index);
 				if (index > -1) {

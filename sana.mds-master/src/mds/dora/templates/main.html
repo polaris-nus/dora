@@ -128,9 +128,6 @@
 
    <!-- <img src="/static/loading.gif" class="above loading" ng-show="loadingStatus.count > 0"/> -->
 
-
-
-
    <!-- Start of History Panel -->
    <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0">
     <div class="panel-heading panel-heading-height">
@@ -141,7 +138,7 @@
         <span class="glyphicon glyphicon-chevron-left"></span>
       </button>  
       <!-- delete button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS($index)" data-toggle="tooltip" title="delete">
+      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS()" data-toggle="tooltip" title="delete">
         <span class="glyphicon glyphicon-remove"></span>
       </button>  
       <!-- save button -->

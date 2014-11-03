@@ -18,7 +18,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 		//sets the filter from the QueryResultController
 		$scope.setfilters = function(newFilters){
-		
+
 			// console.log(newFilters);
 			
 			$scope.filters = [];
@@ -51,11 +51,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 
 		//autocomplete filter types
 		$scope.data = [
-			"Patient's family name",
-			"Patient's given name",
-			'Gender',
-			'Procedure',
-			'Age range',
+		"Patient's family name",
+		"Patient's given name",
+		'Gender',
+		'Procedure',
+		'Age range',
 			//"Observer's first name",
 			//"Observer's last name",
 			"Observer's username",
@@ -161,10 +161,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 			for (var i = 0; i < $scope.filters.length; i++){
 				var filter = $scope.filters[i];
 				var key = filter.key
-					.trim()
-					.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
-					.replace(new RegExp(escapeRegExp("'"), 'g'), "")
-					.toLowerCase();
+				.trim()
+				.replace(new RegExp(escapeRegExp(" "), 'g'), "_")
+				.replace(new RegExp(escapeRegExp("'"), 'g'), "")
+				.toLowerCase();
 				data[key] = filter.value.trim();
 			}
 
@@ -201,19 +201,19 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 					displayModal(
 						"Error: Unauthorized!",
 						"You are unauthorized to make this query. Please login and try again."
-					);
+						);
 				} else if (QRS.status === 'error') {
 					//Some Error!
 					displayModal(
 						"Error: Query Not Understood!",
 						"The query input was not understood. Please check for errors and try again!"
-					);
+						);
 				} else if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
 					//Empty Set!
 					displayModal(
 						"Error: Query Result is Empty!",
 						"The combination of filters provided returned an empty result set. Please generalize your query and try again!"
-					);
+						);
 				} else {
 					QRS.filters = data;
 					QRSServ.addToQRSHistory(QRS);
@@ -221,7 +221,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				}
 				
 				MapServ.clearPolygonFilters();
-	
+
 				$scope.key = '';
 				$scope.input = '';
 				
@@ -239,7 +239,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', '$http',
 				displayModal(
 					"Error: Unexpected!",
 					"You have performed an unexpected command! Please report your findings to the administrator so it can be rectified ASAP. Thank you!"
-				);
+					);
 			});
 
 		};
@@ -267,8 +267,8 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.name = [];
 
 		$scope.removeQRS = function() {
-			console.log($scope.QRSHistory[$scope.displayedQRSIndex]);
-			QRSServ.removeFromQRSHistory($scope.QRSHistory[index]);
+			console.log($scope.displayedQRSIndex);
+			QRSServ.removeFromQRSHistory($scope.QRSHistory[$scope.displayedQRSIndex]);
 		}
 
 		$scope.requery = function(){
@@ -485,7 +485,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			a.download    = 'qrs.csv';
 			document.body.appendChild(a);
 			a.click();
-}
+		}
 
 		//--End Export Methods--//
 	}
@@ -564,7 +564,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 			var values = $scope.sliderModifier("values");
 			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
-            	$scope.$apply();
+				$scope.$apply();
 			}
 		}
 
@@ -588,7 +588,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		});
 
 	}
-]);
+	]);
 
 doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http){
@@ -618,7 +618,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 			
 			var data = JSON.parse(queryObj.query);
 			//var filterFeatures = JSON.parse(queryObj.features);
-		
+
 			$http({
 				method: 'POST',
 				url: '/dora/query/',
@@ -671,7 +671,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//save
 		$scope.saveQuery = function(QRS, name) {
-		
+
 			// console.log("inside savequery");
 			
 			var data = {};
@@ -724,4 +724,4 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		$scope.loadQueries();
 
 	}
-]);
+	]);
