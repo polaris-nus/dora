@@ -164,11 +164,9 @@
             <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
             <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
           </button>
-
- <!--          <span ng-show="!editingMode" ng-click="editingMode=true"> {{name}} </span>
-          <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="name"> -->
-                  <span ng-show="!editingMode" ng-click="editingMode=true"> {{name[index]}} </span>
-
+          <span ng-show="!editingMode" ng-click="editingMode=true"> {{name[$index]}} </span>
+          <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="name[$index]">
+          
           <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
         </a>
         <!-- </div> -->
