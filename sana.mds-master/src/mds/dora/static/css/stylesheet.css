@@ -80,10 +80,6 @@ ul{ padding-left:0; }
 	position: relative;
 }
 
-#requery-btn{
-  float: right;
-}
-
 .alignR{
   margin-left: 10px;
   float: right;
@@ -93,6 +89,16 @@ ul{ padding-left:0; }
 .visibility-btn{
   border:0px;
   background-color: transparent;
+}
+
+.icon{
+  right: 5px;
+}
+
+.cross-btn{
+  border:0px;
+  background-color: transparent;
+  margin-top:5px;
 }
 
 .filter {
@@ -148,7 +154,7 @@ ul{ padding-left:0; }
   margin-top: 10px;
 }
 
-#history-panel-heading{
+.panel-heading-height{
   height: 30px;
   line-height:30px;
   vertical-align: middle;
@@ -179,11 +185,8 @@ ul{ padding-left:0; }
 }
 
 #qrspanel{
-  position: relative;
-  margin-top: 10px;
-  margin-left: 70px;
-  width: 350px;
-  display: inline-block;
+  margin-left: 20px;
+  width: 25%;
 }
 
 

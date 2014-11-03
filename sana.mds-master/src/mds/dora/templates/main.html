@@ -43,28 +43,27 @@
         </div>
       </div>
 
-       <div class="account above noselect">
+      <div class="account above noselect">
         <div class="username" ng-click="toggleSavePanel()">
-         <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
-         <span ng-show="savePanelVisibility">&and;</span>
-         <span ng-hide="savePanelVisibility">&or;</span>
+          <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
+          <span ng-show="savePanelVisibility">&and;</span>
+          <span ng-hide="savePanelVisibility">&or;</span>
         </div>
         <div ng-show="savePanelVisibility" class="panel panel-default savedQueries">
-         <div class="panel-heading">Saved Queries</div>
-         <ul class="list-group">
-         <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
-         <li class="list-group-item" 
-         ng-repeat="query in savedQueries"
-         ng-click="executeQuery(query)">
-          {{query.alias}}
-          <span ng-click="deleteQuery(query, $index)" class="glyphicon glyphicon-remove" style="float:right;"></span>
-         </li>
-        </ul>
-       </div>
+          <div class="panel-heading">Saved Queries</div>
+          <ul class="list-group">
+            <li class="list-group-item" ng-hide="saveQueries.length">No saved queries</li>
+            <li class="list-group-item" 
+            ng-repeat="query in savedQueries"
+            ng-click="executeQuery(query)">
+            {{query.alias}}
+              <span ng-click="deleteQuery(query, $index)" class="glyphicon glyphicon-remove" style="float:right;"></span>
+            </li>
+          </ul>
+        </div>
       </div>
-      
-      <div ng-controller="QueryFormController">
 
+      <div ng-controller="QueryFormController">
         <!-- Start Error Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
@@ -85,83 +84,93 @@
         <!-- End Error Modal -->
 
         <div class="queryForm">
-         <div class="above input-group" id="searchbox">
-          <form ng-submit="submitFilter()">
-           <div class="form-control autocom-input">
-            <span ng-bind="key" id="key"></span>
-            <span ng-show="key">:</span>
-            <autocomplete ng-model="input" on-select="selectFilter" 
-            attr-input-class="removeInputStyle"
-            data="data"
-            key="key"
-            attr-class="autocom-div"></autocomplete>
-           </div>
-           <span class="input-group-btn">
-            <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
-             <span class="glyphicon glyphicon-plus"></span>
+          <div class="above input-group" id="searchbox">
+            <form ng-submit="submitFilter()">
+              <div class="form-control autocom-input">
+                <span ng-bind="key" id="key"></span>
+                <span ng-show="key">:</span>
+                <autocomplete ng-model="input" on-select="selectFilter" 
+                attr-input-class="removeInputStyle"
+                data="data"
+                key="key"
+                attr-class="autocom-div"></autocomplete>
+              </div>
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </span>
+            </form>
+          </div>
+
+          <div class="location-options">
+            <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
+            <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
+            <div class="location-radio" ng-show="locationSearchOn">
+              <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
+              <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
+              <!--        <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br> -->
+              <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
+            </div>
+          </div>
+
+          <div class="filters noselect">
+            <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
+            <span class="filter" ng-repeat="filter in filters">
+              <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
+              <span ng-click="removeFilter($index, filter)" class="bold hover-text-shadow">&#215;&nbsp;</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div ng-controller="QueryResultController">
+        <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility">
+          <div class="panel-heading panel-heading-height">
+            <span class="glyphicon glyphicon-th-list icon" ></span>
+            Query History
+            <!-- hide button -->
+            <button type="button" class="btn btn-info btn-xs alignR" ng-click="historyPanelVisibility=false">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+            </button>  
+
+            <!-- delete button -->
+            <button type="button" class="btn btn-info btn-xs alignR">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>  
+            <!-- export button -->
+            <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
+              <span class="glyphicon glyphicon-save"></span>
             </button>
-           </span>
-          </form>
+            <!-- clustering on/off button -->
+            <button type="button" class="btn btn-info btn-xs alignR" ng-click="toggleQRSClustering()">
+              <span class="glyphicon glyphicon-record"></span>
+            </button>
+            <!-- requery button -->
+            <button type="button" class="btn btn-info btn-xs alignR" ng-click="requery()" >
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+          </div>
+
+          <!--   <div class="panel-body"> -->
+          <div class="list-group" id="history-list">
+            <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+             <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
+               <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
+               <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
+             </button>
+             <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
+             <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
+           </a>
+           <!-- </div> -->
          </div>
-
-    <div class="location-options">
-      <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
-      <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
-      <div class="location-radio" ng-show="locationSearchOn">
-       <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="polygon" ng-change="changeMode(mapServMode)" checked>Add Polygon<br>
-       <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="circle" ng-change="changeMode(mapServMode)">Add Circle<br>
-<!--        <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="modify" ng-change="changeMode(mapServMode)">Modify Shapes<br> -->
-       <input type="radio" ng-model="mapServMode" name="mapDrawControls" value="country" ng-change="changeMode(mapServMode)">Add Country 
-     </div>
-    </div>
-
-       <div class="filters noselect">
-        <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
-        <span class="filter" ng-repeat="filter in filters">
-         <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
-         <span ng-click="removeFilter($index, filter)" class="bold hover-text-shadow">&#215;&nbsp;</span>
-       </span>
-     </div>
-   </div>
- </div>
-
-
-
-    <div ng-controller="QueryResultController">
-      <div class="above panel panel-info" id="history-panel">
-        <div class="panel-heading" id="history-panel-heading">
-         Query History
-         <button type="button" class="btn btn-info btn-xs alignR">
-           <span class="glyphicon glyphicon-remove"></span>
-         </button>  
-
-         <button type="button" class="btn btn-info btn-xs alignR" type="submit" ng-click="exportQRS()">
-           <span class="glyphicon glyphicon-save"></span>
-         </button>
-
-         <button type="button" class="btn btn-info btn-xs alignR">
-           <span class="glyphicon glyphicon-record"></span>
-         </button>
-
-         <button type="button" class="btn btn-info btn-xs alignR">
-           <span class="glyphicon glyphicon-pencil"></span>
-         </button>
        </div>
 
-       <!--   <div class="panel-body"> -->
-       <div class="list-group" id="history-list">
-        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="visibility($index)" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-         <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
-           <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
-           <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
-         </button>
-          <span ng-click="renameQRS()" id="qrs-alias"> {{name}} </span>
-          <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
-        </a>
-        <!-- </div> -->
-      </div>
-    </div>
-
+       <div class="above" ng-show="!historyPanelVisibility">
+         <!-- <button type="button" class="btn btn-default" ng-click="historyPanelVisibility=true"> -->
+         <span class="glyphicon glyphicon-th-list"></span>
+         <!-- </button>   -->
+       </div>
 
 <!--       <div class="above" id="qrsbuttons">
         <div class="nowrap" ng-repeat="qrs in QRSHistory"  ng-mouseleave="hover=false">
@@ -172,25 +181,25 @@
         </div>
         <img src="/static/loading.gif" ng-show="loadingStatus.count > 0"/>
       </div>
- -->
+    -->
 
-      <div class="above" id="qrspanel"> 
+      <div class="above" id="qrspanel" ng-show="qrsPanelVisibility"> 
         <!-- ng-show="{{QRSHistory}}"-->
         <div class="panel panel-info">
-          <div class="panel-heading">
-         
-          
-            <button class="btn btn-info alignR"ng-click="setQRSClustering(false)">Cluster Off</button>
-            <button class="btn btn-info alignR" ng-click="setQRSClustering(true)">Cluster On</button>
-          </div>
+          <div class="panel-heading panel-heading-height">
+            Query Result
+            <button type="button" class="btn-xs alignR cross-btn" ng-click="qrsPanelVisibility=false">
+             <span class="glyphicon glyphicon-remove"></span>
+           </button> 
+         </div>
 
-          <div class="panel-body" id="qrs-panel-body">  
-            <!-- display filters -->
-            <div>
-              <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
+         <div class="panel-body" id="qrs-panel-body">  
+          <!-- display filters -->
+          <div>
+            <img  ng-click="filtersVisible=!filtersVisible" ng-show="filtersVisible" class="inline triangle" src="/static/images/open.png" width="14" height="12" alt="submit" />
               <img ng-click="filtersVisible=!filtersVisible" ng-show="!filtersVisible" class="inline triangle"  src="/static/images/close.png" width="12" height="14" alt="submit" />
               <a ng-click="filtersVisible=!filtersVisible">Filters</a>
-              <button class="btn btn-info" ng-click="requery()" id="requery-btn">requery</button>
+
               <div ng-show="filtersVisible">
                 <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
               </div>
