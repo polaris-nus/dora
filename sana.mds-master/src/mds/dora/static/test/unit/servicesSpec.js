@@ -133,7 +133,7 @@ describe('Dora services', function() {
 
   });
 
-  ddescribe('PaletteServ', function(){
+  describe('PaletteServ', function(){
     var PaletteServ;
 
     beforeEach(inject(function(_PaletteServ_) {

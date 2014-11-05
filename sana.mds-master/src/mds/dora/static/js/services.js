@@ -52,9 +52,8 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 
 			},
 			removeFromQRSHistory: function(QRS){
-				console.log(QRS);
 				var index = QRSHistory.indexOf(QRS);
-				console.log(index);
+				
 				if (index > -1) {
 					QRSHistory.splice(index, 1);
 					MapServ.removeVectorLayer(QRS);
@@ -696,7 +695,6 @@ doraServices.service('MapServ', [
 						    max: new Date()
 						}
 					});
-					console.log(this);
 				}
 				modifySliderMinBound();
 			},
