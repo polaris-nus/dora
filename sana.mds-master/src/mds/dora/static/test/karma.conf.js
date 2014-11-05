@@ -10,7 +10,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine-jquery', 'jasmine'],
 
 
     // list of files / patterns to load in the browser
@@ -22,6 +22,8 @@ module.exports = function(config) {
       'ol2/custom-regpolyhandler.js',
       'https://www.google.com/jsapi',
       'jquery/jquery.js',
+      'jquery-ui/jquery-ui.custom.js',
+      'angular-modules/slider/jQDateRangeSlider-min.js',
       'js/*.js',
       'test/unit/*.js'
     ],
@@ -36,6 +38,7 @@ module.exports = function(config) {
 
     plugins : [
       'karma-chrome-launcher',
+      'karma-jasmine-jquery',
       'karma-jasmine'
     ],
 

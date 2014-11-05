@@ -6,7 +6,8 @@
   "devDependencies": {
     "karma": "^0.12.23",
     "karma-chrome-launcher": "^0.1.4",
-    "karma-jasmine": "^0.1.5",
+    "karma-jasmine": "^0.2.0",
+    "karma-jasmine-jquery": "^0.1.1",
     "karma-junit-reporter": "^0.2.2",
     "protractor": "^1.1.1"
   },
