@@ -10,7 +10,6 @@ describe('Dora services', function() {
       MapServ = _MapServ_;
       QRS1 = TestingQRS.getStub(0);
       QRS2 = TestingQRS.getStub(1);
-      spyOn(MapServ, 'setSliderMinBound');
     }));
 
     it('should contain 2 QRS in QRSHistory', function() {
@@ -18,7 +17,7 @@ describe('Dora services', function() {
       QRSServ.addToQRSHistory(QRS2);
       expect(QRSServ.getQRSHistory().length).toBe(2);
     });
-
+ 
     it('should limit to 10 QRS in QRSHistory', function() {
       for(var i = 0; i < 15; i++) {
         QRSServ.addToQRSHistory(TestingQRS.getStub(0));
@@ -38,13 +37,13 @@ describe('Dora services', function() {
 	});
 
   describe('MapServ', function(){
-    var MapServ, QRS1, QRS2;
+    var MapServ, QRS1, QRS2, QRSServ;
     
-    beforeEach(inject(function(_MapServ_){
+    beforeEach(inject(function(_MapServ_, _QRSServ_){
       MapServ = _MapServ_;
+      QRSServ = _QRSServ_;
       QRS1 = TestingQRS.getStub(0);
       QRS2 = TestingQRS.getStub(1);
-      spyOn(MapServ, 'setSliderMinBound');
     }));
 
     it('should add a vector layer with 1 cluster of 2 points on map', function() {
@@ -129,6 +128,46 @@ describe('Dora services', function() {
       "GEOMETRYCOLLECTION(POLYGON((-9.492187500000112 26.44979032978419,-9.84375000000045 6.100892668623654,8.261718750000012 5.926426847059551,6.8554687500000115 33.95799531086818,-9.492187500000112 26.44979032978419)),POLYGON((-8.492187500000112 27.44979032978419,-8.84375000000045 7.100892668623654,7.261718750000012 6.926426847059551,5.8554687500000115 34.95799531086818,-8.492187500000112 27.44979032978419)))"
       ];
       expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(3);
+    });
+
+    it('should set slider min bound to the earliest in all visible datasets and return min date', function() {
+      //Only one QRS
+      QRSServ.addToQRSHistory(QRS1);
+      expect(QRSServ.getQRSHistory().length).toBe(1);
+      expect(MapServ.setSliderMinBound()).toEqual("Fri Oct 26 2012");
+
+      //On addition of second QRS
+      QRSServ.addToQRSHistory(QRS2);
+      expect(QRSServ.getQRSHistory().length).toBe(2);
+      expect(MapServ.setSliderMinBound()).toEqual("Tue Jun 25 2013");
+
+      //On toggling the visibility of both QRSes to be visible
+      QRSHistory = QRSServ.getQRSHistory();
+      for (index in QRSHistory) {
+        QRSHistory[index].isVisible = true;
+        MapServ.setVectorLayerVisibility(QRSHistory[index], true);
+      }
+      expect(MapServ.setSliderMinBound()).toEqual("Fri Oct 26 2012");
+    });
+
+    it('should be able to hide and show features correctly', function() {
+			QRSServ.addToQRSHistory(QRS1);
+      QRSServ.addToQRSHistory(QRS2);
+      expect(QRSServ.getQRSHistory().length).toBe(2);
+      QRSHistory = QRSServ.getQRSHistory();
+      for (index in QRSHistory) {
+        QRSHistory[index].isVisible = true;
+        MapServ.setVectorLayerVisibility(QRSHistory[index], true);
+      }
+
+      MapServ.setSliderMinMax('11/12/2012', '12/12/2012');
+			MapServ.temporalSliderFeaturesToggle();
+    	expect(MapServ.verifyOrderInVisibleLayers()).toBe(0);
+
+      MapServ.setSliderMinMax('06/24/2011', '06/26/2015');
+			MapServ.temporalSliderFeaturesToggle();
+    	expect(MapServ.verifyOrderInVisibleLayers()).toBe(0);
+
     });
 
   });

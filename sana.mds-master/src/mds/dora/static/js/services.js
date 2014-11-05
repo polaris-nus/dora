@@ -550,7 +550,9 @@ doraServices.service('MapServ', [
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
 					clusterLayer.setVisibility(visibility);
 					if (clusterLayer.getVisibility()) {
-						visibleLayers.push(QRS.clusterLayerId);
+						if (visibleLayers.indexOf(QRS.clusterLayerId) == -1) {
+							visibleLayers.push(QRS.clusterLayerId);
+						}
 					} else if (visibleLayers.indexOf(QRS.clusterLayerId) != -1) {
 						visibleLayers.splice(visibleLayers.indexOf(QRS.clusterLayerId),1);
 					}
@@ -671,11 +673,11 @@ doraServices.service('MapServ', [
 			setSliderMinBound: function() {
 				//Always set slider bounds to the earliest date of all feature layers
 				//Which one has the latest date
-				minDate = new Date()
+				var minDate = new Date()
 				for (var i=0; i<visibleLayers.length;i++) {
-					clusterLayerId = visibleLayers[i];
-					features = clusterLayerFeatures[clusterLayerId].features;
-					leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
+					var clusterLayerId = visibleLayers[i];
+					var features = clusterLayerFeatures[clusterLayerId].features;
+					var leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
 					if (leftStack.length > 0) {
 						if (Date.parse(leftStack[0].attributes.date) < Date.parse(minDate)) {
 							minDate = leftStack[0].attributes.date;
@@ -697,6 +699,9 @@ doraServices.service('MapServ', [
 					});
 				}
 				modifySliderMinBound();
+
+				minDate = new Date(minDate);
+				return minDate.toDateString();
 			},
 			temporalSliderFeaturesToggle: function() {
 				selectClusterControls.unselectAll();
@@ -726,7 +731,7 @@ doraServices.service('MapServ', [
 						}
 					}
 
-					function addBackFromLeftStackMoreThanMinDate(features,LeftStack) {
+					function addBackFromLeftStackMoreThanMinDate(features,leftStack) {
 						if (leftStack.length != 0) {
 							leftStackTopDate = Date.parse(peek(leftStack).attributes.date);
 							while (leftStack.length != 0 && leftStackTopDate >= minDate) {
@@ -746,7 +751,7 @@ doraServices.service('MapServ', [
 						}
 					}
 
-					function addBackFromrightStackLessThanMaxDate(features,LeftStack) {
+					function addBackFromrightStackLessThanMaxDate(features,rightStack) {
 						if (rightStack.length != 0) {
 							rightStackTopDate = Date.parse(peek(rightStack).attributes.date);
 							while (rightStack.length != 0 && rightStackTopDate <= maxDate) {
@@ -757,23 +762,19 @@ doraServices.service('MapServ', [
 					}
 
 					function toggleMarkerVisibility(clusterLayerId) {
-					//DONE! -- Step 1: Take in temporal slider min max date.
-					clusterLayer = map.getLayer(clusterLayerId);
-					features = clusterLayerFeatures[clusterLayerId].features;
-					leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
-					rightStack = clusterLayerFeatures[clusterLayerId].rightStack;
+						//DONE! -- Step 1: Take in temporal slider min max date.
+						var clusterLayer = map.getLayer(clusterLayerId);
+						var leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
+						var features = clusterLayerFeatures[clusterLayerId].features;
+						var rightStack = clusterLayerFeatures[clusterLayerId].rightStack;
 
-					removeFeaturesLessThanMinDate(features,leftStack);
-					removeFeaturesMoreThanMaxDate(features,rightStack);
-					addBackFromLeftStackMoreThanMinDate(features,leftStack);
-					addBackFromrightStackLessThanMaxDate(features,rightStack);
+						removeFeaturesLessThanMinDate(features,leftStack);
+						removeFeaturesMoreThanMaxDate(features,rightStack);
+						addBackFromLeftStackMoreThanMinDate(features,leftStack);
+						addBackFromrightStackLessThanMaxDate(features,rightStack);
 
-					/*console.log(features);
-					console.log(leftStack);
-					console.log(rightStack);*/
-
-					redrawFeatures(clusterLayer, features);
-				}
+						redrawFeatures(clusterLayer, features);
+					}
 
 				for (var i=0; i<visibleLayers.length;i++) {
 					toggleMarkerVisibility(visibleLayers[i]);
@@ -802,7 +803,60 @@ doraServices.service('MapServ', [
 					}
 				}
 			},
+			verifyOrderInVisibleLayers: function() {
 
+				function checkLayerOrder(clusterLayerId) {
+					//DONE! -- Step 1: Take in temporal slider min max date.
+					var clusterLayer = map.getLayer(clusterLayerId);
+					var features = clusterLayerFeatures[clusterLayerId].features;
+					var leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
+					var rightStack = clusterLayerFeatures[clusterLayerId].rightStack;
+
+					console.log(features.length);
+					console.log(leftStack.length);
+					console.log(rightStack.length);
+
+					function checkOrder(array) {
+						if (array.length > 1) {
+							for (var i = 1; i < array.length; i++) {
+								currDate = Date.parse(array[i].attributes.date);
+								prevDate = Date.parse(array[i-1].attributes.date);
+								if (currDate > prevDate) {
+									return 1;
+								}
+							}
+						}
+					}
+
+					function checkArrayConsecutivity(array1, array2) {
+						if (array1.length > 0 && array2.length > 0) {
+							date1 = Date.parse(array1[array1.length-1].attributes.date);
+							date2 = Date.parse(array2[0].attributes.date);
+							if (date1 > date2) {
+								return 1;
+							}
+						}
+					}
+
+					checkOrder(leftStack);
+					checkOrder(features);
+					checkOrder(rightStack);
+					checkArrayConsecutivity(leftStack, features);
+					checkArrayConsecutivity(features, rightStack);
+
+					return 0;
+				}
+
+				console.log(visibleLayers);
+				for (var i=0; i<visibleLayers.length;i++) {
+					console.log("index"+i);
+					if (checkLayerOrder(visibleLayers[i])) {
+						return 1;
+					}
+				}
+
+				return 0;
+			},
 		}
 	}
 	]);
