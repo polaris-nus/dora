@@ -219,65 +219,65 @@ doraServices.service('MapServ', [
 			}
 		});
 
-var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
-	default: new OpenLayers.Style({
-		fillColor: "${filterFillColor}",
-		fillOpacity: 0.4,
-		strokeColor: "${filterStrokeColor}",
-		strokeWidth: 2,
-		strokeOpacity: 1,
-		strokeDashstyle: "solid",
-		graphicZIndex: 1,
-	})
-});
+		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
+			default: new OpenLayers.Style({
+				fillColor: "${filterFillColor}",
+				fillOpacity: 0.4,
+				strokeColor: "${filterStrokeColor}",
+				strokeWidth: 2,
+				strokeOpacity: 1,
+				strokeDashstyle: "solid",
+				graphicZIndex: 1,
+			})
+		});
 
-var countryPolygonStyle = new OpenLayers.StyleMap({
-	default: {
-		fillOpacity: 0,
-		strokeOpacity: 0,
-	},
-	temporary: {
-		fillColor: "#808080",
-		fillOpacity: 0.6,
-	},
-	select: {
-		fillColor: "#808080",
-		fillOpacity: 0.4,
-		strokeColor: "#808080",
-		strokeWidth: 1,
-		strokeOpacity: 1,
-	}
-});
-
-var drawPolygonStyle = new OpenLayers.StyleMap({
-	default: new OpenLayers.Style({
-		fillColor: "#808080",
-		fillOpacity: 0.4,
-		strokeColor: "#808080",
-		strokeWidth: 1,
-		strokeOpacity: 1,
-		label: "${dimension}"
-	}, {
-		context: {
-			dimension: function(feature){
-				if(feature.attributes.circle) {
-					var geometry = feature.geometry;
-					var center = geometry.getCentroid();
-					var point = geometry.getVertices()[0];
-					var pointClone = point.clone().transform("EPSG:900913", "EPSG:4326");
-					var centerClone = center.clone().transform("EPSG:900913", "EPSG:4326");
-					var distance = OpenLayers.Util.distVincenty(
-						new OpenLayers.LonLat(pointClone.x, pointClone.y),
-						new OpenLayers.LonLat(centerClone.x, centerClone.y)
-						);
-					return Math.round(distance * 100) / 100 + "km";
-				} else {
-					return "";
-				}
+		var countryPolygonStyle = new OpenLayers.StyleMap({
+			default: {
+				fillOpacity: 0,
+				strokeOpacity: 0,
+			},
+			temporary: {
+				fillColor: "#808080",
+				fillOpacity: 0.6,
+			},
+			select: {
+				fillColor: "#808080",
+				fillOpacity: 0.4,
+				strokeColor: "#808080",
+				strokeWidth: 1,
+				strokeOpacity: 1,
 			}
-		}
-	})
-});
+		});
+
+		var drawPolygonStyle = new OpenLayers.StyleMap({
+			default: new OpenLayers.Style({
+				fillColor: "#808080",
+				fillOpacity: 0.4,
+				strokeColor: "#808080",
+				strokeWidth: 1,
+				strokeOpacity: 1,
+				label: "${dimension}"
+			}, {
+				context: {
+					dimension: function(feature){
+						if(feature.attributes.circle) {
+							var geometry = feature.geometry;
+							var center = geometry.getCentroid();
+							var point = geometry.getVertices()[0];
+							var pointClone = point.clone().transform("EPSG:900913", "EPSG:4326");
+							var centerClone = center.clone().transform("EPSG:900913", "EPSG:4326");
+							var distance = OpenLayers.Util.distVincenty(
+								new OpenLayers.LonLat(pointClone.x, pointClone.y),
+								new OpenLayers.LonLat(centerClone.x, centerClone.y)
+								);
+							return Math.round(distance * 100) / 100 + "km";
+						} else {
+							return "";
+						}
+					}
+				}
+			})
+		});
 
 		// Adding Utility Layers
 		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
@@ -397,20 +397,20 @@ var drawPolygonStyle = new OpenLayers.StyleMap({
 				feature.popup = null;
 			}
 		});
-map.addControl(selectClusterControls);
-selectClusterControls.activate();
+		map.addControl(selectClusterControls);
+		selectClusterControls.activate();
 
-var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
-	multiple: true,
-	toggle: true,
-});
-var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
-	hover: true,
-	highlightOnly: true,
-	renderIntent: "temporary"
-});
-map.addControl(hoverCountryControls);
-map.addControl(selectCountryControls);
+		var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+			multiple: true,
+			toggle: true,
+		});
+		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+			hover: true,
+			highlightOnly: true,
+			renderIntent: "temporary"
+		});
+		map.addControl(hoverCountryControls);
+		map.addControl(selectCountryControls);
 
 		// Zoom and Pan Event Listeners
 		map.zoomToProxy = map.zoomTo;
@@ -525,6 +525,7 @@ map.addControl(selectCountryControls);
 			},
 			setClusterStrategyStatus: function(QRS, activate) {
 				if(QRS.clusterLayerId) {
+					selectClusterControls.unselectAll();
 					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
 					activate ? clusterStrategy.activate() : clusterStrategy.deactivate();
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
