@@ -34,7 +34,7 @@ def create_encounter_location_from_observation(observation):
     gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', observation.value_text))
     print gps_tuple
         
-    if len(gps_tuple) >= 2:
+    if len(gps_tuple) >= 2 and gps_tuple != (0,0,0) and gps_tuple != (0,0):
         gps_location = Point(gps_tuple[0], gps_tuple[1])
         print gps_location
         encounter_location = EncounterLocation(encounter=observation.encounter, 
