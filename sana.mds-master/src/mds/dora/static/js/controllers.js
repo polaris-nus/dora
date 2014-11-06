@@ -50,11 +50,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 
 		//autocomplete filter types
 		$scope.data = [
-		"Patient's family name",
-		"Patient's given name",
-		'Gender',
-		'Procedure',
-		'Age range',
+			"Patient's family name",
+			"Patient's given name",
+			'Gender',
+			'Procedure',
+			'Age range',
 			//"Observer's first name",
 			//"Observer's last name",
 			"Observer's username",
@@ -144,6 +144,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		$scope.submitQuery = function(){
 
 			console.log("inside submitQuery()");
+			
+			if ($scope.locationSearchOn){
+				$scope.toggleButton();
+			}
 
 			QRSServ.initializeLoading();
 			
