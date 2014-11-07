@@ -24,6 +24,8 @@ def index(request):
 
 @csrf_exempt
 def query(request):
+	start = datetime.now()
+
 	if (not request.user.is_authenticated()):
 		return HttpResponse('{"assigned":[], "unassigned":[], "status":"unauthorized"}', content_type="application/json")		
 	#Parse the request
@@ -36,6 +38,9 @@ def query(request):
 
 	#Create a list of json objects
 	json_response = create_json_response(query_result_set)
+
+	end = datetime.now()
+	print ("time taken for query: " + str(end-start))
 
 	return HttpResponse(json_response, content_type="application/json")
 
