@@ -18,9 +18,10 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 
 		//sets the filter from the QueryResultController
 		var setfilters = function(newFilters){
-			// console.log(newFilters);
+			//console.log("running requery in formctrl" + JSON.stringify(newFilters));
 			
-			$scope.filters = newFilters;
+			
+			$scope.filters = newFilters.slice();
 			
 			// console.log($scope.filters);
 		}
@@ -189,9 +190,9 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 					);
 				} else {
 					//for testing saving and loading queries only!!!
-					qrs = QRSServ.getQRSHistory();
-					console.log(qrs);
-					$scope.$parent.saveQuery(qrs[qrs.length-1]);
+					//qrs = QRSServ.getQRSHistory();
+					//console.log(qrs);
+					//$scope.$parent.saveQuery(qrs[qrs.length-1]);
 				}
 			});
 			
@@ -229,7 +230,13 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 		$scope.requery = function(){
+			//console.log("inside QRS result ctrl " + JSON.stringify($scope.displayedQRS));
 			QRSServ.requery($scope.displayedQRS);
+			var location = $scope.displayedQRS.location
+			if (location && location.length > 0) {
+				MapServ.clearPolygonFilters();
+				MapServ.addPolygonFilters(location);
+			}
 		}
 
 		$scope.setDisplayedQRS = function(index) {
@@ -246,7 +253,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
-			scrollToBottom();
+			//scrollToBottom();
 			
 		};
 		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
@@ -324,10 +331,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
-		scrollToBottom = function(){
-			$location.hash('qrs' + $scope.displayedQRSIndex);
-			$anchorScroll();
-		}
+		//function scrollToBottom(){
+		//	$location.hash('qrs' + $scope.displayedQRSIndex);
+		//	$anchorScroll();
+		//}
 
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){

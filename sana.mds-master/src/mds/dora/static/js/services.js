@@ -19,6 +19,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				queryCallback = callback;
 			},
 			requery:function(displayedQRS){
+				//console.log("inside QRSServ " + JSON.stringify(displayedQRS.filters));
 				requeryCallBack(displayedQRS.filters);
 			},
 			getLoadingStatus: function(){
