@@ -489,7 +489,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		$scope.isPlaying = false;
 		$scope.speed = "1x";
 		$scope.granularity = "Weekly";
-		$scope.scroll_speed = 1000; //in milliseconds
+		$scope.scroll_speed = 500; //in milliseconds
 		$scope.scroll_granularity = 7; //every 0.5 is one day
 		var scroller = null;
 
