@@ -39,9 +39,9 @@ def parse_request(request):
 		concept_name['firmness_at_surgical_site'] = 'firmness sx site'
 		concept_name['spontaneous_opening_at_surgical_site'] = 'sx site open spontaneous'
 		concept_name['infection_suspected_at_surgical_site'] = 'sx site infection suspected'
-		concept_name['operation_date'] = 'operation date'
-		concept_name['discharge_date'] = 'discharge date'
-		concept_name['follow_up_date'] = 'follow up date'
+		#concept_name['operation_date'] = 'operation date'
+		#concept_name['discharge_date'] = 'discharge date'
+		#concept_name['follow_up_date'] = 'follow up date'
 
 		#Location Filter
 		location_filter = cleaned_data['location']

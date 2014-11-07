@@ -36,9 +36,11 @@ class QueryForm(forms.Form):
     infection_suspected_at_surgical_site = forms.CharField(required=False, max_length=10)
 
     #Date Fields
-    operation_date = forms.DateTimeField(required=False)
-    discharge_date = forms.DateTimeField(required=False)
-    follow_up_date = forms.DateTimeField(required=False)
+    #===========================================================================
+    # operation_date = forms.DateTimeField(required=False)
+    # discharge_date = forms.DateTimeField(required=False)
+    # follow_up_date = forms.DateTimeField(required=False)
+    #===========================================================================
 
     #observers_first_name = forms.TextField(required=False),
     #observers_last_name = forms.TextField(required=False),

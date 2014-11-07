@@ -70,10 +70,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			'Firmness at surgical site',
 			'Spontaneous opening at surgical site',
 			'Infection suspected at surgical site',
-			'Diagnosis',
-			'Operation date',
-			'Discharge date',
-			'Follow up date'];
+			'Diagnosis'
+			//'Operation date',
+			//'Discharge date',
+			//'Follow up date'
+			];
 			
 		// console.log($scope.data);
 		
