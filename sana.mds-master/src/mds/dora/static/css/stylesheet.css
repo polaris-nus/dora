@@ -352,56 +352,38 @@ margin-top: 3px;
 /*time slider*/
 #slider-panel{
   position: absolute;
-  width: 740px;
+  width: 760px;
   right: 10px;
   bottom: 25px;
-  background-color: red;
   white-space: nowrap;
 }
 
 #slider{
-  position: absolute;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
   width: 450px;
-  bottom: 0px;
 }
 
 #slider-btn{
-  position: absolute;
   border-radius: 100%;
-  display: inline-block;
-  bottom: 0;
-  left: 445px;
   border-width: 2px;
 }
 
-#slider-label-1{
-  display: inline-block;
-  position: absolute;
-  bottom: 0;
-  left: 490px;
+#slider-granularity {
+  width:90px;
 }
 
-#slider-input-1 {
-  display: inline-block;
-  width: 55px;
-  position: absolute;
-  bottom: 0;
-  left: 565px;
+#slider-scrollspeed {
+  width:60px;
 }
 
-#slider-label-2{
-  display: inline-block;
-  position: absolute;
-  bottom: 0;
-  left: 630px;
+.slider-dropdown-menu {
+  min-width: 0px;
 }
 
-#slider-input-2 {
-  display: inline-block;
-  width: 65px;
-  position: absolute;
-  bottom: 0;
-  left: 675px;
+.slider-dropdown-btn {
+  width:100%;
 }
 
 /* QRS BUTTON STYLES*/

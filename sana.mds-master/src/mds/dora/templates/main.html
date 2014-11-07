@@ -276,19 +276,39 @@
 
 
     <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
-      <div id="slider"></div>
+        <div id="slider"></div>
 
-      <button type="button" class="above btn btn-info btn-xs alignR blue-tooltip" ng-click="toggleScrolling(); isPlaying=!isPlaying;" id="slider-btn">
-        <span  ng-show="isPlaying" class="glyphicon glyphicon glyphicon-pause"></span>
-        <span  ng-show="!isPlaying" class="glyphicon glyphicon-play"></span>
-      </button>  
+        <div class="inline">
+          <button type="button" class="above btn btn-info btn-xs" ng-click="toggleScrolling(); isPlaying=!isPlaying;" id="slider-btn">
+            <span  ng-show="isPlaying" class="glyphicon glyphicon glyphicon-pause"></span>
+            <span  ng-show="!isPlaying" class="glyphicon glyphicon-play"></span>
+          </button>  
+        </div>
 
+        <span class="text-color inline inline slider-input-label">Granularity:</span>
+        <div class="btn-group dropup inline" id="slider-granularity">
+          <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ granularity }}<span class="caret" align="right"></span>
+          </button>
+          <ul class="dropdown-menu slider-dropdown-menu" role="menu">
+            <li><a href="#" ng-click="setScrollGranularity(1); granularity='Daily';">Daily</a></li>
+            <li><a href="#" ng-click="setScrollGranularity(7); granularity='Weekly';">Weekly</a></li>
+            <li><a href="#" ng-click="setScrollGranularity(30); granularity='Monthly';">Monthly</a></li>
+            <li><a href="#" ng-click="setScrollGranularity(90); granularity='Quarterly';">Quarterly</a></li>
+          </ul>
+        </div>
 
-        <span class="text-color inline" id="slider-label-1">Granularity:</span>
-        <input type="number" min="1" step="1" class="form-control uniform-height" id="slider-input-1" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input>
+        <span class="text-color inline">Speed:</span>
+        <div class="btn-group dropup inline" id="slider-scrollspeed">
+          <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ speed }}<span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu slider-dropdown-menu" role="menu">
+            <li><a href="#" ng-click="setScrollSpeed(1000); speed='0.5x';">0.5x</a></li>
+            <li><a href="#" ng-click="setScrollSpeed(500); speed='1x';">1x</a></li>
+            <li><a href="#" ng-click="setScrollSpeed(250); speed='2x';">2x</a></li>
+            <li><a href="#" ng-click="setScrollSpeed(500); speed='4x';">4x</a></li>
+          </ul>
+        </div>
 
-        <span class="text-color inline" id="slider-label-2">Delay:</span>
-        <input type="number" min="1" step="0.1" class="form-control uniform-height" id="slider-input-2" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>
     </div>
     {% endverbatim %}
     <!-- scripts loaded after html-->

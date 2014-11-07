@@ -484,47 +484,43 @@ function drawChart() {
 //--Start TemporalSlider Controller--//
 doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 	function($scope, MapServ){
+
 		$scope.sliderVisible = true;
 		$scope.isPlaying = false;
+		$scope.speed = "1x";
+		$scope.granularity = "Weekly";
+		$scope.scroll_speed = 1000; //in milliseconds
+		$scope.scroll_granularity = 7; //every 0.5 is one day
+		var scroller = null;
 
 		$scope.sliderModifier = function(arg) {
 			return $("#slider").dateRangeSlider(arg);
 		};
 
-		//Initialize slider
-		var defaultMax = new Date();
-		var defaultMin = new Date();
-		var defaultRange = 30;
-		defaultMin.setDate(defaultMax.getDate() - defaultRange);
-		
-		$scope.sliderModifier({
-			defaultValues:{
-				min: defaultMin, //default is one month
-				max: defaultMax
-			},
-			bounds:{
-			    min: new Date(2012, 0, 1), //This value should be changed to the latest date available
-			    max: new Date()
-			  }
-			});
-		var values = $scope.sliderModifier("values");
-		MapServ.setSliderMinMax(values.min, values.max);
-
-		$scope.sliderModifier({range:{min: {days: 7}}});
-		$scope.sliderModifier({symmetricPositionning: true});
-
-		$scope.scroll_speed = 0.1; //in seconds
-		$scope.scroll_granularity = 10; //every 0.5 is one day
-		var scroller = null;
-
 		$scope.autoscroll = function() {
-			$('#slider').dateRangeSlider('scrollRight', $scope.scroll_granularity/2);
+			var values = $("#slider").dateRangeSlider("values");
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
-			var values = $scope.sliderModifier("values");
 			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
 				$scope.isPlaying = false;
-				$scope.$apply();
+				$scope.$apply(); //Find a way to observe this value.
+			} else {
+				var endDate = new Date(values.max);
+				endDate.setDate(endDate.getDate() + $scope.scroll_granularity*1);
+
+				var startDate = null;
+				if (Date.parse(endDate) >= Date.parse(bounds.max)) {
+					var range = (new Date(values.max)) - (new Date(values.min));
+					range = Math.ceil(range / (1000 * 3600 * 24))-1;
+					console.log(range);
+					startDate = new Date(bounds.max);
+					startDate.setDate(startDate.getDate() - range);
+				} else {
+					startDate = new Date(values.min);
+					startDate.setDate(startDate.getDate() + $scope.scroll_granularity*1);
+				}
+
+				$("#slider").dateRangeSlider("values", new Date(startDate), new Date(endDate));
 			}
 		}
 
@@ -535,17 +531,59 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 
 		$scope.toggleScrolling = function() {
 			if (scroller == null) {
-				scroller = setInterval(function(){$scope.autoscroll()}, $scope.scroll_speed*1000);
+				scroller = setInterval(function(){$scope.autoscroll()}, $scope.scroll_speed);
 			} else {
 				$scope.stopAutoscroll();
 			}
 		}
 
-		$("#slider").bind("valuesChanging", function(e, data){
-			MapServ.setSliderMinMax(data.values.min, data.values.max);
-			MapServ.temporalSliderFeaturesToggle();
-		});
+		$scope.setScrollSpeed = function(scroll_speed) {
+			$scope.scroll_speed = scroll_speed;
+			$scope.toggleScrolling();
+			$scope.toggleScrolling();
+		}
 
+		$scope.setScrollGranularity = function(scroll_granularity) {
+			$scope.scroll_granularity = scroll_granularity;
+			$scope.toggleScrolling();
+			$scope.toggleScrolling();
+		}
+
+		function init() {
+			//Initialize slider
+			var defaultMax = new Date();
+			var defaultMin = new Date();
+			var defaultRange = 30;
+			defaultMin.setDate(defaultMax.getDate() - defaultRange);
+			
+			$scope.sliderModifier({
+				defaultValues:{
+					min: defaultMin, //default is one month
+					max: defaultMax
+				},
+				bounds:{
+				    min: new Date(2012, 0, 1), //This value should be changed to the latest date available
+				    max: new Date()
+				  }
+				});
+			var values = $scope.sliderModifier("values");
+			MapServ.setSliderMinMax(values.min, values.max);
+
+			$scope.sliderModifier({range:{min: {days: 7}}});
+			$scope.sliderModifier({symmetricPositionning: true});
+
+			$("#slider").bind("valuesChanging", function(e, data){
+				MapServ.setSliderMinMax(data.values.min, data.values.max);
+				MapServ.temporalSliderFeaturesToggle();
+			});
+
+			$("#slider").bind("valuesChanged", function(e, data){
+				MapServ.setSliderMinMax(data.values.min, data.values.max);
+				MapServ.temporalSliderFeaturesToggle();
+			});
+		}
+
+		init();
 	}
 ]);
 
