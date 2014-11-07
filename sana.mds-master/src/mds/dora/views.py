@@ -35,12 +35,9 @@ def query(request):
 	query_result_set = get_query_result_set(query, concepts_list, locations_list)
 
 	#Create a list of json objects
-	json_obj_list = create_json_obj_list(query_result_set)
+	json_response = create_json_response(query_result_set)
 
-	#transform json objects into one json array of objects
-	json_obj_array = generate_json_obj_to_return(json_obj_list)
-
-	return HttpResponse(json_obj_array, content_type="application/json")
+	return HttpResponse(json_response, content_type="application/json")
 
 
 def save_query(request):

@@ -138,39 +138,82 @@ def get_query_result_set(query, concepts_list, locations_list):
 	#return Encounter.objects.all()
 
 #Creates a list of json objects from the given query_result_set
-def create_json_obj_list(query_result_set):
-	json_obj_list = []
-	json_obj_list.append([])
-	json_obj_list.append([])
+def create_json_response(query_result_set):
+	#query_result_set = list(query_result_set)
+	start = datetime.now()
+
+	# json_obj_list = []
+	# json_obj_list.append([])
+	# json_obj_list.append([])
+	# locations = EncounterLocation.objects.all() #Need to query the REAL Location Model
+	# if (query_result_set):
+	# 	json_template = loader.get_template('json_obj_template')
+	# 	for query_result in query_result_set:
+	# 		context_args = {}
+	# 		context_args['encounter_uuid'] = query_result.uuid
+	# 		context_args['subject_uuid'] = query_result.subject.uuid
+	# 		context_args['subject_family_name'] = query_result.subject.family_name
+	# 		context_args['subject_given_name'] = query_result.subject.given_name
+	# 		context_args['subject_dob'] = str(query_result.subject.dob)
+	# 		context_args['subject_gender'] = query_result.subject.gender
+	# 		context_args['created_date'] = str(query_result.created)
+	# 		context_args['modified_date'] = str(query_result.modified)
+	# 		context_args['procedure'] = query_result.procedure.description
+	# 		context_args['observer'] = str(query_result.observer.user)
+	# 		context_args['coordinates'] = "None"
+	# 		context_args['altitude'] = "alt!"
+
+	# 		if locations.filter(encounter__uuid=query_result.uuid).exists():
+	# 			encounter_with_coords = locations.filter(encounter__uuid=query_result.uuid)
+	# 			for encounter in encounter_with_coords:
+	# 				context_args['coordinates'] = encounter.coordinates
+	# 			json_obj = json_template.render(Context(context_args))
+	# 			json_obj_list[0].append(json_obj)
+	# 		else:
+	# 			json_obj = json_template.render(Context(context_args))
+	# 			json_obj_list[1].append(json_obj)
+
+	# 	json_response = generate_json_obj_to_return(json_obj_list)
+
+	# end = datetime.now()
+	# print (end-start)
+	# return json_response
+
+	json_response = {}
+	json_response['assigned'] = []
+	json_response['unassigned'] = []
+	json_response['status'] = "ok"
 	locations = EncounterLocation.objects.all() #Need to query the REAL Location Model
 	if (query_result_set):
-		json_template = loader.get_template('json_obj_template')
 		for query_result in query_result_set:
-			context_args = {}
-			context_args['encounter_uuid'] = query_result.uuid
-			context_args['subject_uuid'] = query_result.subject.uuid
-			context_args['subject_family_name'] = query_result.subject.family_name
-			context_args['subject_given_name'] = query_result.subject.given_name
-			context_args['subject_dob'] = str(query_result.subject.dob)
-			context_args['subject_gender'] = query_result.subject.gender
-			context_args['created_date'] = str(query_result.created)
-			context_args['modified_date'] = str(query_result.modified)
-			context_args['procedure'] = query_result.procedure.description
-			context_args['observer'] = str(query_result.observer.user)
-			context_args['coordinates'] = "None"
-			context_args['altitude'] = "alt!"
+			encounter_object = {}
+			encounter_object['uuid'] = query_result.uuid
+			encounter_object['subject'] = {}
+			encounter_object['subject']['family_name'] = query_result.subject.family_name
+			encounter_object['subject']['uuid'] = query_result.subject.uuid
+			encounter_object['subject']['given_name'] = query_result.subject.given_name
+			encounter_object['subject']['dob'] = str(query_result.subject.dob)
+			encounter_object['subject']['gender'] = query_result.subject.gender
+			encounter_object['created_date'] = str(query_result.created)
+			encounter_object['modified_date'] = str(query_result.modified)
+			encounter_object['procedure'] = query_result.procedure.description
+			encounter_object['observer'] = str(query_result.observer.user)
+			encounter_object['location'] = {}
+			encounter_object['location']['coords'] = "None"
+			encounter_object['location']['alt'] = "alt!"
 
 			if locations.filter(encounter__uuid=query_result.uuid).exists():
 				encounter_with_coords = locations.filter(encounter__uuid=query_result.uuid)
 				for encounter in encounter_with_coords:
-					context_args['coordinates'] = encounter.coordinates
-				json_obj = json_template.render(Context(context_args))
-				json_obj_list[0].append(json_obj)
+					encounter_object['location']['coords'] = str(encounter.coordinates)
+				json_response['assigned'].append(encounter_object)
 			else:
-				json_obj = json_template.render(Context(context_args))
-				json_obj_list[1].append(json_obj)
+				json_response['unassigned'].append(encounter_object)
 
-	return json_obj_list;
+
+	end = datetime.now()
+	print ("time taken for create_json_response: " + str(end-start))
+	return cjson.encode(json_response)
 
 
 #Creates a json array of objects from a given list of json objects. Pre cond: = 2
