@@ -203,7 +203,7 @@
               <a ng-click="filtersVisible=!filtersVisible">Filters</a>
             </div>
             <div ng-show="filtersVisible">
-              <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
+              <span class="filter" ng-repeat="filter in filters">&nbsp;{{filter.key}}: {{filter.value}}</span>
             </div>
           </div>
 

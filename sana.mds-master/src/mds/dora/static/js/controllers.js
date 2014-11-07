@@ -20,12 +20,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		var setfilters = function(newFilters){
 			// console.log(newFilters);
 			
-			$scope.filters = [];
-			for (key in newFilters) {
-				if (key != "location") {
-					$scope.filters.push({key: key, value: newFilters[key]});
-				}
-			}
+			$scope.filters = newFilters;
 			
 			// console.log($scope.filters);
 		}
@@ -294,16 +289,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 		function updateFilters(){
-			$scope.filters = [];
-			$scope.displayedQRS.filters;
-			for (key in $scope.displayedQRS.filters){
-				if (key!=="location"){
-					value = $scope.displayedQRS.filters[key];
-					if(value){
-						$scope.filters.push(" "+key+": "+ value+" ");
-					}
-				}
-			}
+			$scope.filters = $scope.displayedQRS.filters;
 		}
 
 		function updateEncounters(){
