@@ -97,7 +97,19 @@
           </form>
         </div>
 
-        <div class="location-options">
+        <div class="location-options">     
+          <!-- <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+              Add Location
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+            </ul>
+          </div> -->
           <button type="button" class="btn btn-primary" ng-click="toggleButton()">{{buttonName()}}</button>
           <button ng-show="locationSearchOn" type="button" class="btn btn-danger" ng-click="clearShapes()">Clear shapes</button>
           <div class="location-radio" ng-show="locationSearchOn">
@@ -109,8 +121,8 @@
         </div>
 
         <div class="filters noselect">
-          <button type="button" class="btn btn-primary submitButton" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
-          <span class="filter" ng-repeat="filter in filters">
+          <button type="button" class="btn btn-primary submitButton uniform-height" ng-click="submitQuery()" ng-show="filters.length > 0">Submit</button>
+          <span class="filter text-color" ng-repeat="filter in filters">
             <span ng-click="editFilter($index, filter)">&nbsp;{{filter.key}}: {{filter.value}}&nbsp;&nbsp;</span>
             <span ng-click="removeFilter($index, filter)" class="bold hover-text-shadow">&#215;&nbsp;</span>
           </span>
@@ -166,7 +178,7 @@
             <span ng-show="!editingMode" ng-click="editingMode=true"> {{name[$index]}} </span>
             <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="name[$index]">
 
-            <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
+            <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator margintop"></button>
           </a>
           <!-- </div> -->
         </div>
@@ -262,19 +274,17 @@
     </div>
 
     <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
-      <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
-      <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
-      <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
-        <img src="/static/images/play.png" width="30" height="24" alt="submit" />
-      </button>
-      <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
-        <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
-      </button>
-      <div id="slider-div">
-        <div id="slider"></div>
-      </div>
-    </div>
+      <div id="slider"></div>
+      <button type="button" class="above btn btn-info btn-xs alignR blue-tooltip" ng-click="toggleScrolling(); isPlaying=!isPlaying;" id="slider-btn">
+        <span  ng-show="isPlaying" class="glyphicon glyphicon glyphicon-pause"></span>
+        <span  ng-show="!isPlaying" class="glyphicon glyphicon-play"></span>
+      </button>  
 
+        <span class="text-color inline" id="slider-label-1">Granularity:</span>
+        <input type="number" min="1" step="1" class="form-control uniform-height" id="slider-input-1" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input>
+        <span class="text-color inline" id="slider-label-2">Delay:</span>
+        <input type="number" min="1" step="0.1" class="form-control uniform-height" id="slider-input-2" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>
+    </div>
     {% endverbatim %}
     <!-- scripts loaded after html-->
   </div>
