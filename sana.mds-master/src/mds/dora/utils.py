@@ -1,4 +1,4 @@
-import json, operator
+import cjson, operator
 from django.shortcuts import render
 from mds.dora.models import *
 from mds.core.models import *
@@ -99,7 +99,8 @@ def parse_request(request):
 		if location_filter:
 			try:
 				print location_filter
-				geometries = json.loads(location_filter)
+				#geometries = json.loads(location_filter)
+				geometries = cjson.decode(location_filter)
 				q_object_geometry = Q()
 				for geometry in geometries:
 					q_object_geometry |= Q(coordinates__within=geometry)
@@ -214,4 +215,5 @@ def get_user_saved_queries(request):
 		query['alias'] = item.alias
 		response['queries'].append(query)
 
-	return json.dumps(response)
+	#return json.dumps(response)
+	return cjson.encode(response)
