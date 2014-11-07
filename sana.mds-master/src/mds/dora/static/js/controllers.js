@@ -251,6 +251,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartTwoDS();
 			drawChart();
 			scrollToBottom();
+			
 		};
 		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
 
@@ -340,7 +341,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			$location.hash('qrs' + $scope.displayedQRSIndex);
 			$anchorScroll();
 		}
-		
+
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
 			var yearCount = {};
@@ -464,7 +465,7 @@ function drawChart() {
 	var optionsOne = {
 		// title: 'Patient Number',
 		curveType: 'function',
-		chartArea:{width:'85%'},
+		chartArea:{width:'75%'},
 		// chartArea:{left:30,top:30,width:'80%',height:'50%'},
 		legend: { position: 'none'}
 	};
@@ -474,7 +475,7 @@ function drawChart() {
 	var dataTwo = google.visualization.arrayToDataTable(dataChartTwo);
 	var optionsTwo = {
 		// title: 'Patient Distribution',
-		chartArea:{width:'85%'},
+		chartArea:{width:'75%'},
 		legend: { position: 'none'},
 		hAxis: {title: 'Age Group', titleTextStyle: {color: 'black'}}
 	};

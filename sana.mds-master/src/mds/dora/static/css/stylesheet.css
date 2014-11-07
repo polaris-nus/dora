@@ -191,9 +191,19 @@ background-color: red;*/
   overflow-y: scroll; 
 }
 
+.anchorimg{
+  width: 15px;
+}
+
+#encounter-content{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .section-heading{
   width: 100%;
   color: #31708f;
+  /*color: #d9edf7;*/
   padding-left: 10px;
   padding-top: 5px;
   background-color: #d9edf7;
@@ -282,8 +292,15 @@ html, body{
 }
 
 .loading{
-  width: 10px;
-  height: 10px;
+  margin-left: 10px;
+}
+
+.loading-img{
+  width: 15px;
+  height: 15px;
+}
+#loading-text{
+color: #31708f;
 }
 
 #customZoom a {
@@ -345,12 +362,6 @@ html, body{
 
 .slider-input {
   width:50px;
-}
-
-.section-heading{
-/*  margin: 0px;
-  width: 100%;
-  background-color: lightblue;*/
 }
 
 /* MAP POPOVER STYLES */
