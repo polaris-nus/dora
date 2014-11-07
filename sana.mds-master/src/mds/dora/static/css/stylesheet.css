@@ -49,7 +49,8 @@ ul{ padding-left:0; }
 
 .queryForm{
 	position: relative;
-	z-index: 500;
+  opacity: 0.99;
+	/*z-index: 500;*/
 	margin-top: 10px;
  margin-left: 10px;
  white-space: nowrap;
@@ -163,8 +164,8 @@ ul{ padding-left:0; }
   }*/
 
   #query-result-div{
-    height: 70%;
-    background-color: red;
+/*    height: 70%;
+    background-color: red;*/
   }
 
   .panel-heading-height{
