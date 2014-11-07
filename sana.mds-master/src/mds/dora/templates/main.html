@@ -158,7 +158,7 @@
 
       <!--   <div class="panel-body"> -->
       <div class="list-group" id="history-list">
-        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+        <a href="#" id="qrs{{$index}}" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
           <!-- btn-invisible:!getQRSVisibility($index) -->
           <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
             <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
@@ -171,13 +171,13 @@
         </a>
         <!-- </div> -->
       </div>
+    </div>
 
-      <div class="above" ng-show="!historyPanelVisibility">
+    <div class="above" ng-show="!historyPanelVisibility">
         <button type="button" class="btn btn-default" id="thumbnail-history-panel" ng-click="historyPanelVisibility=true; qrsPanelVisibility=true">
           <span class="glyphicon glyphicon-th-list"></span>
         </button>  
       </div>
-    </div>
     <!-- End of History Panel -->
 
     <!-- Start of Result Panel -->

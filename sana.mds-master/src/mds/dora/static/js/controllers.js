@@ -207,8 +207,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 	}
 	]);
 
-doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapServ',
-	function($scope, QRSServ, MapServ){
+doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapServ','$location', '$anchorScroll',
+	function($scope, QRSServ, MapServ,$anchorScroll, $location){
 		$scope.QRSHistory = QRSServ.getQRSHistory();
 		$scope.loadingStatus = QRSServ.getLoadingStatus();
 
@@ -250,6 +250,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
+			scrollToBottom();
 		};
 		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
 
@@ -335,6 +336,11 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
+		scrollToBottom = function(){
+			$location.hash('qrs' + $scope.displayedQRSIndex);
+			$anchorScroll();
+		}
+		
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
 			var yearCount = {};
