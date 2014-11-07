@@ -523,12 +523,12 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 			var values = $scope.sliderModifier("values");
 			if (Date.parse(values.max) >= Date.parse(bounds.max)) {
 				$scope.stopAutoscroll();
+				$scope.isPlaying = false;
 				$scope.$apply();
 			}
 		}
 
 		$scope.stopAutoscroll = function() {
-			$scope.isPlaying = false;
 			clearInterval(scroller);
 			scroller = null;
 		}
