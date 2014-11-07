@@ -3,6 +3,7 @@ from django.test import TestCase
 import mds.dora.utils as utils
 from mds.dora.tests.util_test_helper import *
 from django.contrib.auth import authenticate, login
+import cjson
 
 
 class UtilsTestCase(TestCase):
@@ -51,7 +52,7 @@ class UtilsTestCase(TestCase):
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
 		self.assertEqual(query_result_set,None)
 
-	def test_create_json_obj_list(self):
+	def test_create_json_response(self):
 		#setup
 		results = setup_create_json_obj_list_results()
 		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'location':'["POLYGON ((-3 0, -3 15, 0 15, 0 0, -3 0))"]', 'age_range':'65-75'})
@@ -59,24 +60,32 @@ class UtilsTestCase(TestCase):
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
 
 		#assert when passed in None
-		json_obj_list = utils.create_json_obj_list(None)
-		self.assertEqual(json_obj_list, [[],[]])
+		json_response_none = {}
+		json_response_none['assigned'] = []
+		json_response_none['unassigned'] = []
+		json_response_none['status'] = "ok"
+		json_response = utils.create_json_response(None)
+		self.assertEqual(cjson.decode(json_response), json_response_none)
 
 		#assert when passed in some QRS
-		json_obj_list = utils.create_json_obj_list(query_result_set)
-		self.assertEqual(json_obj_list, results)
-		pass
+		json_response = utils.create_json_response(query_result_set)
+		json_response = cjson.decode(json_response)
+		self.assertEqual(json_response['status'], results['status'])
+		self.assertEqual(len(json_response['assigned']), len(results['assigned']))
+		self.assertEqual(len(json_response['unassigned']), len(results['unassigned']))
 
-	def test_json_obj_to_return(self):
-		#takes in list of json and returns json array
-		json_list = []
-		json_list.append([])
-		json_list.append([])
-		json_list[0].append('{"name":"json item 1"}')
-		json_list[0].append('{"name":"json item 2"}')
-		json_list[1].append('{"name":"json item 3"}')
-
-		results = '{\n"assigned" : [\n{"name":"json item 1"},\n{"name":"json item 2"}\n],\n"unassigned" : [\n{"name":"json item 3"}\n],\n"status" : "ok"\n}'
-		json_array = utils.generate_json_obj_to_return(json_list)
-
-		self.assertEquals(json_array, results)
+		for i in range(0,len(results['assigned'])):
+			response = json_response['assigned'][i]
+			result = results['assigned'][i]
+			self.assertEqual(response['uuid'], result['uuid'])
+			self.assertEqual(response['subject']['family_name'], result['subject']['family_name'])
+			self.assertEqual(response['subject']['uuid'], result['subject']['uuid'])
+			self.assertEqual(response['subject']['given_name'], result['subject']['given_name'])
+			self.assertEqual(response['subject']['dob'], result['subject']['dob'])
+			self.assertEqual(response['subject']['gender'], result['subject']['gender'])
+			self.assertEqual(response['created_date'], result['created_date'])
+			self.assertEqual(response['modified_date'], result['modified_date'])
+			self.assertEqual(response['procedure'], result['procedure'])
+			self.assertEqual(response['observer'], result['observer'])
+			self.assertEqual(response['location']['coords'], result['location']['coords'])
+			self.assertEqual(response['location']['alt'], result['location']['alt'])

@@ -1,4 +1,4 @@
-import random
+import random, cjson
 from mds.dora.models import *
 from datetime import *
 from django.contrib.gis.geos import Point
@@ -41,20 +41,30 @@ def check_assertions(self, query_result_set, results, check_num):
 
 
 def setup_create_json_obj_list_results():
-	results = [[],[]]
+	results = {}
+	results['assigned'] = []
+	results['unassigned'] = []
+	results['status'] = "ok"
 	json_template = loader.get_template('json_obj_template')
-	results[0].append(json_template.render(Context({
-		"encounter_uuid": "56bd2478-e6da-48b4-8e5a-15818f62d2d9",
-		"subject_uuid":'c7c21c30-5865-4d00-a5cb-32b69108947d', 
-		"subject_family_name":'pavey', 
-		"subject_given_name":'petersen',
-		"subject_dob":'1943-02-09 05:35:46.259076',
-		"subject_gender":'M', 
-		"created_date":'2014-10-26 23:59:48.086540', 
-		"modified_date":'2014-10-26 23:59:48.086540',
-		"procedure":'apply disinfectant and give antibiotics',
-		"observer":'test2',
-		"coordinates":'POINT (-1.5758419447100001 10.5434422844999993)',
-		"altitude":"alt!"
-	})))
+	results['assigned'].append(cjson.decode('{"uuid": "56bd2478-e6da-48b4-8e5a-15818f62d2d9","subject": {"family_name": "pavey","uuid": "c7c21c30-5865-4d00-a5cb-32b69108947d","given_name": "petersen","dob": "1943-02-09 05:35:46.259076","gender": "M"},"created_date": "2014-10-26 23:59:48.086540","modified_date": "2014-10-26 23:59:48.086540","procedure": "apply disinfectant and give antibiotics","observer": "test2","location": {"coords": "POINT (-1.5758419447100001 10.5434422844999993)","alt": "alt!"}}'))
 	return results
+
+# {
+#     "uuid": "56bd2478-e6da-48b4-8e5a-15818f62d2d9",
+#     "subject": {
+#         "family_name": "pavey",
+#         "uuid": "c7c21c30-5865-4d00-a5cb-32b69108947d",
+#         "given_name": "petersen",
+#         "dob": "1943-02-09 05:35:46.259076",
+#         "gender": "M"
+#     },
+#     "created_date": "2014-10-26 23:59:48.086540",
+#     "modified_date": "2014-10-26 23:59:48.086540",
+#     "procedure": "apply disinfectant and give antibiotics",
+#     "observer": "test2",
+#     "location": {
+#         "coords": "POINT (-1.5758419447100001 10.5434422844999993)",
+#         "alt": "alt!"
+#     }
+#	
+# }
