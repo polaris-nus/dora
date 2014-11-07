@@ -34,7 +34,7 @@
 </head>
 {% verbatim %}
 <body>
-  <div ng-controller="UserAccountController">  
+  <div ng-controller="UserAccountController" id="top-controller">  
     <div id="map">
       <div id="customZoom">
         <a href="#customZoomIn" id="customZoomIn">+</a>
@@ -123,71 +123,66 @@
     </div>
   </div>
 
-  <div ng-controller="QueryResultController">
-
-   <!-- <img src="/static/loading.gif" class="above loading" ng-show="loadingStatus.count > 0"/> -->
-
-   <!-- Start of History Panel -->
-   <!-- <div class="above panel panel-info" id="history-panel" ng-show="historyPanelVisibility&&QRSHistory.length>0"> -->
-   <div class="above panel panel-info" id="history-panel">
-    <div class="panel-heading panel-heading-height">
-      <span class="glyphicon glyphicon-th-list icon"></span>
-      Query History
-      <!-- hide button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="historyPanelVisibility=false" data-toggle="tooltip" title="hide panels">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-      </button>  
-      <!-- delete button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS()" data-toggle="tooltip" title="delete">
-        <span class="glyphicon glyphicon-remove"></span>
-      </button>  
-      <!-- save button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" data-toggle="tooltip" title="save">
-        <span class="glyphicon glyphicon-floppy-disk"></span>
-      </button>
-      <!-- export button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" ng-click="exportQRS()" data-toggle="tooltip" title="export">
-        <span class="glyphicon glyphicon-save"></span>
-      </button>
-      <!-- clustering on/off button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="toggleQRSClustering()" data-toggle="tooltip" title="toggle clustering">
-        <span class="glyphicon glyphicon-record"></span>
-      </button>
-      <!-- copy button -->
-      <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="requery()" data-toggle="tooltip" title="duplicate query">
-        <span class="glyphicon glyphicon-pencil"></span>
-      </button>
-    </div>
-
-    <!--   <div class="panel-body"> -->
-    <div class="list-group" id="history-list">
-      <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-        <!-- btn-invisible:!getQRSVisibility($index) -->
-        <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
-          <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
-          <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
+  <div class="above" ng-controller="QueryResultController" id="query-result-div">
+    <!-- <img src="/static/loading.gif" class="above loading" ng-show="loadingStatus.count > 0"/> -->
+    <!-- Start of History Panel -->
+    <div class="above panel panel-info" ng-show="historyPanelVisibility&&QRSHistory.length>0" id="history-panel">
+      <div class="panel-heading panel-heading-height">
+        <span class="glyphicon glyphicon-th-list icon"></span>
+        Query History
+        <!-- hide button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="historyPanelVisibility=false" data-toggle="tooltip" title="hide panels">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>  
+        <!-- delete button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS()" data-toggle="tooltip" title="delete">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>  
+        <!-- save button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" data-toggle="tooltip" title="save">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
         </button>
-        <span ng-show="!editingMode" ng-click="editingMode=true"> {{name[$index]}} </span>
-        <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="name[$index]">
+        <!-- export button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" ng-click="exportQRS()" data-toggle="tooltip" title="export">
+          <span class="glyphicon glyphicon-save"></span>
+        </button>
+        <!-- clustering on/off button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="toggleQRSClustering()" data-toggle="tooltip" title="toggle clustering">
+          <span class="glyphicon glyphicon-record"></span>
+        </button>
+        <!-- copy button -->
+        <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="requery()" data-toggle="tooltip" title="duplicate query">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </div>
 
-        <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
-      </a>
-      <!-- </div> -->
+      <!--   <div class="panel-body"> -->
+      <div class="list-group" id="history-list">
+        <a href="#" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+          <!-- btn-invisible:!getQRSVisibility($index) -->
+          <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
+            <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
+            <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
+          </button>
+          <span ng-show="!editingMode" ng-click="editingMode=true"> {{name[$index]}} </span>
+          <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="name[$index]">
+
+          <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator"></button>
+        </a>
+        <!-- </div> -->
+      </div>
+
+      <div class="above" ng-show="!historyPanelVisibility">
+        <button type="button" class="btn btn-default" id="thumbnail-history-panel" ng-click="historyPanelVisibility=true; qrsPanelVisibility=true">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </button>  
+      </div>
     </div>
-  </div>
+    <!-- End of History Panel -->
 
-  <div class="above" ng-show="!historyPanelVisibility">
-    <button type="button" class="btn btn-default" id="thumbnail-history-panel" ng-click="historyPanelVisibility=true; qrsPanelVisibility=true">
-      <span class="glyphicon glyphicon-th-list"></span>
-    </button>  
-  </div>
-  <!-- End of History Panel -->
+    <!-- Start of Result Panel -->
+    <div class="panel panel-info above" id="result-panel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0">
 
-
-  <!-- Start of Result Panel -->
-
-  <!-- <div class="above" id="qrspanel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> -->
-    <div class="panel panel-info above" id="result-panel">
       <div class="panel-heading panel-heading-height">
         <span class="glyphicon glyphicon-th-list icon"></span>
         Query Result
@@ -256,25 +251,25 @@
         <!-- End of Encounters -->
       </div>
     </div>
-  <!-- End of Result Panel -->
-</div>
-
-<div ng-controller="TemporalSliderController" class="above" id="slider-panel">
-  <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
-  <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
-  <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
-    <img src="/static/images/play.png" width="30" height="24" alt="submit" />
-  </button>
-  <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
-    <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
-  </button>
-  <div id="slider-div">
-    <div id="slider"></div>
+    <!-- End of Result Panel -->
   </div>
-</div>
 
-{% endverbatim %}
-<!-- scripts loaded after html-->
+  <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
+    <div class="slider-input-div">Granularity: <input type="number" min="1" step="1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_granularity"></input></div>
+    <div class="slider-input-div">Delay: <input type="number" min="0" step="0.1" class="slider-input" ng-change="toggleScrolling();toggleScrolling();" ng-model="scroll_speed"></input>&nbsp;</div>
+    <button type="submit" class="above" ng-hide="isPlaying" ng-click="toggleScrolling(); isPlaying=true;" id="slider-btn">
+      <img src="/static/images/play.png" width="30" height="24" alt="submit" />
+    </button>
+    <button type="submit" class="above" ng-show="isPlaying" ng-click="toggleScrolling(); isPlaying=false;" id="slider-btn">
+      <img src="/static/images/pause.png" width="30" height="24" alt="submit" />
+    </button>
+    <div id="slider-div">
+      <div id="slider"></div>
+    </div>
+  </div>
+
+  {% endverbatim %}
+  <!-- scripts loaded after html-->
 </div>
 </body>
 

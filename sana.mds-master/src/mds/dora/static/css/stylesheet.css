@@ -1,5 +1,11 @@
 body { overflow: hidden; }
 
+html, body, #top-controller{ 
+  margin: 0; 
+  padding: 0; 
+  height: 100%;
+}
+
 ul{ padding-left:0; }
 
 #map { position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; }
@@ -156,11 +162,9 @@ ul{ padding-left:0; }
   background-color: red;
   }*/
 
-  #history-panel{
-    width: 30%;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 0px;
+  #query-result-div{
+    height: 70%;
+    background-color: red;
   }
 
   .panel-heading-height{
@@ -171,9 +175,17 @@ ul{ padding-left:0; }
     padding-top: 0px;
   }
 
+  #history-panel{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    width: 30%;
+    max-height: 30%;
+  }
+
   #history-list{
     margin: 0px;
-    max-height: 120px;
+    max-height: 30%;
     overflow-y: scroll; 
   }
 
@@ -202,6 +214,7 @@ ul{ padding-left:0; }
     margin-top: 10px;
     margin-left: 10px;
     margin-bottom: 0px;
+    height: 70%;
     width: 30%;
   }
 
