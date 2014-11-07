@@ -39,7 +39,7 @@ class UtilsTestCase(TestCase):
 		check_assertions(self, query_result_set, results, 2)
 
 		#assert with disease,gender,location,age_range
-		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'location':'GEOMETRYCOLLECTION(POLYGON ((-3 0, -3 15, 0 15, 0 0, -3 0)))', 'age_range':'65-75'})
+		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'location':'["POLYGON ((-3 0, -3 15, 0 15, 0 0, -3 0))"]', 'age_range':'65-75'})
 		query, concepts_list, locations_list = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
 		query_result_set = query_result_set.order_by('uuid')
@@ -54,7 +54,7 @@ class UtilsTestCase(TestCase):
 	def test_create_json_obj_list(self):
 		#setup
 		results = setup_create_json_obj_list_results()
-		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'location':'GEOMETRYCOLLECTION(POLYGON ((-3 0, -3 15, 0 15, 0 0, -3 0)))', 'age_range':'65-75'})
+		request = self.factory.post('/dora/query/', {'diagnosis': 'inflammation of wound', 'gender':'M', 'location':'["POLYGON ((-3 0, -3 15, 0 15, 0 0, -3 0))"]', 'age_range':'65-75'})
 		query, concepts_list, locations_list = utils.parse_request(request)
 		query_result_set = utils.get_query_result_set(query, concepts_list, locations_list)
 
