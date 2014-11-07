@@ -195,7 +195,7 @@
       <div class="panel panel-info above" id="result-panel" ng-show="qrsPanelVisibility&&historyPanelVisibility&&QRSHistory.length>0"> 
 
         <div class="panel-heading uniform-height">
-          <span class="glyphicon glyphicon-th-list right-margin"></span>
+          <span class="glyphicon glyphicon-th-list right-margin margintop"></span>
           Query Result
 
           <!-- delete button -->
@@ -215,7 +215,7 @@
               <a ng-click="filtersVisible=!filtersVisible">Filters</a>
             </div>
             <div ng-show="filtersVisible">
-              <span class="filter" ng-repeat="filter in filters">{{filter}}</span>
+              <span class="filter text-color" ng-repeat="filter in filters">&nbsp;{{filter.key}}: {{filter.value}}</span>
             </div>
           </div>
 
