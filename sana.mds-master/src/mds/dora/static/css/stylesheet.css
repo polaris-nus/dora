@@ -178,6 +178,7 @@ ul{
 
 .queryForm{
   position: relative;
+  min-width: 380px;
   width: 30%;
   z-index: 500;
   margin-top: 10px;
@@ -258,6 +259,7 @@ ul{
 
 #thumbnail-history-panel{
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 .visibility-btn{
@@ -270,7 +272,9 @@ ul{
   margin-top: 10px;
   margin-bottom: 0px;
   width: 30%;
-  max-height: 30%;
+  min-width: 380px;
+  /*max-height: 30%;*/
+   max-height: 150px;
 }
 
 #history-list{
@@ -281,7 +285,7 @@ ul{
 }
 
 .blue-tooltip{
-  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .history-entry{
@@ -331,12 +335,18 @@ ul{
   margin-bottom: 0px;
   height: 70%;
   width: 30%;
+  min-width: 380px;
 }
 
 #qrs-panel-body{
   max-height: 450px;
   overflow-y: scroll; 
   padding: 0px;
+}
+
+#encounter-filter{
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /*time slider*/
