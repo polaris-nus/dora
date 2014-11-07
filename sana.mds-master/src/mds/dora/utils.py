@@ -1,4 +1,4 @@
-import cjson, operator
+import json, operator
 from django.shortcuts import render
 from mds.dora.models import *
 from mds.core.models import *
@@ -99,8 +99,8 @@ def parse_request(request):
 		if location_filter:
 			try:
 				print location_filter
-				#geometries = json.loads(location_filter)
-				geometries = cjson.decode(location_filter)
+				geometries = json.loads(location_filter)
+				#geometries = cjson.decode(location_filter)
 				q_object_geometry = Q()
 				for geometry in geometries:
 					q_object_geometry |= Q(coordinates__within=geometry)
@@ -213,7 +213,11 @@ def create_json_response(query_result_set):
 
 	end = datetime.now()
 	print ("time taken for create_json_response: " + str(end-start))
-	return cjson.encode(json_response)
+	
+	#print json.dumps(json_response, indent=4, separators=(',', ': '))
+	
+	#return cjson.encode(json_response)
+	return json.dumps(json_response)
 
 
 #Creates a json array of objects from a given list of json objects. Pre cond: = 2
@@ -258,5 +262,5 @@ def get_user_saved_queries(request):
 		query['alias'] = item.alias
 		response['queries'].append(query)
 
-	#return json.dumps(response)
-	return cjson.encode(response)
+	return json.dumps(response)
+	#return cjson.encode(response)
