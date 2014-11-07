@@ -4,7 +4,7 @@ body { overflow: hidden; }
 html, body, #top-controller{ 
   margin: 0; 
   padding: 0; 
-    width: 100%;
+  width: 100%;
   height: 100%;
 }
 
@@ -38,7 +38,6 @@ ul{
 .alignR{
   margin-left: 10px;
   float: right;
-  margin-top: 5px;
 }
 
 .hover-text-shadow:hover {
@@ -92,7 +91,7 @@ ul{
   font-weight: bold;
   color: #fff;
   background: #369;
-  border: 1px solid #ccc;
+  border: 1px solid #bce8f1;
   border-radius: 3px;
 }
 
@@ -108,7 +107,7 @@ ul{
 .account{
   float: right;
   margin-top: 10px;
-  margin-right: 20px;
+  margin-right: 10px;
   cursor: default;
 }
 
@@ -121,7 +120,7 @@ ul{
 
 .removeSavedQuery{
   color: #31708f;
-  top:7px;
+  top:8px;
 }
 
 .noselect {
@@ -169,19 +168,19 @@ ul{
   z-index: 5000;
 }
 
-#searchbox{
-  position: relative; 
-  width: 30%;
-  display: inline-block;
-}
-
 .queryForm{
   position: relative;
-  opacity: 0.99;
-  /*z-index: 500;*/
+  width: 30%;
+  z-index: 500;
   margin-top: 10px;
   margin-left: 10px;
   white-space: nowrap;
+  display: inline-block;
+}
+
+#searchbox{
+  position: relative; 
+  width: 100%;
   display: inline-block;
 }
 
@@ -221,7 +220,7 @@ ul{
 
 .filter {
   margin: 2px;
-  border: 1px solid black;
+  border: 1px solid #bce8f1;
   background-color: white;
   padding: 2px;
   display: inline-block;
@@ -271,6 +270,10 @@ ul{
   /*max-height: 50px;*/
   max-height: 30%;
   overflow-y: scroll; 
+}
+
+.blue-tooltip{
+  margin-top: 5px;
 }
 
 .history-entry{

@@ -84,14 +84,10 @@
       <div class="queryForm above">
         <div class="input-group" id="searchbox">
           <form ng-submit="submitFilter()">
-            <div class="form-control autocom-input">
+            <div class="form-control autocom-input" id="parentDiv">
               <span ng-bind="key" id="key"></span>
               <span ng-show="key">:</span>
-              <autocomplete ng-model="input" on-select="selectFilter" 
-              attr-input-class="removeInputStyle"
-              data="data"
-              key="key"
-              attr-class="autocom-div"></autocomplete>
+              <autocomplete ng-model="input" on-select="selectFilter" attr-input-class="removeInputStyle" data="data" key="key" attr-class="autocom-div"></autocomplete>
             </div>
             <span class="input-group-btn" id="addCriteria">
               <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
@@ -122,7 +118,7 @@
       </div>
     </div>
 
-    <div class="above" ng-controller="QueryResultController" id="query-result-div">
+    <div ng-controller="QueryResultController" id="query-result-div">
       <div class="above loading" ng-show="loadingStatus.count > 0">
         <img src="/static/loading.gif" class="loading-img" />
         <span id="loading-text">Query result is loading, please wait.</span>

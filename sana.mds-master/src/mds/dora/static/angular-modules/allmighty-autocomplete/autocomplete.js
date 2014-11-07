@@ -163,6 +163,14 @@ app.directive('autocomplete', function() {
       	scope.keyWidth = width;
       });
 
+      scope.getParentWidth = function() {
+        return $('#parentDiv').width();
+      };
+      
+      scope.$watch(scope.getParentWidth, function(width){
+        scope.parentDivWidth = width;
+      });
+
       var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9, backspace:8 };
 
       document.addEventListener("keydown", function(e){
@@ -280,7 +288,7 @@ app.directive('autocomplete', function() {
           <input\
             type="text"\
             ng-model="searchParam"\
-            ng-style="{ width: (326 - keyWidth) +\'px\'}"\
+            ng-style="{ width: (parentDivWidth - keyWidth) +\'px\'}"\
             placeholder="{{ attrs.placeholder }}"\
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"/>\
