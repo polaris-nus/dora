@@ -223,6 +223,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		$scope.historyPanelVisibility = true;
 		$scope.editingMode = false;
 		$scope.name = [];
+		var counter = 1;
 
 		$scope.removeQRS = function() {
 			console.log($scope.displayedQRSIndex);
@@ -240,11 +241,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		}
 
 		$scope.setDisplayedQRS = function(index) {
-			if(index>=$scope.name.length){
-				$scope.name.push("QRS "+(index+1));
-			}
-			console.log($scope.name[index]);
-
 			$scope.displayedQRS = $scope.QRSHistory[index];
 			$scope.displayedQRSIndex = index;
 			$scope.qrsPanelVisibility = true;
@@ -254,9 +250,16 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartTwoDS();
 			drawChart();
 			//scrollToBottom();
-			
 		};
-		QRSServ.setOnAddCallback($scope.setDisplayedQRS);
+		
+		function addNewQRS(index) {
+			var QRSHistory = $scope.QRSHistory;
+			QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
+			
+			$scope.setDisplayedQRS(index);
+		}
+		
+		QRSServ.setOnAddCallback(addNewQRS);
 
 		$scope.showPopoverOnMap = function(encounterUuid) {
 			MapServ.triggerPopover($scope.displayedQRS, encounterUuid);

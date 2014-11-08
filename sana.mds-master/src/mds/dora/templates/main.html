@@ -150,7 +150,7 @@
             <span class="glyphicon glyphicon-remove"></span>
           </button>  
           <!-- save button -->
-          <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" type="submit" data-toggle="tooltip" title="save">
+          <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="$parent.saveQuery(displayedQRS)" type="submit" data-toggle="tooltip" title="save">
             <span class="glyphicon glyphicon-floppy-disk"></span>
           </button>
           <!-- export button -->
@@ -175,8 +175,8 @@
               <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
               <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
             </button>
-            <span ng-show="!editingMode" ng-click="editingMode=true"> {{name[$index]}} </span>
-            <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="name[$index]">
+            <span ng-show="!editingMode" ng-click="editingMode=true"> {{qrs.alias}} </span>
+            <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="qrs.alias">
 
             <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator margintop"></button>
           </a>
