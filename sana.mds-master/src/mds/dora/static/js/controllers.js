@@ -23,6 +23,13 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			
 			$scope.filters = newFilters.slice();
 			
+			var filters = $scope.filters;
+			
+			for (var i = 0; i < filters.length; i++) {
+				var key = filters[i].key;
+				$scope.data.splice($scope.data.indexOf(key),1);
+			}
+			
 			// console.log($scope.filters);
 		}
 
@@ -254,8 +261,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		
 		function addNewQRS(index) {
 			var QRSHistory = $scope.QRSHistory;
-			QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
-			
+			var alias = QRSHistory[QRSHistory.length-1].alias;
+			if (alias == undefined) {
+				QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
+			}
 			$scope.setDisplayedQRS(index);
 		}
 		
