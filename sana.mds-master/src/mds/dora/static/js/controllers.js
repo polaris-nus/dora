@@ -18,19 +18,18 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 
 		//sets the filter from the QueryResultController
 		var setfilters = function(newFilters){
-			//console.log("running requery in formctrl" + JSON.stringify(newFilters));
 			
+			for (var i = 0; i < $scope.filters.length; i++) {
+				$scope.data.push($scope.filters[i].key);
+			}
 			
 			$scope.filters = newFilters.slice();
 			
-			var filters = $scope.filters;
-			
-			for (var i = 0; i < filters.length; i++) {
-				var key = filters[i].key;
+			for (var i = 0; i < $scope.filters.length; i++) {
+				var key = $scope.filters[i].key;
 				$scope.data.splice($scope.data.indexOf(key),1);
 			}
-			
-			// console.log($scope.filters);
+
 		}
 
 		QRSServ.setRequeryCallback(setfilters);
@@ -158,8 +157,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			var filters = $scope.filters;
 			
 			//return the keys back into autocomplete array
-			for (var i = 0; i < $scope.filters.length; i++) {
-				$scope.data.push($scope.filters[i].key);
+			for (var i = 0; i < filters.length; i++) {
+				$scope.data.push(filters[i].key);
 			}
 			
 			$scope.filters = [];
@@ -174,7 +173,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 				$('#myModal').modal('show');
 			}
 			
-			console.log(filters);
+			//console.log(filters);
 			
 			QRSServ.setQueryCallback(function(status){
 				if (status === 'unauthorized') {

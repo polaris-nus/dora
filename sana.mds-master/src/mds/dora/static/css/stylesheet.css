@@ -223,7 +223,7 @@ ul{
 .filters {
   cursor: default;
   white-space: normal;
-  width: 400px;
+  //width: 400px;
   position: relative;
 }
 
