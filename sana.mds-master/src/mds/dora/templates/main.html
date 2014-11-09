@@ -176,7 +176,7 @@
               <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
             </button>
             <span ng-show="!editingMode" ng-click="editingMode=true"> {{qrs.alias}} </span>
-            <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="qrs.alias">
+            <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="qrs.alias" maxlength="24">
 
             <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator margintop"></button>
           </a>
