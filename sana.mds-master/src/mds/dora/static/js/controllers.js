@@ -35,16 +35,14 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		QRSServ.setRequeryCallback(setfilters);
 
 		function changeMode(newValue) {
-			//console.log("changeMode triggered");
+
 			if (newValue == 'polygon') {
 				MapServ.activateDrawPolygon();
 			}
 			else if (newValue == 'circle') {
 				MapServ.activateDrawCircle();
 			}
-			// else if (newValue == 'modify') {
-			// 	MapServ.activateModifyPolygon();
-			// }
+
 			else if (newValue == 'country') {
 				MapServ.activateSelectCountry();
 			}
@@ -78,7 +76,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			//'Follow up date'
 			];
 			
-		// console.log($scope.data);
 		
 		$scope.selectFilter = function(key){
 			$scope.key = key;
@@ -86,8 +83,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		};
 		
 		$scope.submitFilter = function(){
-			// console.log("length of data array: " + $scope.data.length);
-			// console.log($scope.data);
 			if ($scope.key && $scope.input) {
 				
 				$scope.filters.push({key:$scope.key, value:$scope.input});
@@ -110,7 +105,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 				MapServ.activatePolygonFilters();
 				$scope.mapServMode = 'drawing';
 			}
-			//console.log($scope.mapServMode);
+
 			$scope.locationSearchOn = !$scope.locationSearchOn;
 		};
 		
@@ -121,7 +116,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		$scope.$watch('mapServMode', changeMode);
 		
 		$scope.buttonName = function(){
-			//console.log("location now is " + location);
 			if ($scope.locationSearchOn) return "Hide location search";
 			else return "Location search";
 		};
@@ -137,7 +131,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		};
 		
 		$scope.removeFilter = function(index, filter){
-			// console.log(filter);
+
 			$scope.filters.splice(index, 1);
 			$scope.data.push(filter.key);
 		};
@@ -145,8 +139,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 		$scope.changeMode = changeMode;
 
 		$scope.submitQuery = function(){
-
-			console.log("inside submitQuery()");
 			
 			if ($scope.locationSearchOn){
 				$scope.toggleButton();
@@ -172,8 +164,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 				$scope.errorMessage = msg;
 				$('#myModal').modal('show');
 			}
-			
-			//console.log(filters);
 			
 			QRSServ.setQueryCallback(function(status){
 				if (status === 'unauthorized') {
@@ -232,12 +222,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 		var counter = 1;
 
 		$scope.removeQRS = function() {
-			console.log($scope.displayedQRSIndex);
 			QRSServ.removeFromQRSHistory($scope.QRSHistory[$scope.displayedQRSIndex]);
 		}
 
 		$scope.requery = function(){
-			//console.log("inside QRS result ctrl " + JSON.stringify($scope.displayedQRS));
 			QRSServ.requery($scope.displayedQRS);
 			var location = $scope.displayedQRS.location
 			if (location && location.length > 0) {
@@ -418,7 +406,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				}else if(sexString =="M"){
 					maleCount[ageGroup]+=1;
 				}else{
-					console.log("invalide sex");
+
 				}
 			}
 
@@ -523,7 +511,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 				if (Date.parse(endDate) >= Date.parse(bounds.max)) {
 					var range = (new Date(values.max)) - (new Date(values.min));
 					range = Math.ceil(range / (1000 * 3600 * 24))-1;
-					console.log(range);
+
 					startDate = new Date(bounds.max);
 					startDate.setDate(startDate.getDate() - range);
 				} else {
@@ -620,12 +608,9 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		};
 		
 		$scope.executeQuery = function(queryObj) {
-			// console.log('inside executeQuery');
 			var location, alias;
 			
 			QRSServ.initializeLoading();
-			console.log(queryObj);
-			console.log(queryObj.query);
 			var filters = JSON.parse(queryObj.query);
 			if (queryObj.location) {
 				location = JSON.parse(queryObj.location);
@@ -640,7 +625,6 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//load data
 		$scope.loadQueries = function() {
-			// console.log("inside loadQuery");
 			$http({
 				method: 'POST',
 				url: '/dora/loadqueries/',
@@ -649,14 +633,11 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 				var queries = response.queries;
 				for (var i = 0; i < queries.length; i++) {
-					// console.log(queries[i]);
 					var query = queries[i];
 					if (!isExist(query)) {
 						$scope.savedQueries.push(query);
 					}
 				}
-
-				// console.log($scope.savedQueries);
 
 			}).error(function(data){
 				document.open();
@@ -667,9 +648,6 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//save
 		$scope.saveQuery = function(QRS) {
-		
-			console.log("inside savequery");
-			console.log(QRS);
 
 			var data = {};
 			
@@ -693,8 +671,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				},
 				data: data
 			}).success(function(response) {
-				// console.log('reloading queries');
-				// console.log('response: '  + JSON.stringify(response));
+
 				$scope.loadQueries();
 			}).error(function(data){
 				document.open();
@@ -705,7 +682,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 
 		//delete
 		$scope.deleteQuery = function(query, index) {
-			// console.log("deleting " + query.uuid);
+
 			var uuid = query.uuid;
 			$scope.savedQueries.splice(index, 1);
 			
@@ -715,7 +692,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				data: uuid
 			}).success(function(response) {
-				// console.log(response);
+
 			}).error(function(data){
 				document.open();
 				document.write(data);
