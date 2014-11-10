@@ -19,7 +19,6 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				queryCallback = callback;
 			},
 			requery:function(displayedQRS){
-				//console.log("inside QRSServ " + JSON.stringify(displayedQRS.filters));
 				requeryCallBack(displayedQRS.filters);
 			},
 			getLoadingStatus: function(){
@@ -91,8 +90,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 				if (location && location.length > 0) {
 					data.location = JSON.stringify(location);
 				}
-				
-				console.log(data);
+
 				var QRSServ = this;
 				
 				$http({
@@ -109,13 +107,9 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 					
 				}).success(function(QRS) {
 					
-					console.log(QRS);
-					
 					if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
 						QRS.status = 'empty'
 					} else if (QRS.status == "ok") {
-						console.log("success!");
-						console.log(location);
 						QRS.filters = filters;
 						if (alias) {
 							QRS.alias = alias;
@@ -440,6 +434,7 @@ doraServices.service('MapServ', [
 				var polygonFilter = wktParser.read(WKTArray[i]);
 				if (polygonFilter instanceof Array) {
 					for(j in polygonFilter) {
+						polygonFilter[j].geometry.transform("EPSG:4326", "EPSG:900913");
 						addToPolygonFeatures(polygonFilter[j]);
 					}
 				} else {
@@ -818,10 +813,6 @@ doraServices.service('MapServ', [
 					var leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
 					var rightStack = clusterLayerFeatures[clusterLayerId].rightStack;
 
-					console.log(features.length);
-					console.log(leftStack.length);
-					console.log(rightStack.length);
-
 					function checkOrder(array) {
 						if (array.length > 1) {
 							for (var i = 1; i < array.length; i++) {
@@ -853,9 +844,7 @@ doraServices.service('MapServ', [
 					return 0;
 				}
 
-				console.log(visibleLayers);
 				for (var i=0; i<visibleLayers.length;i++) {
-					console.log("index"+i);
 					if (checkLayerOrder(visibleLayers[i])) {
 						return 1;
 					}
