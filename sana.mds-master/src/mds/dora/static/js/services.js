@@ -518,7 +518,12 @@ doraServices.service('MapServ', [
 			  selectClusterControls.setLayer(selectControlsLayers);
 
 			  // QRS specific zoom and pan center
-			  map.zoomToExtent(clusterLayer.getDataExtent());
+			  if(returnedLayers.locationLayer) {
+					map.zoomToExtent(returnedLayers.locationLayer.getDataExtent());
+			  } else {
+			  	map.zoomToExtent(returnedLayers.clusterLayer.getDataExtent());
+			  }
+			  
 
 			  return returnedLayers; // for testability
 
