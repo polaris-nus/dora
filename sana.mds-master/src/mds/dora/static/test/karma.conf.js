@@ -33,7 +33,8 @@ module.exports = function(config) {
     exclude: [
       'js/qrspanel.js',
       'js/controllers.js',
-      'test/unit/controllersSpec.js'
+      //'test/unit/controllersSpec.js',
+      'test/e2e/*'
     ],
 
     plugins : [

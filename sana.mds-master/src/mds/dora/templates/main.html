@@ -43,7 +43,7 @@
     </div>
 
     <div class="account above noselect">
-      <button type="button" class="btn btn-info alignR" ng-click="toggleSavePanel()">
+      <button id="accountButton" type="button" class="btn btn-info alignR" ng-click="toggleSavePanel()">
         <span class="glyphicon glyphicon-user"></span>
         <span style="text-decoration:underline;">{% endverbatim %}{{ username }}{% verbatim %}</span>
         <span ng-show="savePanelVisibility">&and;</span>
@@ -90,7 +90,7 @@
               <autocomplete ng-model="input" on-select="selectFilter" attr-input-class="removeInputStyle" data="data" key="key" attr-class="autocom-div"></autocomplete>
             </div>
             <span class="input-group-btn" id="addCriteria">
-              <button type="submit" class="btn btn-info" ng-disabled="!key || !input">
+              <button id="submitCriteria" type="submit" class="btn btn-info" ng-disabled="!key || !input">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
             </span>
@@ -146,11 +146,11 @@
             <span class="glyphicon glyphicon-chevron-left"></span>
           </button>  
           <!-- delete button -->
-          <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS()" data-toggle="tooltip" title="delete">
+          <button id="deleteButton" type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="removeQRS()" data-toggle="tooltip" title="delete">
             <span class="glyphicon glyphicon-remove"></span>
           </button>  
           <!-- save button -->
-          <button type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="$parent.saveQuery(displayedQRS)" type="submit" data-toggle="tooltip" title="save">
+          <button id="saveButton" type="button" class="btn btn-info btn-xs alignR blue-tooltip" ng-click="$parent.saveQuery(displayedQRS)" type="submit" data-toggle="tooltip" title="save">
             <span class="glyphicon glyphicon-floppy-disk"></span>
           </button>
           <!-- export button -->
