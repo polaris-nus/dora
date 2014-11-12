@@ -492,10 +492,6 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 		$scope.scroll_granularity = 7; //every 0.5 is one day
 		var scroller = null;
 
-		$scope.sliderModifier = function(arg) {
-			return $("#slider").dateRangeSlider(arg);
-		};
-
 		$scope.autoscroll = function() {
 			var values = $("#slider").dateRangeSlider("values");
 			var bounds = $("#slider").dateRangeSlider("option", "bounds");
@@ -555,7 +551,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 			var defaultRange = 30;
 			defaultMin.setDate(defaultMax.getDate() - defaultRange);
 			
-			$scope.sliderModifier({
+			$("#slider").dateRangeSlider({
 				defaultValues:{
 					min: defaultMin, //default is one month
 					max: defaultMax
@@ -565,11 +561,11 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 				    max: new Date()
 				  }
 				});
-			var values = $scope.sliderModifier("values");
+			var values = $("#slider").dateRangeSlider("values");
 			MapServ.setSliderMinMax(values.min, values.max);
 
-			$scope.sliderModifier({range:{min: {days: 7}}});
-			$scope.sliderModifier({symmetricPositionning: true});
+			$("#slider").dateRangeSlider({range:{min: {days: 7}}});
+			$("#slider").dateRangeSlider({symmetricPositionning: true});
 
 			$("#slider").bind("valuesChanging", function(e, data){
 				MapServ.setSliderMinMax(data.values.min, data.values.max);
