@@ -16,7 +16,6 @@ def change_encounter_location(sender, **kwargs):
     
     if created and instance.concept.name == "LOCATION GPS":
         create_encounter_location_from_observation(instance)
-        print "EncounterLocation created"
    
     #modified
     else:
@@ -25,18 +24,15 @@ def change_encounter_location(sender, **kwargs):
             encounter_location.delete()
             if instance.concept.name == "LOCATION GPS":
                 create_encounter_location_from_observation(instance)
-                print "EncounterLocation modified"
         except:
             pass
     
 def create_encounter_location_from_observation(observation):
 
     gps_tuple = tuple(float(v) for v in re.findall(r'[-+]?[0-9]*\.?[0-9]+', observation.value_text))
-    print gps_tuple
         
     if len(gps_tuple) >= 2 and gps_tuple != (0,0,0) and gps_tuple != (0,0):
         gps_location = Point(gps_tuple[0], gps_tuple[1])
-        print gps_location
         encounter_location = EncounterLocation(encounter=observation.encounter, 
                                                coordinates=gps_location,
                                                observation=observation)

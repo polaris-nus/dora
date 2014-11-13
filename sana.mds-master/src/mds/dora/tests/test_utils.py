@@ -4,6 +4,7 @@ import mds.dora.utils as utils
 from mds.dora.tests.util_test_helper import *
 from django.contrib.auth import authenticate, login
 import cjson
+from django.contrib.gis.geos import GEOSGeometry
 
 
 class UtilsTestCase(TestCase):
@@ -79,13 +80,12 @@ class UtilsTestCase(TestCase):
 			result = results['assigned'][i]
 			self.assertEqual(response['uuid'], result['uuid'])
 			self.assertEqual(response['subject']['family_name'], result['subject']['family_name'])
-			self.assertEqual(response['subject']['uuid'], result['subject']['uuid'])
 			self.assertEqual(response['subject']['given_name'], result['subject']['given_name'])
 			self.assertEqual(response['subject']['dob'], result['subject']['dob'])
 			self.assertEqual(response['subject']['gender'], result['subject']['gender'])
 			self.assertEqual(response['created_date'], result['created_date'])
-			self.assertEqual(response['modified_date'], result['modified_date'])
 			self.assertEqual(response['procedure'], result['procedure'])
 			self.assertEqual(response['observer'], result['observer'])
-			self.assertEqual(response['location']['coords'], result['location']['coords'])
-			self.assertEqual(response['location']['alt'], result['location']['alt'])
+			#converts wkt into GEOSGeometry to compare geometries up to a small tolerance level
+			self.assertTrue(GEOSGeometry(response['location']['coords']).equals_exact(GEOSGeometry(result['location']['coords']), tolerance=0.001))
+			
