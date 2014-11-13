@@ -100,7 +100,6 @@ def parse_request(request):
 			try:
 				print location_filter
 				geometries = json.loads(location_filter)
-				#geometries = cjson.decode(location_filter)
 				q_object_geometry = Q()
 				for geometry in geometries:
 					q_object_geometry |= Q(coordinates__within=geometry)
@@ -124,7 +123,9 @@ def get_query_result_set(query, concepts_list, locations_list):
 	if (query == None and concepts_list == None):
 		return None
 	#return Observation.objects.all().values_list('encounter__created', flat=True)
-	encounter_QRS = Encounter.objects.filter(query).order_by('created')
+	encounter_QRS = Encounter.objects.select_related('subject', 'observer', 'procedure').filter(query).order_by('created')
+
+	print encounter_QRS.query
 
 	for concept in concepts_list:
 		concept_filter = Observation.objects.filter(concept).values_list('encounter__uuid', flat=True)
@@ -184,68 +185,100 @@ def create_json_response(query_result_set):
 	json_response['unassigned'] = []
 	json_response['status'] = "ok"
 	locations = EncounterLocation.objects.all() #Need to query the REAL Location Model
-	if (query_result_set):
-		for query_result in query_result_set:
+
+	end = datetime.now()
+	print ("time taken for setting up create_json_response: " + str(end-start))
+
+	counter = 0
+	start = datetime.now()
+	list(query_result_set)
+	end = datetime.now()
+	print ("time taken to evaluate QRS: " + str(end-start))
+	if (query_result_set.exists()):
+		start = datetime.now()
+		for query_result in query_result_set.iterator():
+			subject = query_result.subject
 			encounter_object = {}
 			encounter_object['uuid'] = query_result.uuid
 			encounter_object['subject'] = {}
-			encounter_object['subject']['family_name'] = query_result.subject.family_name
-			encounter_object['subject']['uuid'] = query_result.subject.uuid
-			encounter_object['subject']['given_name'] = query_result.subject.given_name
-			encounter_object['subject']['dob'] = str(query_result.subject.dob)
-			encounter_object['subject']['gender'] = query_result.subject.gender
+			encounter_object['subject']['family_name'] = subject.family_name
+			#encounter_object['subject']['uuid'] = subject.uuid
+			encounter_object['subject']['given_name'] = subject.given_name
+			encounter_object['subject']['dob'] = str(subject.dob)
+			encounter_object['subject']['gender'] = subject.gender
 			encounter_object['created_date'] = str(query_result.created)
-			encounter_object['modified_date'] = str(query_result.modified)
 			encounter_object['procedure'] = query_result.procedure.description
 			encounter_object['observer'] = str(query_result.observer.user)
 			encounter_object['location'] = {}
 			encounter_object['location']['coords'] = "None"
-			encounter_object['location']['alt'] = "alt!"
 
 			if locations.filter(encounter__uuid=query_result.uuid).exists():
 				encounter_with_coords = locations.filter(encounter__uuid=query_result.uuid)
-				for encounter in encounter_with_coords:
-					encounter_object['location']['coords'] = str(encounter.coordinates)
+				#for encounter in encounter_with_coords:
+				encounter_object['location']['coords'] = str(encounter_with_coords[0].coordinates)
 				json_response['assigned'].append(encounter_object)
 			else:
 				json_response['unassigned'].append(encounter_object)
 
+			counter += 1
 
+		end = datetime.now()
+		print ("time taken to create all objects: " + str(end-start))
+		print ("time taken to create one python obj: " + str((end-start)/counter))
+
+	start = datetime.now()
+	results = json.dumps(json_response, separators=(',',':'))
+	f = open('somefile.txt', 'w')
+	f.write(results)
+	#results = generate_json_obj_to_return(json_response)
 	end = datetime.now()
-	print ("time taken for create_json_response: " + str(end-start))
+	print ("time taken to dump: " + str(end-start))
 	
 	#print json.dumps(json_response, indent=4, separators=(',', ': '))
-	
-	#return cjson.encode(json_response)
-	return json.dumps(json_response)
+	return results
 
+# def make_to_json(encounter_object):
+# 	result = '{"uuid": "%s","subject": {"family_name": "%s","uuid": "%s","given_name": "%s","dob": "%s","gender": "%s"},"created_date": "%s","modified_date": "%s","procedure": "%s","observer": "%s","location": {"coords": "%s","alt": "%s"}}' % (
+# 			encounter_object['uuid'],
+# 			encounter_object['subject']['family_name'],
+# 			encounter_object['subject']['uuid'],
+# 			encounter_object['subject']['given_name'],
+# 			encounter_object['subject']['dob'],
+# 			encounter_object['subject']['gender'],
+# 			encounter_object['created_date'],
+# 			encounter_object['modified_date'],
+# 			encounter_object['procedure'],
+# 			encounter_object['observer'],
+# 			encounter_object['location']['coords'],
+# 			encounter_object['location']['alt']
+# 		)
 
-#Creates a json array of objects from a given list of json objects. Pre cond: = 2
-def generate_json_obj_to_return(json_obj_list):
-	json_complete = "{\n"
+# #Creates a json array of objects from a given list of json objects. Pre cond: = 2
+# def generate_json_obj_to_return(json_obj_list):
+# 	json_complete = "{\n"
 
-	if (len(json_obj_list) == 2) :
-		json_complete += '"assigned" : ' + (generate_json_from_list(json_obj_list[0]) + ",\n")
+# 	if (len(json_obj_list) == 2) :
+# 		json_complete += '"assigned" : ' + (generate_json_from_list(json_obj_list.assigned) + ",\n")
 
-		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list[1]) + ",\n")
+# 		json_complete += '"unassigned" : ' + (generate_json_from_list(json_obj_list.unassigned) + ",\n")
 
-		json_complete += '"status" : "ok"\n' 
+# 		json_complete += '"status" : "ok"\n' 
 
-	json_complete += "}"
+# 	json_complete += "}"
 
-	return json_complete
+# 	return json_complete
 
-def generate_json_from_list(json_obj_list):
-	json_array = "[\n"
-	for i in range(0, len(json_obj_list)-1):
-		json_array += (json_obj_list[i] + ",\n")
+# def generate_json_from_list(json_obj_list):
+# 	json_array = "[\n"
+# 	for i in range(0, len(json_obj_list)-1):
+# 		json_array += (json_obj_list[i] + ",\n")
 
-	if (len(json_obj_list) > 0):
-		json_array += json_obj_list[len(json_obj_list)-1]
+# 	if (len(json_obj_list) > 0):
+# 		json_array += json_obj_list[len(json_obj_list)-1]
 
-	json_array += "\n]"
+# 	json_array += "\n]"
 
-	return json_array
+# 	return json_array
 
 
 def get_user_saved_queries(request):
@@ -263,4 +296,3 @@ def get_user_saved_queries(request):
 		response['queries'].append(query)
 
 	return json.dumps(response)
-	#return cjson.encode(response)
