@@ -24,23 +24,32 @@ def index(request):
 
 @csrf_exempt
 def query(request):
-	start = datetime.now()
+	start1 = datetime.now()
 
 	if (not request.user.is_authenticated()):
 		return HttpResponse('{"assigned":[], "unassigned":[], "status":"unauthorized"}', content_type="application/json")		
 	#Parse the request
+	start = datetime.now()
 	query, concepts_list, locations_list = parse_request(request)
+	end = datetime.now()
+	print ("time taken for parse_request: " + str(end-start))
 	if (query == None and concepts_list == None and locations_list == None):
 		return HttpResponse('{"assigned":[], "unassigned":[], "status":"error"}', content_type="application/json")		
 
 	#Make the query
+	start = datetime.now()
 	query_result_set = get_query_result_set(query, concepts_list, locations_list)
+	end = datetime.now()
+	print ("time taken for get_query_result_set: " + str(end-start))
 
 	#Create a list of json objects
+	start = datetime.now()
 	json_response = create_json_response(query_result_set)
+	end = datetime.now()
+	print ("time taken for create_json_response: " + str(end-start))
 
 	end = datetime.now()
-	print ("time taken for query: " + str(end-start))
+	print ("time taken for query(): " + str(end-start1))
 
 	return HttpResponse(json_response, content_type="application/json")
 

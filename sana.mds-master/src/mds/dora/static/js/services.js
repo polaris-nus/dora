@@ -68,6 +68,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 			generateQRS: function(filters, location, alias) {
 				
 				var data = {};
+				var start = new Date();
 				
 				function escapeRegExp(string) {
 					return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
@@ -106,8 +107,7 @@ doraServices.service('QRSServ', [ 'MapServ', 'PaletteServ', '$http',
 					data: data
 					
 				}).success(function(QRS) {
-					
-					if (QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
+					if (QRS.status !== 'error' && QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
 						QRS.status = 'empty'
 					} else if (QRS.status == "ok") {
 						QRS.filters = filters;
