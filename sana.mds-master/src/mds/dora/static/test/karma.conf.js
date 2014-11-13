@@ -32,7 +32,7 @@ module.exports = function(config) {
     // list of files to exclude
     exclude: [
       'js/qrspanel.js',
-      'js/controllers.js',
+      //'js/controllers.js',
       //'test/unit/controllersSpec.js',
       'test/e2e/*'
     ],
