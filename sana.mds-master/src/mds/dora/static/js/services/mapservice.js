@@ -2,6 +2,7 @@ doraServices.service('MapService', [
 	function(){
 		OpenLayers.ImgPath = '/static/ol2/img/';
 		
+		//Initialising Map 
 		var map = new OpenLayers.Map({
 			div: "map",
 			controls: [
@@ -17,7 +18,6 @@ doraServices.service('MapService', [
 			})
 			],
 			layers: [
-	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {wrapDateLine: true, buffer: 2}),
 	    new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true}),
 	    ]
 	  });
@@ -25,13 +25,14 @@ doraServices.service('MapService', [
 		var zoom = 3;
 		map.setCenter(center, zoom);
 
+		// WKT Parser for serializing and deserailzing vector features
 		var wktParser = new OpenLayers.Format.WKT({
 			externalProjection: 'EPSG:4326',  //from WSG84
 			internalProjection: 'EPSG:900913' //to Spherical Mercator Projection
 		});
 
-		// StyleMaps for layers
-		var clusterMarkerStyle = new OpenLayers.StyleMap({
+		// StyleMaps for Vector Features
+		var encounterFeatureStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				pointRadius: "${radius}",
 				fillColor: "${color}",
@@ -76,7 +77,7 @@ doraServices.service('MapService', [
 			}
 		});
 
-		var QRSPolygonFilterStyle = new OpenLayers.StyleMap({
+		var locationFilterStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				fillColor: "${filterFillColor}",
 				fillOpacity: 0.4,
@@ -88,7 +89,7 @@ doraServices.service('MapService', [
 			})
 		});
 
-		var countryPolygonStyle = new OpenLayers.StyleMap({
+		var countryFilterStyle = new OpenLayers.StyleMap({
 			default: {
 				fillOpacity: 0,
 				strokeOpacity: 0,
@@ -106,7 +107,7 @@ doraServices.service('MapService', [
 			}
 		});
 
-		var drawPolygonStyle = new OpenLayers.StyleMap({
+		var polygonFilterStyle = new OpenLayers.StyleMap({
 			default: new OpenLayers.Style({
 				fillColor: "#808080",
 				fillOpacity: 0.4,
@@ -118,6 +119,7 @@ doraServices.service('MapService', [
 				context: {
 					dimension: function(feature){
 						if(feature.attributes.circle) {
+							// calculating radius of circle feature
 							var geometry = feature.geometry;
 							var center = geometry.getCentroid();
 							var point = geometry.getVertices()[0];
@@ -137,9 +139,9 @@ doraServices.service('MapService', [
 		});
 
 		// Adding Utility Layers
-		var countriesLayer = new OpenLayers.Layer.Vector("KML", {
+		var countryFilterLayer = new OpenLayers.Layer.Vector("KML", {
 			strategies: [new OpenLayers.Strategy.Fixed()],
-			styleMap: countryPolygonStyle,
+			styleMap: countryFilterStyle,
 			protocol: new OpenLayers.Protocol.HTTP({
 				url: "/static/kml/countriesM.kml",
 				format: new OpenLayers.Format.KML({
@@ -149,15 +151,15 @@ doraServices.service('MapService', [
 				})
 			})
 		})
-		map.addLayer(countriesLayer);
+		map.addLayer(countryFilterLayer);
 
-		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
-			styleMap: drawPolygonStyle
+		var polygonFilterLayer = new OpenLayers.Layer.Vector("Polygon Layer", {
+			styleMap: polygonFilterStyle
 		});
-		map.addLayer(polygonLayer);
+		map.addLayer(polygonFilterLayer);
 		
 		// Adding Map Controls
-		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon);
+		var drawPolygonControls = new OpenLayers.Control.DrawFeature(polygonFilterLayer, OpenLayers.Handler.Polygon);
 		map.addControl(drawPolygonControls);
 		// undo/redo event handlers for draw polygons
 		OpenLayers.Event.observe(document, "keydown", function(evt) {
@@ -186,20 +188,18 @@ doraServices.service('MapService', [
 		});
 
 		var polyOptions = {sides: 40};
-		var drawRegularPolygonControls = new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.RegularPolygon, {handlerOptions: polyOptions});
-		map.addControl(drawRegularPolygonControls);
-		drawRegularPolygonControls.events.register('featureadded', drawRegularPolygonControls, function(f){
+		var drawCircleControls = new OpenLayers.Control.DrawFeature(
+			polygonFilterLayer,
+			OpenLayers.Handler.RegularPolygon,
+			{handlerOptions: polyOptions}
+		);
+		map.addControl(drawCircleControls);
+		drawCircleControls.events.register('featureadded', drawCircleControls, function(f){
 			var addedFeature =  f.feature.clone();
 			addedFeature.attributes.circle = true;
-			polygonLayer.removeFeatures([f.feature], {silent:true});
-			polygonLayer.addFeatures([addedFeature], {silent:true});
+			polygonFilterLayer.removeFeatures([f.feature], {silent:true});
+			polygonFilterLayer.addFeatures([addedFeature], {silent:true});
 		});
-
-		// var modifyPolygonControls = new OpenLayers.Control.ModifyFeature(polygonLayer);
-		// modifyPolygonControls.mode = OpenLayers.Control.ModifyFeature.ROTATE;
-		// modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
-		// modifyPolygonControls.mode |= OpenLayers.Control.ModifyFeature.DRAG;
-		// map.addControl(modifyPolygonControls);
 
 		var selectClusterControls = new OpenLayers.Control.SelectFeature(new OpenLayers.Layer.Vector("stub"), {
 			toggle: true,
@@ -257,17 +257,17 @@ doraServices.service('MapService', [
 		map.addControl(selectClusterControls);
 		selectClusterControls.activate();
 
-		var selectCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+		var selectCountryFilterControls = new OpenLayers.Control.SelectFeature(countryFilterLayer, {
 			multiple: true,
 			toggle: true,
 		});
-		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countriesLayer, {
+		var hoverCountryControls = new OpenLayers.Control.SelectFeature(countryFilterLayer, {
 			hover: true,
 			highlightOnly: true,
 			renderIntent: "temporary"
 		});
 		map.addControl(hoverCountryControls);
-		map.addControl(selectCountryControls);
+		map.addControl(selectCountryFilterControls);
 
 		// Zoom and Pan Event Listeners
 		map.zoomToProxy = map.zoomTo;
@@ -310,11 +310,11 @@ doraServices.service('MapService', [
 		return {
 			addVectorLayer: function(QRS) {
 				var returnedLayers = {};
-			  // Check and create location polygon layer
+			  // Check for location filters and create location polygon layer
 			  if (QRS.location) {
 			  	var polygonFeatures = parseWKTArray(QRS.location, QRS.color.featureColor);
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
-			  		styleMap: QRSPolygonFilterStyle,
+			  		styleMap: locationFilterStyle,
 			  		renderers: ['Canvas', 'VML'],
 			  	});
 			  	QRS.locationLayerId = locationLayer.id;
@@ -350,18 +350,18 @@ doraServices.service('MapService', [
 			  var clusterStrategy = new OpenLayers.Strategy.Cluster();
 			  clusterStrategy.distance = 30;
 			  var clusterLayer = new OpenLayers.Layer.Vector('clusterLayer',{
-			  	styleMap: clusterMarkerStyle,
+			  	styleMap: encounterFeatureStyle,
 			  	strategies: [clusterStrategy]
 			  });
 			  clusterStrategyReferences[clusterLayer.id] = clusterStrategy;
 
-			  // Create clusterLayerId property to link QRS with respective cluster layer
+			  // Add clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
 			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
 
-			  // QRS specific zoom and pan center
+			  // Add extent property for zooming and panning view port to fit encounter features
 			  if(returnedLayers.locationLayer) {
 					QRS.extent = returnedLayers.locationLayer.getDataExtent();
 			  } else if (returnedLayers.clusterLayer.features.length > 0){
@@ -386,64 +386,23 @@ doraServices.service('MapService', [
 			  return returnedLayers; // for testability
 
 			},
-			setClusterStrategyStatus: function(QRS, activate) {
-				if(QRS.clusterLayerId) {
-					selectClusterControls.unselectAll();
-					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
-					activate ? clusterStrategy.activate() : clusterStrategy.deactivate();
-					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					clusterLayer.removeAllFeatures();
-					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
-				}
-			},
-			getClusterStrategyStatus: function(QRS) {
-				if(QRS.clusterLayerId) {
-					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
-					return clusterStrategy.active;
-				}
-				return null;
-			},
-			zoomToFitVectorFeatures: function(QRS) {
-				if(QRS.extent) {
-					map.zoomToExtent(QRS.extent);
-				}
-			},
-			setVectorLayerVisibility: function(QRS, visibility) {
-				if (QRS.clusterLayerId) {
-					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					clusterLayer.setVisibility(visibility);
-					if (clusterLayer.getVisibility()) {
-						if (visibleLayers.indexOf(QRS.clusterLayerId) == -1) {
-							visibleLayers.push(QRS.clusterLayerId);
-						}
-					} else if (visibleLayers.indexOf(QRS.clusterLayerId) != -1) {
-						visibleLayers.splice(visibleLayers.indexOf(QRS.clusterLayerId),1);
-					}
-				}
-				if (QRS.locationLayerId) {
-					var locationLayer = map.getLayer(QRS.locationLayerId);
-					locationLayer.setVisibility(visibility);
-				}
-				this.setSliderMinBound();
-				this.temporalSliderFeaturesToggle();
-			},
 			removeVectorLayer: function(QRS) {
 				if (QRS.clusterLayerId) {
 					// Manual cleanup on selectClusterControls.layers
 					var selectControlsLayers = selectClusterControls.layers || [selectClusterControls.layer];
 					selectControlsLayers = selectControlsLayers.filter(
 						function(element) {
-							return element.id.localeCompare(QRS.clusterLayerId) !== 0
+							return element.id !== QRS.clusterLayerId
 						}
-						)
+					)
 					selectClusterControls.setLayer(selectControlsLayers);
 
 					//Manual cleanup on visibleLayers and clusterLayerFeatures
 					visibleLayers = visibleLayers.filter(
 						function(element) {
-							return element.localeCompare(QRS.clusterLayerId) !== 0
+							return element !== QRS.clusterLayerId
 						}
-						)
+					)
 					delete clusterLayerFeatures[QRS.clusterLayerId];
 
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
@@ -456,78 +415,92 @@ doraServices.service('MapService', [
 				}
 				return map; // for testability
 			},
+			setClusterStrategyStatus: function(QRS, activate) {
+				if(QRS.clusterLayerId) {
+					selectClusterControls.unselectAll();
+
+					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
+					activate ? clusterStrategy.activate() : clusterStrategy.deactivate();
+					
+					// Redrawing encounter features after activation/deactivation
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					clusterLayer.removeAllFeatures();
+					clusterLayer.addFeatures(clusterLayerFeatures[QRS.clusterLayerId].features);
+				}
+			},
+			getClusterStrategyStatus: function(QRS) {
+				if(QRS.clusterLayerId) {
+					var clusterStrategy = clusterStrategyReferences[QRS.clusterLayerId];
+					return clusterStrategy.active;
+				}
+				return null;
+			},
+			setVectorLayerVisibility: function(QRS, visibility) {
+				if (QRS.clusterLayerId) {
+					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					clusterLayer.setVisibility(visibility);
+
+					if (clusterLayer.getVisibility()) {
+						if (visibleLayers.indexOf(QRS.clusterLayerId) === -1) {
+							visibleLayers.push(QRS.clusterLayerId);
+						}
+					} else if (visibleLayers.indexOf(QRS.clusterLayerId) !== -1) {
+						visibleLayers.splice(visibleLayers.indexOf(QRS.clusterLayerId),1);
+					}
+
+				}
+				if (QRS.locationLayerId) {
+					var locationLayer = map.getLayer(QRS.locationLayerId);
+					locationLayer.setVisibility(visibility);
+				}
+
+				this.setSliderMinBound();
+				this.temporalSliderFeaturesToggle();
+			},
+			zoomToFitVectorFeatures: function(QRS) {
+				if(QRS.extent) {
+					map.zoomToExtent(QRS.extent);
+				}
+			},
 			activatePolygonFilters: function() {
-				polygonLayer.setVisibility(true);
-				countriesLayer.setVisibility(true);
-				return polygonLayer.getVisibility() && countriesLayer.getVisibility();
+				polygonFilterLayer.setVisibility(true);
+				countryFilterLayer.setVisibility(true);
+				return polygonFilterLayer.getVisibility() && countryFilterLayer.getVisibility();
 			},
 			deactivatePolygonFilters: function() {
 				drawPolygonControls.deactivate();
-				drawRegularPolygonControls.deactivate();
-				// modifyPolygonControls.deactivate();
+				drawCircleControls.deactivate();
 				hoverCountryControls.deactivate();
-				selectCountryControls.deactivate();
-				polygonLayer.setVisibility(false);
-				countriesLayer.setVisibility(false);
+				selectCountryFilterControls.deactivate();
+				polygonFilterLayer.setVisibility(false);
+				countryFilterLayer.setVisibility(false);
 
-				return polygonLayer.getVisibility() || countriesLayer.getVisibility();
+				return polygonFilterLayer.getVisibility() || countryFilterLayer.getVisibility();
 			},
 			clearPolygonFilters: function() {
-				polygonLayer.removeAllFeatures();
-				selectCountryControls.unselectAll();
+				polygonFilterLayer.removeAllFeatures();
+				selectCountryFilterControls.unselectAll();
 
-				return polygonLayer.features.length + countriesLayer.selectedFeatures.length;	
+				return polygonFilterLayer.features.length + countryFilterLayer.selectedFeatures.length;	
 			},
 			addPolygonFilters: function(WKTArray) {
 				var polygonFeatures = parseWKTArray(WKTArray);
-				polygonLayer.addFeatures(polygonFeatures);
-				return polygonLayer.features.length;
-			},
-			activateDrawPolygon: function() {
-				drawRegularPolygonControls.deactivate();
-				// modifyPolygonControls.deactivate();
-				hoverCountryControls.deactivate();
-				selectCountryControls.deactivate();
-
-				drawPolygonControls.activate();
-			},
-			activateDrawCircle: function() {
-				drawPolygonControls.deactivate();
-				// modifyPolygonControls.deactivate();
-				hoverCountryControls.deactivate();
-				selectCountryControls.deactivate();
-
-				drawRegularPolygonControls.activate();
-			},
-			// activateModifyPolygon: function() {
-			// 	// BUG: cannot selectCountry after modification.
-			// 	drawPolygonControls.deactivate();
-			// 	drawRegularPolygonControls.deactivate();
-			// 	hoverCountryControls.deactivate();
-			// 	selectCountryControls.deactivate();
-
-			// 	modifyPolygonControls.activate();
-			// },
-			activateSelectCountry: function(){
-				drawPolygonControls.deactivate();
-				// modifyPolygonControls.deactivate();
-				drawRegularPolygonControls.deactivate();
-
-				hoverCountryControls.activate();
-				selectCountryControls.activate();
+				polygonFilterLayer.addFeatures(polygonFeatures);
+				return polygonFilterLayer.features.length;
 			},
 			getPolygonFilters: function() {
 				var preprocessedFeatures = [];
 
-				for (var i = 0; i < polygonLayer.features.length; i++) {
-					var drawnFeature = polygonLayer.features[i].clone()
+				for (var i = 0; i < polygonFilterLayer.features.length; i++) {
+					var drawnFeature = polygonFilterLayer.features[i].clone()
 					preprocessedFeatures.push(wktParser.write(drawnFeature));
 				}
-				for (var i = 0; i < countriesLayer.selectedFeatures.length; i++) {
-					var selectedFeature = countriesLayer.selectedFeatures[i].clone();
+				for (var i = 0; i < countryFilterLayer.selectedFeatures.length; i++) {
+					var selectedFeature = countryFilterLayer.selectedFeatures[i].clone();
 					preprocessedFeatures.push(wktParser.write(selectedFeature));
 				}
 
+				// Processing to align all features' projection
 				var filterFeatures = [];
 				for (var i = 0; i < preprocessedFeatures.length; i++) {
 					var polygonFilter = wktParser.read(preprocessedFeatures[i]);
@@ -542,6 +515,27 @@ doraServices.service('MapService', [
 				}
 
 				return filterFeatures;
+			},
+			activateDrawPolygon: function() {
+				drawCircleControls.deactivate();
+				hoverCountryControls.deactivate();
+				selectCountryFilterControls.deactivate();
+
+				drawPolygonControls.activate();
+			},
+			activateDrawCircle: function() {
+				drawPolygonControls.deactivate();
+				hoverCountryControls.deactivate();
+				selectCountryFilterControls.deactivate();
+
+				drawCircleControls.activate();
+			},
+			activateSelectCountry: function(){
+				drawPolygonControls.deactivate();
+				drawCircleControls.deactivate();
+
+				hoverCountryControls.activate();
+				selectCountryFilterControls.activate();
 			},
 			setSliderMinMax: function(min, max) {
 				slider.min = min;
@@ -661,6 +655,7 @@ doraServices.service('MapService', [
 				selectClusterControls.unselectAll();
 				if (QRS.clusterLayerId) {
 					var clusterLayer = map.getLayer(QRS.clusterLayerId);
+					
 					searchloop:
 					for (i in clusterLayer.features) {
 						var feature = clusterLayer.features[i];
