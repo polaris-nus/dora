@@ -81,7 +81,7 @@ def load_saved_queries(request):
 	if (not request.user.is_authenticated()):
 		return HttpResponse('{"status":"unauthorized"}', content_type="application/json")
 
-	json_response = get_user_saved_queries(request)
+	json_response = get_user_saved_queries(request.user)
 
 	return HttpResponse(json_response, content_type="application/json")
  

@@ -7,8 +7,8 @@ from mds.dora.forms import QueryForm
 from datetime import *
 from django.template import Context, loader
 
-#Returns the query result set from a given request
-#Pre: must have disease request
+#Parses the given request
+#Returns Q-Object query, Q-Object List concepts_list, Q-Object List locations_list
 def parse_request(request):
 	query_form = QueryForm(request.POST)
 	
@@ -116,6 +116,8 @@ def parse_request(request):
 	else:
 		return None, None, None
 
+#Takes in a Q-Object query and gets a set of data, and filters according to concepts_list and locations_list
+#Returns a query result set
 def get_query_result_set(query, concepts_list, locations_list):
 	if (query == None and concepts_list == None):
 		return None
@@ -131,7 +133,7 @@ def get_query_result_set(query, concepts_list, locations_list):
 
 	return encounter_QRS
 
-#Creates a list of json objects from the given query_result_set
+#Creates a list of objects from the given query_result_set and generates a JSON String from it
 def create_json_response(query_result_set):
 
 	json_response = {}
@@ -173,12 +175,12 @@ def create_json_response(query_result_set):
 	#print json.dumps(json_response, indent=4, separators=(',', ': '))
 	return results
 
-
-def get_user_saved_queries(request):
+#Takes in a user and returns a list of saved queries belonging to the user
+def get_user_saved_queries(user):
 	response = {}
 	response['queries'] = []
 
-	user_saved_queries = SavedQuery.objects.filter(user=request.user)
+	user_saved_queries = SavedQuery.objects.filter(user=user)
 	for item in user_saved_queries:
 		query = {}
 		query['uuid'] = item.uuid
@@ -190,5 +192,6 @@ def get_user_saved_queries(request):
 
 	return json.dumps(response)
 
+#Takes in a uuid and returns the saved query with that uuid
 def get_saved_query(uuid):
 	return SavedQuery.objects.get(uuid=uuid)
