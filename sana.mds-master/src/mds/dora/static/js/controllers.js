@@ -50,11 +50,11 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 
 		//autocomplete filter types
 		$scope.data = [
-			"Patient's family name",
-			"Patient's given name",
-			'Gender',
-			'Procedure',
-			'Age range',
+		"Patient's family name",
+		"Patient's given name",
+		'Gender',
+		'Procedure',
+		'Age range',
 			//"Observer's first name",
 			//"Observer's last name",
 			"Observer's username",
@@ -76,24 +76,24 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			//'Follow up date'
 			];
 			
-		
-		$scope.selectFilter = function(key){
-			$scope.key = key;
-			$scope.input = '';
-		};
-		
-		$scope.submitFilter = function(){
-			if ($scope.key && $scope.input) {
-				
-				$scope.filters.push({key:$scope.key, value:$scope.input});
-				$scope.data.splice($scope.data.indexOf($scope.key),1);
-				
-				$scope.key = '';
+			
+			$scope.selectFilter = function(key){
+				$scope.key = key;
 				$scope.input = '';
-			}
-		};
+			};
+			
+			$scope.submitFilter = function(){
+				if ($scope.key && $scope.input) {
+					
+					$scope.filters.push({key:$scope.key, value:$scope.input});
+					$scope.data.splice($scope.data.indexOf($scope.key),1);
+					
+					$scope.key = '';
+					$scope.input = '';
+				}
+			};
 
-		$scope.toggleButton = function(){
+			$scope.toggleButton = function(){
 			//mapServMode reset so that ngChange may be triggered
 			if ($scope.locationSearchOn) {
 				$scope.mapServMode = 'unselected';
@@ -171,19 +171,19 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 					displayModal(
 						"Error: Unauthorized!",
 						"You are unauthorized to make this query. Please login and try again."
-					);
+						);
 				} else if (status === 'error') {
 					//Some Error!
 					displayModal(
 						"Error: Query Not Understood!",
 						"The query input was not understood. Please check for errors and try again!"
-					);
+						);
 				} else if (status === 'empty') {
 					//Empty Set!
 					displayModal(
 						"Error: Query Result is Empty!",
 						"The combination of filters provided returned an empty result set. Please generalize your query and try again!"
-					);
+						);
 				} else {
 					//for testing saving and loading queries only!!!
 					//qrs = QRSServ.getQRSHistory();
@@ -243,7 +243,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
-			//scrollToBottom();
+			scrollToBottom();
 		};
 		
 		function addNewQRS(index) {
@@ -330,10 +330,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			}
 		}
 
-		//function scrollToBottom(){
-		//	$location.hash('qrs' + $scope.displayedQRSIndex);
-		//	$anchorScroll();
-		//}
+		function scrollToBottom(){
+			var objDiv = document.getElementById("history-body");
+			objDiv.scrollTop = objDiv.scrollHeight;
+		}
 
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
@@ -580,7 +580,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapServ',
 
 		init();
 	}
-]);
+	]);
 
 doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http',
 	function($scope, QRSServ, $http){
@@ -615,7 +615,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 			if (queryObj.alias) {
 				alias = queryObj.alias;
 			}
-		
+			
 			QRSServ.generateQRS(filters, location, alias);
 		};
 
@@ -699,4 +699,4 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 		$scope.loadQueries();
 
 	}
-]);
+	]);

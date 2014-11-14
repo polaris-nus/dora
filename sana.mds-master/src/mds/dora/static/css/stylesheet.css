@@ -341,7 +341,7 @@ margin-top: 3px;
 }
 
 #qrs-panel-body{
-  max-height: 450px;
+  max-height: 430px;
   overflow-y: scroll; 
   padding: 0px;
 }
