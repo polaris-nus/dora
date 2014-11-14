@@ -8,8 +8,8 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSService', 'MapS
 		$scope.filters = [];
 		
 		//Vars for error Modal
-		$scope.modalTitle = 'Error!'
-		$scope.errorMessage = 'Your query was not understood, Please Try Again!'
+		$scope.modalTitle = 'Error!';
+		$scope.errorMessage = 'Your query was not understood, Please Try Again!';
 
 
 		//sets the filter from the QueryResultController
@@ -21,12 +21,12 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSService', 'MapS
 			
 			$scope.filters = newFilters.slice();
 			
-			for (var i = 0; i < $scope.filters.length; i++) {
+			for (i = 0; i < $scope.filters.length; i++) {
 				var key = $scope.filters[i].key;
 				$scope.data.splice($scope.data.indexOf(key),1);
 			}
 
-		}
+		};
 
 		QRSService.setRequeryCallback(setfilters);
 
@@ -42,7 +42,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSService', 'MapS
 			else if (newValue == 'country') {
 				MapService.activateSelectCountry();
 			}
-		};
+		}
 
 		//autocomplete filter types
 		$scope.data = [
@@ -93,7 +93,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSService', 'MapS
 			//mapServMode reset so that ngChange may be triggered
 			if ($scope.locationSearchOn) {
 				$scope.mapServMode = 'unselected';
-				$scope.doneDrawing();
+				MapService.deactivatePolygonFilters();
 			}
 			
 			//polygon drawing mode by default
@@ -114,10 +114,6 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSService', 'MapS
 		$scope.buttonName = function(){
 			if ($scope.locationSearchOn) return "Hide location search";
 			else return "Location search";
-		};
-		
-		$scope.doneDrawing = function(filter){
-			MapService.deactivatePolygonFilters();
 		};
 		
 		$scope.editFilter = function(index, filter){
@@ -159,7 +155,7 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSService', 'MapS
 				$scope.modalTitle = title;
 				$scope.errorMessage = msg;
 				$('#myModal').modal('show');
-			}
+			};
 			
 			QRSService.setQueryCallback(function(status){
 				if (status === 'unauthorized') {

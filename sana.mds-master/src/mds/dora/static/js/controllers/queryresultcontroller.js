@@ -24,16 +24,16 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 
 		$scope.removeQRS = function() {
 			QRSService.removeFromQRSHistory($scope.QRSHistory[$scope.displayedQRSIndex]);
-		}
+		};
 
 		$scope.requery = function(){
 			QRSService.requery($scope.displayedQRS);
-			var location = $scope.displayedQRS.location
+			var location = $scope.displayedQRS.location;
 			if (location && location.length > 0) {
 				MapService.clearPolygonFilters();
 				MapService.addPolygonFilters(location);
 			}
-		}
+		};
 
 		$scope.setDisplayedQRS = function(index) {
 			$scope.displayedQRS = $scope.QRSHistory[index];
@@ -49,7 +49,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 		function addNewQRS(index) {
 			var QRSHistory = $scope.QRSHistory;
 			var alias = QRSHistory[QRSHistory.length-1].alias;
-			if (alias == undefined) {
+			if (alias === undefined) {
 				QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
 			}
 			$scope.setDisplayedQRS(index);
@@ -60,28 +60,28 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 
 		$scope.showPopoverOnMap = function(encounterUuid) {
 			MapService.triggerPopover($scope.displayedQRS, encounterUuid);
-		}
+		};
 
 		$scope.toggleQRSVisibility = function(index) {
 			$scope.doubleClickedQRS = $scope.QRSHistory[index];
 			var toggledVisibility = !$scope.doubleClickedQRS.isVisible;
-			$scope.doubleClickedQRS.isVisible = toggledVisibility
+			$scope.doubleClickedQRS.isVisible = toggledVisibility;
 			MapService.setVectorLayerVisibility($scope.doubleClickedQRS, toggledVisibility);
-		}
+		};
 
 		$scope.getQRSVisibility = function(index) {
 			$scope.currentQRS = $scope.QRSHistory[index];
 			return $scope.currentQRS.isVisible;
-		}
+		};
 
 		$scope.toggleQRSClustering = function() {
 			var status = MapService.getClusterStrategyStatus($scope.displayedQRS);
 			MapService.setClusterStrategyStatus($scope.displayedQRS, !status);
-		}
+		};
 
 		$scope.zoomToFitFilters = function(){
-			MapService.zoomToFitVectorFeatures($scope.displayedQRS)
-		}
+			MapService.zoomToFitVectorFeatures($scope.displayedQRS);
+		};
 
 		$scope.visibility = function(index){
 			if ($scope.QRSHistory[index].isVisible) {
@@ -89,7 +89,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 			} else {
 				return "btn-invisible";
 			}
-		}
+		};
 
 		function cap(string){
 			return string.charAt(0).toUpperCase() + string.slice(1);
@@ -105,8 +105,9 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 
 		function updateEncounters(){
 			$scope.encounters = [];
-			for (index in $scope.displayedQRS.assigned){
-				var encounter = {
+			var encounter;
+			for (var index = 0; index < $scope.displayedQRS.assigned.length; index++){
+				encounter = {
 					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name),
 					procedure: low($scope.displayedQRS.assigned[index].procedure),
 					observer:  cap($scope.displayedQRS.assigned[index].observer),
@@ -115,13 +116,12 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 					dob: $scope.displayedQRS.assigned[index].subject.dob,
 					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
 					uuid: $scope.displayedQRS.assigned[index].uuid,
-				}		
+				};
 				$scope.encounters.push(encounter);
 			}
 
-			// $scope.assignedCount = $scope.encounters.length;
-			for(index in $scope.displayedQRS.unassigned){
-				var encounter = {
+			for(index = 0; index < $scope.displayedQRS.unassigned.length; index++){
+				encounter = {
 					patient: cap($scope.displayedQRS.assigned[index].subject.given_name) +" "+ cap($scope.displayedQRS.assigned[index].subject.family_name)+" (no location data)",
 					procedure: low($scope.displayedQRS.assigned[index].procedure),
 					observer:  cap($scope.displayedQRS.assigned[index].observer),
@@ -130,7 +130,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 					dob: $scope.displayedQRS.assigned[index].subject.dob,
 					age: 2014-$scope.displayedQRS.assigned[index].subject.dob.split("-")[0],
 					uuid: $scope.displayedQRS.unassigned[index].uuid,
-				}		
+				};
 				$scope.encounters.push(encounter);
 			}
 		}
@@ -159,7 +159,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 
 			count = 0;
 			last = 0;
-			for(index in yearCount){
+			for(var index in yearCount){
 				if(count>0){
 					yearCount[index] += last;
 				}
@@ -172,7 +172,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 			for(index in yearCount){
 				dataChartOne.push([index,yearCount[index]]);
 			}
-		}
+		};
 
 		function sortOnKeys(dict) {
 			var sorted = [];
@@ -198,7 +198,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 				maleCount.push(0);
 			}
 
-			for (index in $scope.encounters){
+			for (var index in $scope.encounters){
 				var sexString = $scope.encounters[index].gender;
 				var ageGroup = Math.floor($scope.encounters[index].age/10);
 
@@ -218,19 +218,19 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 			dataChartTwo = [];
 			dataChartTwo.push(['Age Group', 'Male', 'Female']);
 
-			for (var i=0;i<length-1;i++){
+			for (i=0;i<length-1;i++){
 				dataChartTwo.push([i*10+"-"+(i*10+9),maleCount[i],femaleCount[i]]);
 			}
 
 			dataChartTwo.push([">80",maleCount[length-1],femaleCount[length-1]]);
-		}
+		};
 		//--End Chart Methods part1--//
 
 		//--Start Export Methods--//
 		$scope.exportQRS = function(){
 			var exportData = [['patient_name','gender','age','procedure','observer']];
 
-			for (index in $scope.encounters){
+			for (var index in $scope.encounters){
 				var encounter=$scope.encounters[index];
 				exportData.push([encounter.patient,encounter.gender,encounter.age,encounter.procedure,encounter.observer]);
 			}
@@ -248,7 +248,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 			a.download    = 'qrs.csv';
 			document.body.appendChild(a);
 			a.click();
-		}
+		};
 
 		//--End Export Methods--//
 	}
