@@ -1,5 +1,5 @@
-doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'MapService',
-	function($scope, QRSService, MapService){
+doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'MapService','$timeout',
+	function($scope, QRSService, MapService, $timeout){
 		$scope.QRSHistory = QRSService.getQRSHistory();
 		$scope.loadingStatus = QRSService.getLoadingStatus();
 
@@ -50,7 +50,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 				QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
 			}
 			$scope.setDisplayedQRS(index);
-			scrollToBottom();
+			$timeout(scrollToBottom,600);
 		}
 		
 		QRSService.setOnAddCallback(addNewQRS);
@@ -74,6 +74,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 		$scope.toggleQRSClustering = function() {
 			var status = MapService.getClusterStrategyStatus($scope.displayedQRS);
 			MapService.setClusterStrategyStatus($scope.displayedQRS, !status);
+		}
+
+		$scope.zoomToFitFilters = function(){
+			MapService.zoomToFitVectorFeatures($scope.displayedQRS)
 		}
 
 		$scope.visibility = function(index){
