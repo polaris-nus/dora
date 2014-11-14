@@ -425,6 +425,7 @@ doraServices.service('MapService', [
 					locationLayer.setVisibility(visibility);
 				}
 				this.setSliderMinBound();
+				temporalSliderFeaturesToggle();
 			},
 			removeVectorLayer: function(QRS) {
 				if (QRS.clusterLayerId) {
