@@ -5,9 +5,9 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapService',
 		$scope.sliderVisible = true;
 		$scope.isPlaying = false;
 		$scope.speed = "1x";
-		$scope.granularity = "Weekly";
+		$scope.step = "Weekly";
 		$scope.scroll_speed = 500; //in milliseconds
-		$scope.scroll_granularity = 7; //every 0.5 is one day
+		$scope.scroll_step = 7; //every 0.5 is one day
 		var scroller = null;
 
 		$scope.autoscroll = function() {
@@ -19,7 +19,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapService',
 				$scope.$apply(); //Find a way to observe this value.
 			} else {
 				var endDate = new Date(values.max);
-				endDate.setDate(endDate.getDate() + $scope.scroll_granularity*1);
+				endDate.setDate(endDate.getDate() + $scope.scroll_step*1);
 
 				var startDate = null;
 				if (Date.parse(endDate) >= Date.parse(bounds.max)) {
@@ -30,7 +30,7 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapService',
 					startDate.setDate(startDate.getDate() - range);
 				} else {
 					startDate = new Date(values.min);
-					startDate.setDate(startDate.getDate() + $scope.scroll_granularity*1);
+					startDate.setDate(startDate.getDate() + $scope.scroll_step*1);
 				}
 
 				$("#slider").dateRangeSlider("values", new Date(startDate), new Date(endDate));
@@ -56,8 +56,8 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapService',
 			$scope.toggleScrolling();
 		};
 
-		$scope.setScrollGranularity = function(scroll_granularity) {
-			$scope.scroll_granularity = scroll_granularity;
+		$scope.setScrollStep = function(scroll_step) {
+			$scope.scroll_step = scroll_step;
 			$scope.toggleScrolling();
 			$scope.toggleScrolling();
 		};

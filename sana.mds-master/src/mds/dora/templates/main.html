@@ -304,15 +304,15 @@
         </button>  
       </div>
 
-      <span class="text-color inline inline slider-input-label">Granularity:</span>
-      <div class="btn-group dropup inline" id="slider-granularity">
-        <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ granularity }}<span class="caret" align="right"></span>
+      <span class="text-color inline inline slider-input-label">Step:</span>
+      <div class="btn-group dropup inline" id="slider-step">
+        <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ step }}<span class="caret" align="right"></span>
         </button>
         <ul class="dropdown-menu slider-dropdown-menu" role="menu">
-          <li><a href="#" ng-click="setScrollGranularity(1); granularity='Daily';">Daily</a></li>
-          <li><a href="#" ng-click="setScrollGranularity(7); granularity='Weekly';">Weekly</a></li>
-          <li><a href="#" ng-click="setScrollGranularity(30); granularity='Monthly';">Monthly</a></li>
-          <li><a href="#" ng-click="setScrollGranularity(90); granularity='Quarterly';">Quarterly</a></li>
+          <li><a href="#" ng-click="setScrollStep(1); step='Daily';">Daily</a></li>
+          <li><a href="#" ng-click="setScrollStep(7); step='Weekly';">Weekly</a></li>
+          <li><a href="#" ng-click="setScrollStep(30); step='Monthly';">Monthly</a></li>
+          <li><a href="#" ng-click="setScrollStep(90); step='Quarterly';">Quarterly</a></li>
         </ul>
       </div>
 
