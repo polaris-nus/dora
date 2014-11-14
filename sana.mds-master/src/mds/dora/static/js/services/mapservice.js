@@ -681,9 +681,11 @@ doraServices.service('MapService', [
 				}
 			},
 			getVisibleLayers: function() {
+				//for testing only
 				return visibleLayers;
 			},
 			getClusterLayerFeatures: function() {
+				//for testing only
 				return clusterLayerFeatures;
 			}
 		}
