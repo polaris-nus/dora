@@ -24,6 +24,8 @@ module.exports = function(config) {
       'jquery/jquery.js',
       'jquery-ui/jquery-ui.custom.js',
       'angular-modules/slider/jQDateRangeSlider-min.js',
+      'js/controllers/*.js',
+      'js/services/*.js',
       'js/*.js',
       'test/unit/*.js'
     ],
@@ -31,9 +33,6 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-      'js/qrspanel.js',
-      //'js/controllers.js',
-      //'test/unit/controllersSpec.js',
       'test/e2e/*'
     ],
 

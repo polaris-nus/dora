@@ -3,3 +3,6 @@ var doraApp = angular.module('doraApp', [
 	'doraServices',
 	'autocomplete',
 	]);
+
+var doraServices = angular.module('doraServices', []);
+var doraControllers = angular.module('doraControllers', []);
