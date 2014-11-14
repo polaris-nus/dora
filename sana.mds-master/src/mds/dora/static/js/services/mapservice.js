@@ -17,7 +17,7 @@ doraServices.service('MapService', [
 			})
 			],
 			layers: [
-	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {buffer: 2}),
+	    // new OpenLayers.Layer.OSM("OSM (with buffer)", null, {wrapDateLine: true, buffer: 2}),
 	    new OpenLayers.Layer.OSM("OSM (without buffer)", null, {wrapDateLine: true}),
 	    ]
 	  });
@@ -315,7 +315,8 @@ doraServices.service('MapService', [
 			  if (QRS.location) {
 			  	var polygonFeatures = parseWKTArray(QRS.location, QRS.color.featureColor);
 			  	var locationLayer = new OpenLayers.Layer.Vector('locationLayer', {
-			  		styleMap: QRSPolygonFilterStyle
+			  		styleMap: QRSPolygonFilterStyle,
+			  		renderers: ['Canvas', 'VML'],
 			  	});
 			  	QRS.locationLayerId = locationLayer.id;
 			  	map.addLayer(locationLayer);
@@ -361,6 +362,13 @@ doraServices.service('MapService', [
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
 
+			  // QRS specific zoom and pan center
+			  if(returnedLayers.locationLayer) {
+					map.zoomToExtent(returnedLayers.locationLayer.getDataExtent());
+			  } else if (returnedLayers.clusterLayer.features.length > 0){
+			  	map.zoomToExtent(returnedLayers.clusterLayer.getDataExtent());
+			  }
+
 			  visibleLayers.push(clusterLayer.id);
 			  clusterLayerFeatures[clusterLayer.id] = {};
 			  clusterLayerFeatures[clusterLayer.id]['features'] = features;
@@ -374,14 +382,6 @@ doraServices.service('MapService', [
 			  var selectControlsLayers = selectClusterControls.layers || [selectClusterControls.layer];
 			  selectControlsLayers.push(clusterLayer);
 			  selectClusterControls.setLayer(selectControlsLayers);
-
-			  // QRS specific zoom and pan center
-			  if(returnedLayers.locationLayer) {
-					map.zoomToExtent(returnedLayers.locationLayer.getDataExtent());
-			  } else {
-			  	map.zoomToExtent(returnedLayers.clusterLayer.getDataExtent());
-			  }
-			  
 
 			  return returnedLayers; // for testability
 
