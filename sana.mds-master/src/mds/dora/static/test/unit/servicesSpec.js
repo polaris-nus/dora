@@ -162,11 +162,59 @@ describe('Dora services', function() {
 
       MapService.setSliderMinMax('11/12/2012', '12/12/2012');
 			MapService.temporalSliderFeaturesToggle();
-    	expect(MapService.verifyOrderInVisibleLayers()).toBe(0);
+    	expect(verifyOrderInVisibleLayers()).toBe(0);
 
       MapService.setSliderMinMax('06/24/2011', '06/26/2015');
 			MapService.temporalSliderFeaturesToggle();
-    	expect(MapService.verifyOrderInVisibleLayers()).toBe(0);
+    	expect(verifyOrderInVisibleLayers()).toBe(0);
+
+      function verifyOrderInVisibleLayers() {
+        function checkLayerOrder(clusterLayerId) {
+          var features = clusterLayerFeatures[clusterLayerId].features;
+          var leftStack = clusterLayerFeatures[clusterLayerId].leftStack;
+          var rightStack = clusterLayerFeatures[clusterLayerId].rightStack;
+
+          function checkOrder(array) {
+            if (array.length > 1) {
+              for (var i = 1; i < array.length; i++) {
+                currDate = Date.parse(array[i].attributes.date);
+                prevDate = Date.parse(array[i-1].attributes.date);
+                if (currDate > prevDate) {
+                  return 1;
+                }
+              }
+            }
+          }
+
+          function checkArrayConsecutivity(array1, array2) {
+            if (array1.length > 0 && array2.length > 0) {
+              date1 = Date.parse(array1[array1.length-1].attributes.date);
+              date2 = Date.parse(array2[0].attributes.date);
+              if (date1 > date2) {
+                return 1;
+              }
+            }
+          }
+
+          checkOrder(leftStack);
+          checkOrder(features);
+          checkOrder(rightStack);
+          checkArrayConsecutivity(leftStack, features);
+          checkArrayConsecutivity(features, rightStack);
+
+          return 0;
+        }
+
+        var visibleLayers = MapService.getVisibleLayers();
+        var clusterLayerFeatures = MapService.getClusterLayerFeatures();
+        for (var i=0; i<visibleLayers.length;i++) {
+          if (checkLayerOrder(visibleLayers[i])) {
+            return 1;
+          }
+        }
+
+        return 0;
+      }
 
     });
 
