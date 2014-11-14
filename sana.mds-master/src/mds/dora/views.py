@@ -63,7 +63,7 @@ def delete_query(request):
 	if request.user.is_authenticated():
 		uuid = request.body
 		if uuid:
-			query = SavedQuery.objects.get(uuid=uuid)
+			query = get_saved_query(uuid)
 			if query.user == request.user:
 				query.delete()
 				return HttpResponse('{"status": "ok"}', content_type="application/json")

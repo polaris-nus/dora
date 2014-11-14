@@ -189,3 +189,6 @@ def get_user_saved_queries(request):
 		response['queries'].append(query)
 
 	return json.dumps(response)
+
+def get_saved_query(uuid):
+	return SavedQuery.objects.get(uuid=uuid)
