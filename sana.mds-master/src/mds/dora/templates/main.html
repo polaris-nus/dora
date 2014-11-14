@@ -167,20 +167,20 @@
           </button>
         </div>
 
-        <!--   <div class="panel-body"> -->
-        <div class="list-group" id="history-list">
-          <a href="#" id="qrs{{$index}}" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
-            <!-- btn-invisible:!getQRSVisibility($index) -->
-            <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
-              <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
-              <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
-            </button>
-            <span ng-show="!editingMode" ng-click="editingMode=true"> {{qrs.alias}} </span>
-            <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="qrs.alias" maxlength="24">
+        <div class="panel-body"  id="history-body">
+          <div class="list-group" id="history-list">
+            <a href="#" id="qrs{{$index}}" class="list-group-item history-entry" ng-repeat="qrs in QRSHistory" ng-class="{active:$index==displayedQRSIndex}" ng-click="setDisplayedQRS($index);selectQRS($index);"> 
+              <!-- btn-invisible:!getQRSVisibility($index) -->
+              <button type="button" class="btn-xs visibility-btn" ng-click="toggleQRSVisibility($index);">
+                <span class="glyphicon glyphicon-eye-open" ng-show="getQRSVisibility($index);"></span>
+                <span class="glyphicon glyphicon-eye-close"  ng-show="!getQRSVisibility($index);"></span>
+              </button>
+              <span ng-show="!editingMode" ng-click="editingMode=true"> {{qrs.alias}} </span>
+              <input ng-show="editingMode" type="text" ng-keypress="($event.which === 13)?(editingMode=false):0" id="qrs-alias" ng-model="qrs.alias" maxlength="24">
 
-            <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator margintop"></button>
-          </a>
-          <!-- </div> -->
+              <button type="button" class="btn btn-success btn-color-{{qrs.color.buttonStyleIndex}} alignR btn-indicator margintop"></button>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -273,41 +273,39 @@
       <!-- End of Result Panel -->
     </div>
 
-
-
     <div ng-controller="TemporalSliderController" class="above" id="slider-panel">
-        <div id="slider"></div>
+      <div id="slider"></div>
 
-        <div class="inline">
-          <button type="button" class="above btn btn-info btn-xs" ng-click="toggleScrolling(); isPlaying=!isPlaying;" id="slider-btn">
-            <span  ng-show="isPlaying" class="glyphicon glyphicon glyphicon-pause"></span>
-            <span  ng-show="!isPlaying" class="glyphicon glyphicon-play"></span>
-          </button>  
-        </div>
+      <div class="inline">
+        <button type="button" class="above btn btn-info btn-xs" ng-click="toggleScrolling(); isPlaying=!isPlaying;" id="slider-btn">
+          <span  ng-show="isPlaying" class="glyphicon glyphicon glyphicon-pause"></span>
+          <span  ng-show="!isPlaying" class="glyphicon glyphicon-play"></span>
+        </button>  
+      </div>
 
-        <span class="text-color inline inline slider-input-label">Granularity:</span>
-        <div class="btn-group dropup inline" id="slider-granularity">
-          <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ granularity }}<span class="caret" align="right"></span>
-          </button>
-          <ul class="dropdown-menu slider-dropdown-menu" role="menu">
-            <li><a href="#" ng-click="setScrollGranularity(1); granularity='Daily';">Daily</a></li>
-            <li><a href="#" ng-click="setScrollGranularity(7); granularity='Weekly';">Weekly</a></li>
-            <li><a href="#" ng-click="setScrollGranularity(30); granularity='Monthly';">Monthly</a></li>
-            <li><a href="#" ng-click="setScrollGranularity(90); granularity='Quarterly';">Quarterly</a></li>
-          </ul>
-        </div>
+      <span class="text-color inline inline slider-input-label">Granularity:</span>
+      <div class="btn-group dropup inline" id="slider-granularity">
+        <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ granularity }}<span class="caret" align="right"></span>
+        </button>
+        <ul class="dropdown-menu slider-dropdown-menu" role="menu">
+          <li><a href="#" ng-click="setScrollGranularity(1); granularity='Daily';">Daily</a></li>
+          <li><a href="#" ng-click="setScrollGranularity(7); granularity='Weekly';">Weekly</a></li>
+          <li><a href="#" ng-click="setScrollGranularity(30); granularity='Monthly';">Monthly</a></li>
+          <li><a href="#" ng-click="setScrollGranularity(90); granularity='Quarterly';">Quarterly</a></li>
+        </ul>
+      </div>
 
-        <span class="text-color inline">Speed:</span>
-        <div class="btn-group dropup inline" id="slider-scrollspeed">
-          <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ speed }}<span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu slider-dropdown-menu" role="menu">
-            <li><a href="#" ng-click="setScrollSpeed(1000); speed='0.5x';">0.5x</a></li>
-            <li><a href="#" ng-click="setScrollSpeed(500); speed='1x';">1x</a></li>
-            <li><a href="#" ng-click="setScrollSpeed(250); speed='2x';">2x</a></li>
-            <li><a href="#" ng-click="setScrollSpeed(500); speed='4x';">4x</a></li>
-          </ul>
-        </div>
+      <span class="text-color inline">Speed:</span>
+      <div class="btn-group dropup inline" id="slider-scrollspeed">
+        <button type="button" class="btn btn-default dropdown-toggle slider-dropdown-btn" data-toggle="dropdown">{{ speed }}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu slider-dropdown-menu" role="menu">
+          <li><a href="#" ng-click="setScrollSpeed(1000); speed='0.5x';">0.5x</a></li>
+          <li><a href="#" ng-click="setScrollSpeed(500); speed='1x';">1x</a></li>
+          <li><a href="#" ng-click="setScrollSpeed(250); speed='2x';">2x</a></li>
+          <li><a href="#" ng-click="setScrollSpeed(500); speed='4x';">4x</a></li>
+        </ul>
+      </div>
 
     </div>
     {% endverbatim %}

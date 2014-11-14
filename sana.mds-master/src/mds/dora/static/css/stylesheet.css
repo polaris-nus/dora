@@ -273,14 +273,16 @@ ul{
   margin-bottom: 0px;
   width: 30%;
   min-width: 380px;
-  /*max-height: 30%;*/
-   max-height: 150px;
+   /*max-height: 150px;*/
 }
 
 #history-list{
   margin: 0px;
-  /*max-height: 50px;*/
-  max-height: 30%;
+}
+
+#history-body{
+  padding: 0px;
+  max-height: 120px;
   overflow-y: scroll; 
 }
 
