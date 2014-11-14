@@ -1,6 +1,5 @@
 var dataChartOne = [];
 var dataChartTwo = [];
-<<<<<<< Updated upstream
 doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'MapService','$timeout',
 	function($scope, QRSService, MapService, $timeout){
 
