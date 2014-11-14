@@ -270,7 +270,6 @@ app.directive('autocomplete', function() {
             break;
           case key.backspace:
           	if (scope.getCaretPosition(element.find('input')[0]) === 0) {
-          		console.log(scope.getCaretPosition(element.find('input')[0]));
           		scope.key = '';
           		scope.select();
            	 	scope.setIndex(-1);
