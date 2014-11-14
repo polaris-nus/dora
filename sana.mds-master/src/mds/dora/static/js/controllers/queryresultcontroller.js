@@ -1,7 +1,5 @@
-var dataChartOne = [];
-var dataChartTwo = [];
-doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'MapService','$location', '$anchorScroll',
-	function($scope, QRSService, MapService,$anchorScroll, $location){
+doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'MapService',
+	function($scope, QRSService, MapService){
 		$scope.QRSHistory = QRSService.getQRSHistory();
 		$scope.loadingStatus = QRSService.getLoadingStatus();
 
@@ -43,7 +41,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
-			//scrollToBottom();
 		};
 		
 		function addNewQRS(index) {
@@ -53,6 +50,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 				QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
 			}
 			$scope.setDisplayedQRS(index);
+			scrollToBottom();
 		}
 		
 		QRSService.setOnAddCallback(addNewQRS);
@@ -130,10 +128,10 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSService', 'Ma
 			}
 		}
 
-		//function scrollToBottom(){
-		//	$location.hash('qrs' + $scope.displayedQRSIndex);
-		//	$anchorScroll();
-		//}
+		function scrollToBottom(){
+			var objDiv = document.getElementById("history-body");
+			objDiv.scrollTop = objDiv.scrollHeight;
+		}
 
 		//--Start Chart Methods part1--//
 		updateChartOneDS = function(){
