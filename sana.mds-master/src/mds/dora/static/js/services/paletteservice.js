@@ -11,11 +11,11 @@ doraServices.service('PaletteService', [
 		{cssIndex: 7, color:'#6E46A6', inUse: false},
 		{cssIndex: 8, color:'#B94395', inUse: false},
 		{cssIndex: 9, color:'#E15273', inUse: false}
-		]
+		];
 
 		return {
 			useNextColor: function() {
-				for(index in palette) {
+				for(var index = 0; index < palette.length; index++) {
 					if(!palette[index].inUse) {
 						palette[index].inUse = true;
 						var color = {
@@ -28,13 +28,13 @@ doraServices.service('PaletteService', [
 				return null; // all colors in use
 			},
 			releaseColor: function(color) {
-				for(index in palette) {
+				for(var index = 0; index < palette.length; index++) {
 					if(palette[index].color.localeCompare(color.featureColor) == 0) {
 						palette[index].inUse = false;
 						break;
 					}
 				}
 			}
-		}
+		};
 	}
 ]);

@@ -4,14 +4,14 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSService', '$h
 		$scope.savedQueries = [];
 
 		var isExist = function(query) {
-			list = $scope.savedQueries;
+			var list = $scope.savedQueries;
 			for (var i = 0; i < list.length; i++) {
 				if (list[i].uuid == query.uuid) {
 					return true;
 				}
 			}
 			return false;
-		}
+		};
 		
 		$scope.savePanelVisibility = false;
 		
@@ -56,7 +56,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSService', '$h
 				document.write(data);
 				document.close();
 			});
-		}
+		};
 
 		//save
 		$scope.saveQuery = function(QRS) {
@@ -82,15 +82,14 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSService', '$h
 					return str.join("&");
 				},
 				data: data
-			}).success(function(response) {
-
+			}).success(function() {
 				$scope.loadQueries();
 			}).error(function(data){
 				document.open();
 				document.write(data);
 				document.close();
 			});	
-		}
+		};
 
 		//delete
 		$scope.deleteQuery = function(query, index) {
@@ -103,14 +102,14 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSService', '$h
 				url: '/dora/deletequery/',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				data: uuid
-			}).success(function(response) {
+			}).success(function() {
 
 			}).error(function(data){
 				document.open();
 				document.write(data);
 				document.close();
 			});	
-		}
+		};
 
 		$scope.loadQueries();
 

@@ -35,32 +35,32 @@ doraControllers.controller('TemporalSliderController', ['$scope', 'MapService',
 
 				$("#slider").dateRangeSlider("values", new Date(startDate), new Date(endDate));
 			}
-		}
+		};
 
 		$scope.stopAutoscroll = function() {
 			clearInterval(scroller);
 			scroller = null;
-		}
+		};
 
 		$scope.toggleScrolling = function() {
 			if (scroller == null) {
-				scroller = setInterval(function(){$scope.autoscroll()}, $scope.scroll_speed);
+				scroller = setInterval(function(){$scope.autoscroll();}, $scope.scroll_speed);
 			} else {
 				$scope.stopAutoscroll();
 			}
-		}
+		};
 
 		$scope.setScrollSpeed = function(scroll_speed) {
 			$scope.scroll_speed = scroll_speed;
 			$scope.toggleScrolling();
 			$scope.toggleScrolling();
-		}
+		};
 
 		$scope.setScrollGranularity = function(scroll_granularity) {
 			$scope.scroll_granularity = scroll_granularity;
 			$scope.toggleScrolling();
 			$scope.toggleScrolling();
-		}
+		};
 
 		function init() {
 			//Initialize slider

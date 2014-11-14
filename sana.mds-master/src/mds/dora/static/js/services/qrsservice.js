@@ -36,7 +36,7 @@ doraServices.service('QRSService', [ 'MapService', 'PaletteService', '$http',
 					PaletteService.releaseColor(removedQRS.color);
 				}
 
-				for(index in QRSHistory) {
+				for(var index = 0; index < QRSHistory.length; index++) {
 					QRSHistory[index].isVisible = false;
 					MapService.setVectorLayerVisibility(QRSHistory[index], false);
 				}
@@ -66,14 +66,9 @@ doraServices.service('QRSService', [ 'MapService', 'PaletteService', '$http',
 			generateQRS: function(filters, location, alias) {
 				
 				var data = {};
-				var start = new Date();
 				
 				function escapeRegExp(string) {
 					return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-				}
-				
-				function replaceAll(string, find, replace) {
-					return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 				}
 				
 				for (var i = 0; i < filters.length; i++){
@@ -105,8 +100,8 @@ doraServices.service('QRSService', [ 'MapService', 'PaletteService', '$http',
 					data: data
 					
 				}).success(function(QRS) {
-					if (QRS.status !== 'error' && QRS.assigned.length == 0 && QRS.unassigned.length == 0) {
-						QRS.status = 'empty'
+					if (QRS.status !== 'error' && QRS.assigned.length === 0 && QRS.unassigned.length === 0) {
+						QRS.status = 'empty';
 					} else if (QRS.status == "ok") {
 						QRS.filters = filters;
 						if (alias) {
