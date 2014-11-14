@@ -76,18 +76,18 @@ doraControllers.controller('QueryFormController', ['$scope', 'QRSServ', 'MapServ
 			//'Follow up date'
 			];
 			
-			
+
 			$scope.selectFilter = function(key){
 				$scope.key = key;
 				$scope.input = '';
 			};
-			
+
 			$scope.submitFilter = function(){
 				if ($scope.key && $scope.input) {
-					
+
 					$scope.filters.push({key:$scope.key, value:$scope.input});
 					$scope.data.splice($scope.data.indexOf($scope.key),1);
-					
+
 					$scope.key = '';
 					$scope.input = '';
 				}
@@ -243,7 +243,6 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 			updateChartOneDS();
 			updateChartTwoDS();
 			drawChart();
-			scrollToBottom();
 		};
 		
 		function addNewQRS(index) {
@@ -253,6 +252,7 @@ doraControllers.controller('QueryResultController', ['$scope', 'QRSServ', 'MapSe
 				QRSHistory[QRSHistory.length-1].alias = "QRS " + counter++;
 			}
 			$scope.setDisplayedQRS(index);
+			scrollToBottom();
 		}
 		
 		QRSServ.setOnAddCallback(addNewQRS);
@@ -615,7 +615,7 @@ doraControllers.controller('UserAccountController', ['$scope', 'QRSServ', '$http
 			if (queryObj.alias) {
 				alias = queryObj.alias;
 			}
-			
+
 			QRSServ.generateQRS(filters, location, alias);
 		};
 
