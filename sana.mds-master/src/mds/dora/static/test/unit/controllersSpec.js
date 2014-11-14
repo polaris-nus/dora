@@ -4,12 +4,12 @@ describe('Dora controllers', function() {
 	beforeEach(module('doraServices'));
 
 	describe('QueryFormController', function() {
-		var scope, ctrl, $httpBackend, MapServ, QRSServ;
+		var scope, ctrl, $httpBackend, MapService, QRSService;
 
-		beforeEach(inject(function(_QRSServ_, _MapServ_, _$httpBackend_, $rootScope, $controller) {
+		beforeEach(inject(function(_QRSService_, _MapService_, _$httpBackend_, $rootScope, $controller) {
       		$httpBackend = _$httpBackend_;
-      		MapServ = _MapServ_;
-      		QRSServ = _QRSServ_;
+      		MapService = _MapService_;
+      		QRSService = _QRSService_;
       		$httpBackend.expectGET('http://127.0.0.1:8000/query/?disease=hiv').
           			respond({json: 'expected data here'});
 
@@ -29,92 +29,7 @@ describe('Dora controllers', function() {
 	});
 
 	describe('QueryResultController', function() {
-    var QRSServ, QRS1, QRS2;
-
-    beforeEach(inject(function($rootScope, $controller, _QRSServ_) {
-      scope = $rootScope.$new();
-      ctrl = $controller('QueryResultController', {$scope: scope});
-      QRSServ = _QRSServ_;
-      QRS1 = {
-        'assigned':[
-          {
-            "disease": "EBOLA",
-            "patient": {
-              "uuid": "one"
-            },
-            "location": {
-              "coords": "POINT (-87.1134192674000050 -4.0753749522299998)",
-              "alt": "alt!"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "EBOLA",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ]
-      };
-
-      QRS2 = {
-        'assigned':[
-          {
-            "disease": "TB",
-            "patient": {
-              "uuid": "four"
-            },
-            "location": {
-              "coords": "POINT (158.4795246920000100 74.5477679921000060)",
-              "alt": "alt!"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "TB",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ]
-      };
-
-      QRS3 = {
-        'assigned':[
-          {
-            "disease": "HIV",
-            "patient": {
-              "uuid": "six"
-            },
-            "location": {
-              "coords": "POINT (40.3393490166000030 -41.1745275103999970)",
-              "alt": "alt!"
-            }
-          }
-        ],
-        'unassigned':[
-          {
-            "disease": "HIV",
-            "patient": {
-              "uuid": "three"
-            }
-          }
-        ]
-      };
-      QRSServ.addToQRSHistory(QRS1);
-      QRSServ.addToQRSHistory(QRS2);
-      QRSServ.addToQRSHistory(QRS3);
-
-      //Make sure variables are always initiated properly
-      expect(scope.selectedQRSList).toEqual([]);
-      expect(scope.selectionFlag).toBe(false);
-      expect(scope.selectionFunction).toBe('');
-
-    }));
-
-
+    
   });
 
 });

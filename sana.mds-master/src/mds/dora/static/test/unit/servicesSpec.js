@@ -2,52 +2,52 @@ describe('Dora services', function() {
 
 	beforeEach(module('doraServices'));
 
-	describe('QRSServ', function(){
-		var QRSServ, MapServ, QRS1, QRS2;
+	describe('QRSService', function(){
+		var QRSService, MapService, QRS1, QRS2;
 
-		beforeEach(inject(function(_QRSServ_, _MapServ_) {
-      QRSServ = _QRSServ_;
-      MapServ = _MapServ_;
+		beforeEach(inject(function(_QRSService_, _MapService_) {
+      QRSService = _QRSService_;
+      MapService = _MapService_;
       QRS1 = TestingQRS.getStub(0);
       QRS2 = TestingQRS.getStub(1);
     }));
 
     it('should contain 2 QRS in QRSHistory', function() {
-      QRSServ.addToQRSHistory(QRS1);
-      QRSServ.addToQRSHistory(QRS2);
-      expect(QRSServ.getQRSHistory().length).toBe(2);
+      QRSService.addToQRSHistory(QRS1);
+      QRSService.addToQRSHistory(QRS2);
+      expect(QRSService.getQRSHistory().length).toBe(2);
     });
  
     it('should limit to 10 QRS in QRSHistory', function() {
       for(var i = 0; i < 15; i++) {
-        QRSServ.addToQRSHistory(TestingQRS.getStub(0));
+        QRSService.addToQRSHistory(TestingQRS.getStub(0));
       }
-      expect(QRSServ.getQRSHistory().length).toBe(10);
+      expect(QRSService.getQRSHistory().length).toBe(10);
     });
 
     it('should remove specified QRS from QRSHistory', function() {
-      QRSServ.addToQRSHistory(QRS1);
-      QRSServ.addToQRSHistory(QRS2);
+      QRSService.addToQRSHistory(QRS1);
+      QRSService.addToQRSHistory(QRS2);
 
-      QRSServ.removeFromQRSHistory(QRS1);
-      expect(QRSServ.getQRSHistory().length).toBe(1);
-      expect(QRSServ.getQRSHistory().indexOf(QRS1)).toBe(-1);
+      QRSService.removeFromQRSHistory(QRS1);
+      expect(QRSService.getQRSHistory().length).toBe(1);
+      expect(QRSService.getQRSHistory().indexOf(QRS1)).toBe(-1);
     });
 
 	});
 
-  describe('MapServ', function(){
-    var MapServ, QRS1, QRS2, QRSServ;
+  describe('MapService', function(){
+    var MapService, QRS1, QRS2, QRSService;
     
-    beforeEach(inject(function(_MapServ_, _QRSServ_){
-      MapServ = _MapServ_;
-      QRSServ = _QRSServ_;
+    beforeEach(inject(function(_MapService_, _QRSService_){
+      MapService = _MapService_;
+      QRSService = _QRSService_;
       QRS1 = TestingQRS.getStub(0);
       QRS2 = TestingQRS.getStub(1);
     }));
 
     it('should add a vector layer with 1 cluster of 2 points on map', function() {
-      var returnedLayers = MapServ.addVectorLayer(QRS1);
+      var returnedLayers = MapService.addVectorLayer(QRS1);
 
       expect(QRS1.clusterLayerId).toBeDefined();
       expect(returnedLayers.clusterLayer.features.length).toBe(1);
@@ -55,7 +55,7 @@ describe('Dora services', function() {
     });
 
     it('should add a vector layer with 1 cluster of 1 point to map', function() {
-      var returnedLayers = MapServ.addVectorLayer(QRS2);
+      var returnedLayers = MapService.addVectorLayer(QRS2);
 
       expect(QRS2.clusterLayerId).toBeDefined();
       expect(returnedLayers.clusterLayer.features.length).toBe(1);
@@ -63,14 +63,14 @@ describe('Dora services', function() {
     });
 
     it('should not add a location layer to map', function() {
-      var returnedLayers = MapServ.addVectorLayer(QRS1);
+      var returnedLayers = MapService.addVectorLayer(QRS1);
 
       expect(QRS1.locationLayerId).not.toBeDefined();
       expect(returnedLayers.locationLayer).not.toBeDefined();
     });
 
     it('should add a location layer with 1 polygon to map', function() {
-      var returnedLayers = MapServ.addVectorLayer(QRS2);
+      var returnedLayers = MapService.addVectorLayer(QRS2);
 
       expect(QRS2.locationLayerId).toBeDefined();
       expect(returnedLayers.locationLayer).toBeDefined();
@@ -78,48 +78,48 @@ describe('Dora services', function() {
     });
 
     it('should switch off cluster strategy of cluster layer', function() {
-      var clusterLayer = MapServ.addVectorLayer(QRS1).clusterLayer;
-      MapServ.setClusterStrategyStatus(QRS1, false);
+      var clusterLayer = MapService.addVectorLayer(QRS1).clusterLayer;
+      MapService.setClusterStrategyStatus(QRS1, false);
 
       expect(clusterLayer.features.length).toBe(2);
     });
 
     it('should set cluster layer and location layer to invisible', function() {
-      var returnedLayers = MapServ.addVectorLayer(QRS2);
-      MapServ.setVectorLayerVisibility(QRS2, false);
+      var returnedLayers = MapService.addVectorLayer(QRS2);
+      MapService.setVectorLayerVisibility(QRS2, false);
 
       expect(returnedLayers.clusterLayer.getVisibility()).toBe(false);
       expect(returnedLayers.locationLayer.getVisibility()).toBe(false);
     });
 
     it('should remove cluster layer and location layer from map', function() {
-      MapServ.addVectorLayer(QRS2);
-      var map = MapServ.removeVectorLayer(QRS2);
+      MapService.addVectorLayer(QRS2);
+      var map = MapService.removeVectorLayer(QRS2);
 
       expect(map.getLayersByName('clusterLayer').length).toBe(0);
       expect(map.getLayersByName('locationLayer').length).toBe(0);
     });
 
     it('should set polygon layer and countries layer to visible', function() {
-      expect(MapServ.activatePolygonFilters()).toBe(true);
+      expect(MapService.activatePolygonFilters()).toBe(true);
     });
 
     it('should set polygon layer and countries layer to invisible', function() {
-      expect(MapServ.deactivatePolygonFilters()).toBe(false);
+      expect(MapService.deactivatePolygonFilters()).toBe(false);
     });
 
     it('should clear all polygons in polygon layer and countries layer', function() {
-      expect(MapServ.clearPolygonFilters()).toBe(0);
+      expect(MapService.clearPolygonFilters()).toBe(0);
     });
 
     it('should add no polygon to polygon layer', function() {
       var polygonsInWKT = [];
-      expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(0);
+      expect(MapService.addPolygonFilters(polygonsInWKT)).toBe(0);
     });
 
     it('should add 1 polygon to polygon layer', function() {
       var polygonsInWKT = ["POLYGON((-9.492187500000112 27.44979032978419,-9.84375000000045 7.100892668623654,8.261718750000012 6.926426847059551,6.8554687500000115 34.95799531086818,-9.492187500000112 27.44979032978419))"];
-      expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(1);
+      expect(MapService.addPolygonFilters(polygonsInWKT)).toBe(1);
     });
 
     it('should add 3 polygons to polygon layer', function() {
@@ -127,60 +127,60 @@ describe('Dora services', function() {
       "POLYGON((-9.492187500000112 27.44979032978419,-9.84375000000045 7.100892668623654,8.261718750000012 6.926426847059551,6.8554687500000115 34.95799531086818,-9.492187500000112 27.44979032978419))",
       "GEOMETRYCOLLECTION(POLYGON((-9.492187500000112 26.44979032978419,-9.84375000000045 6.100892668623654,8.261718750000012 5.926426847059551,6.8554687500000115 33.95799531086818,-9.492187500000112 26.44979032978419)),POLYGON((-8.492187500000112 27.44979032978419,-8.84375000000045 7.100892668623654,7.261718750000012 6.926426847059551,5.8554687500000115 34.95799531086818,-8.492187500000112 27.44979032978419)))"
       ];
-      expect(MapServ.addPolygonFilters(polygonsInWKT)).toBe(3);
+      expect(MapService.addPolygonFilters(polygonsInWKT)).toBe(3);
     });
 
     it('should set slider min bound to the earliest in all visible datasets and return min date', function() {
       //Only one QRS
-      QRSServ.addToQRSHistory(QRS1);
-      expect(QRSServ.getQRSHistory().length).toBe(1);
-      expect(MapServ.setSliderMinBound()).toEqual("Fri Oct 26 2012");
+      QRSService.addToQRSHistory(QRS1);
+      expect(QRSService.getQRSHistory().length).toBe(1);
+      expect(MapService.setSliderMinBound()).toEqual("Fri Oct 26 2012");
 
       //On addition of second QRS
-      QRSServ.addToQRSHistory(QRS2);
-      expect(QRSServ.getQRSHistory().length).toBe(2);
-      expect(MapServ.setSliderMinBound()).toEqual("Tue Jun 25 2013");
+      QRSService.addToQRSHistory(QRS2);
+      expect(QRSService.getQRSHistory().length).toBe(2);
+      expect(MapService.setSliderMinBound()).toEqual("Tue Jun 25 2013");
 
       //On toggling the visibility of both QRSes to be visible
-      QRSHistory = QRSServ.getQRSHistory();
+      QRSHistory = QRSService.getQRSHistory();
       for (index in QRSHistory) {
         QRSHistory[index].isVisible = true;
-        MapServ.setVectorLayerVisibility(QRSHistory[index], true);
+        MapService.setVectorLayerVisibility(QRSHistory[index], true);
       }
-      expect(MapServ.setSliderMinBound()).toEqual("Fri Oct 26 2012");
+      expect(MapService.setSliderMinBound()).toEqual("Fri Oct 26 2012");
     });
 
     it('should be able to hide and show features correctly', function() {
-			QRSServ.addToQRSHistory(QRS1);
-      QRSServ.addToQRSHistory(QRS2);
-      expect(QRSServ.getQRSHistory().length).toBe(2);
-      QRSHistory = QRSServ.getQRSHistory();
+			QRSService.addToQRSHistory(QRS1);
+      QRSService.addToQRSHistory(QRS2);
+      expect(QRSService.getQRSHistory().length).toBe(2);
+      QRSHistory = QRSService.getQRSHistory();
       for (index in QRSHistory) {
         QRSHistory[index].isVisible = true;
-        MapServ.setVectorLayerVisibility(QRSHistory[index], true);
+        MapService.setVectorLayerVisibility(QRSHistory[index], true);
       }
 
-      MapServ.setSliderMinMax('11/12/2012', '12/12/2012');
-			MapServ.temporalSliderFeaturesToggle();
-    	expect(MapServ.verifyOrderInVisibleLayers()).toBe(0);
+      MapService.setSliderMinMax('11/12/2012', '12/12/2012');
+			MapService.temporalSliderFeaturesToggle();
+    	expect(MapService.verifyOrderInVisibleLayers()).toBe(0);
 
-      MapServ.setSliderMinMax('06/24/2011', '06/26/2015');
-			MapServ.temporalSliderFeaturesToggle();
-    	expect(MapServ.verifyOrderInVisibleLayers()).toBe(0);
+      MapService.setSliderMinMax('06/24/2011', '06/26/2015');
+			MapService.temporalSliderFeaturesToggle();
+    	expect(MapService.verifyOrderInVisibleLayers()).toBe(0);
 
     });
 
   });
 
-  describe('PaletteServ', function(){
-    var PaletteServ;
+  describe('PaletteService', function(){
+    var PaletteService;
 
-    beforeEach(inject(function(_PaletteServ_) {
-      PaletteServ = _PaletteServ_;
+    beforeEach(inject(function(_PaletteService_) {
+      PaletteService = _PaletteService_;
     }));
 
     it('should return a color that is not in use', function(){
-      var nextColor = PaletteServ.useNextColor();
+      var nextColor = PaletteService.useNextColor();
       expect(nextColor).toBeDefined();
       expect(nextColor.featureColor).toBeDefined();
       expect(nextColor.buttonStyleIndex).toBeDefined();
@@ -188,19 +188,19 @@ describe('Dora services', function() {
 
     it('should return null if all colors are in use', function(){
       for(var i = 0; i < 15; i++) {
-        PaletteServ.useNextColor();
+        PaletteService.useNextColor();
       }
-      var nextColor = PaletteServ.useNextColor();
+      var nextColor = PaletteService.useNextColor();
       expect(nextColor).toBeNull();
     });
 
     it('should release color in use', function(){
-      var firstColor = PaletteServ.useNextColor();
-      var secondColor = PaletteServ.useNextColor();
+      var firstColor = PaletteService.useNextColor();
+      var secondColor = PaletteService.useNextColor();
       expect(firstColor.buttonStyleIndex).not.toEqual(secondColor.buttonStyleIndex);
       
-      PaletteServ.releaseColor(firstColor);
-      var thirdColor = PaletteServ.useNextColor();
+      PaletteService.releaseColor(firstColor);
+      var thirdColor = PaletteService.useNextColor();
       expect(firstColor.buttonStyleIndex).toEqual(thirdColor.buttonStyleIndex);
 
     });
