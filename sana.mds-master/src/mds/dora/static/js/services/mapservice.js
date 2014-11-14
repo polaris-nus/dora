@@ -364,10 +364,11 @@ doraServices.service('MapService', [
 
 			  // QRS specific zoom and pan center
 			  if(returnedLayers.locationLayer) {
-					map.zoomToExtent(returnedLayers.locationLayer.getDataExtent());
+				QRS.extent = returnedLayers.locationLayer.getDataExtent();
 			  } else if (returnedLayers.clusterLayer.features.length > 0){
-			  	map.zoomToExtent(returnedLayers.clusterLayer.getDataExtent());
+			  	QRS.extent = returnedLayers.clusterLayer.getDataExtent();
 			  }
+			  this.zoomToFitVectorFeatures(QRS);
 
 			  visibleLayers.push(clusterLayer.id);
 			  clusterLayerFeatures[clusterLayer.id] = {};
@@ -404,9 +405,8 @@ doraServices.service('MapService', [
 				return null;
 			},
 			zoomToFitVectorFeatures: function(QRS) {
-				if(QRS.clusterLayerId) {
-					var clusterLayer = map.getLayer(QRS.clusterLayerId);
-					map.zoomToExtent(clusterLayer.getDataExtent());
+				if(QRS.extent) {
+					map.zoomToExtent(QRS.extent);
 				}
 			},
 			setVectorLayerVisibility: function(QRS, visibility) {
