@@ -297,7 +297,6 @@ doraServices.service('MapService', [
 				var polygonFilter = wktParser.read(WKTArray[i]);
 				if (polygonFilter instanceof Array) {
 					for(j in polygonFilter) {
-						polygonFilter[j].geometry.transform("EPSG:4326", "EPSG:900913");
 						addToPolygonFeatures(polygonFilter[j]);
 					}
 				} else {
@@ -364,7 +363,7 @@ doraServices.service('MapService', [
 
 			  // QRS specific zoom and pan center
 			  if(returnedLayers.locationLayer) {
-				QRS.extent = returnedLayers.locationLayer.getDataExtent();
+					QRS.extent = returnedLayers.locationLayer.getDataExtent();
 			  } else if (returnedLayers.clusterLayer.features.length > 0){
 			  	QRS.extent = returnedLayers.clusterLayer.getDataExtent();
 			  }
@@ -517,15 +516,28 @@ doraServices.service('MapService', [
 				selectCountryControls.activate();
 			},
 			getPolygonFilters: function() {
-				var filterFeatures = [];
+				var preprocessedFeatures = [];
 
 				for (var i = 0; i < polygonLayer.features.length; i++) {
 					var drawnFeature = polygonLayer.features[i].clone()
-					filterFeatures.push(wktParser.write(drawnFeature));
+					preprocessedFeatures.push(wktParser.write(drawnFeature));
 				}
 				for (var i = 0; i < countriesLayer.selectedFeatures.length; i++) {
 					var selectedFeature = countriesLayer.selectedFeatures[i].clone();
-					filterFeatures.push(wktParser.write(selectedFeature));
+					preprocessedFeatures.push(wktParser.write(selectedFeature));
+				}
+
+				var filterFeatures = [];
+				for (var i = 0; i < preprocessedFeatures.length; i++) {
+					var polygonFilter = wktParser.read(preprocessedFeatures[i]);
+					if (polygonFilter instanceof Array) {
+						for(j in polygonFilter) {
+							polygonFilter[j].geometry.transform("EPSG:4326", "EPSG:900913");
+							filterFeatures.push(wktParser.write(polygonFilter[j]));
+						}
+					} else {
+						filterFeatures.push(wktParser.write(polygonFilter));
+					}
 				}
 
 				return filterFeatures;
