@@ -1,0 +1,15 @@
+Basic guide on how to use Sample Data Generator
+
+1) edit disease.txt to change the different diseases
+2) edit procedure.txt to change the procedures. At this point in time, the procedure must be synchronized with the disease
+3) open sample_case_generator.py to change the number of cases you want to generate
+4) run python code by doing "python sample_case_generator.py > output.json"
+5) open "extra_items.txt" file and add the subjects and manually add them into the generated list of data. Make sure the pk is consecutive with the current data.
+
+Loading the data into server:
+
+to load the data into your django server, copy your output data over to your root folder and do "python manage.py loaddata output.json" in the root folder (.../mds/src)
+
+Wait.
+
+Done!

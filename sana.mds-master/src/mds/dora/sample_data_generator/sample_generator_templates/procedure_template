@@ -1,0 +1,15 @@
+{
+  "pk": $procedure_number,
+  "model": "core.procedure",
+  "fields": {
+    "src": "",
+    "description": "$procedure_desc",
+    "author": "Sana",
+    "title": "API Test",
+    "modified": "$created_date",
+    "created": "$created_date",
+    "version": "1.0",
+    "voided": false,
+    "uuid": "$procedure_uuid"
+  }
+}

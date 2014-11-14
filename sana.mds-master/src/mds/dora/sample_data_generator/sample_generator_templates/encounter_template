@@ -1,0 +1,15 @@
+{
+  "pk": $encounter_number,
+  "model": "core.encounter",
+  "fields": {
+    "concept": "266d8a8f-9178-4616-bcea-896194379059",
+    "uuid": "$encounter_uuid",
+    "observer": "2197a870-3dda-4220-8d87-bcc5a4ec9c0b",
+    "created": "$created_date",
+    "modified": "$created_date",
+    "voided": false,
+    "device": "0725f5f5-e5b3-4d26-91d3-2d2bce40363c",
+    "procedure": "$procedure_uuid",
+    "subject": "$subject_uuid"
+  }
+}

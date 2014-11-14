@@ -1,0 +1,20 @@
+Some Random Text;Another Text Observation;Patient is in need of hospitalization
+Some Image Link
+yes;no
+yes;no
+yes;no
+yes;no
+yes;no
+yes;no
+yes;no
+yes;no
+image of surgical site
+yes;no
+yes;no
+yes;no
+yellow;black;purple;red
+intake encounter
+operation on head;operation on infection
+Date
+Date
+Date
