@@ -357,9 +357,9 @@ doraServices.service('MapService', [
 
 			  // Add clusterLayerId property to link QRS with respective cluster layer
 			  QRS.clusterLayerId = clusterLayer.id;
-			  map.addLayer(clusterLayer);
 			  returnedLayers.clusterLayer = clusterLayer;
 			  clusterLayer.addFeatures(features);
+			  map.addLayer(clusterLayer);
 
 			  // Add extent property for zooming and panning view port to fit encounter features
 			  if(returnedLayers.locationLayer) {
