@@ -57,7 +57,7 @@ def parse_request(request):
 			flag = True;
 
 		if (procedure_filter):
-			q_object &= Q(procedure__iexact=procedure_filter)
+			q_object &= Q(procedure__description__iexact=procedure_filter)
 			flag = True;
 
 		if (patients_family_name_filter):
