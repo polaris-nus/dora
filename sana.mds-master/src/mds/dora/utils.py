@@ -6,6 +6,7 @@ from django.db.models import Q
 from mds.dora.forms import QueryForm
 from datetime import *
 from django.template import Context, loader
+from django.contrib.gis.geos import GEOSGeometry, GEOSException
 
 #Parses the given request
 #Returns Q-Object query, Q-Object List concepts_list, Q-Object List locations_list
@@ -100,7 +101,13 @@ def parse_request(request):
 				geometries = json.loads(location_filter)
 				q_object_geometry = Q()
 				for geometry in geometries:
-					q_object_geometry |= Q(coordinates__within=geometry)
+					#check whether geometries are valid, will throw GEOSException if a geometry cannot be created
+					#ignore invalid geometries
+					try:
+						geometry = GEOSGeometry(geometry)
+						q_object_geometry |= Q(coordinates__within=geometry)
+					except GEOSException:
+						pass
 				locations_list.append(q_object_geometry)
 				flag = True
 			
